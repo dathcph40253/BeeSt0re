@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -17,7 +18,7 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SanPham {
+public class Product {
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
    @Column
@@ -27,7 +28,7 @@ public class SanPham {
    private String code;
    @Column
    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-   private Date create_date;
+   private LocalDateTime create_date;
    @Column
    private String describe;
    @Column
@@ -36,7 +37,7 @@ public class SanPham {
    @Column
    private int status;
    @Column
-   private Date updated_date;
+   private LocalDateTime updated_date;
    @Column
    private int delete_flag;
    @Column

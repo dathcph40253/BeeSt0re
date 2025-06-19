@@ -27,7 +27,7 @@
                             <form:errors path="name" cssClass="invalid-feedback"/>
                         </c:set>
                         <form:input type="text" class="form-control ${not empty errorName ? 'is-invalid':''}"
-                                    placeholder="name product" path="name"/>
+                                    placeholder="Nhập tên sản phẩm" path="name"/>
                         ${errorName}
                     </div>
                     <div class="mb-3">
@@ -36,13 +36,13 @@
                             <form:errors path="code" cssClass="invalid-feedback"/>
                         </c:set>
                         <form:input type="text" class="form-control ${not empty errorCode ? 'is-invalid' : ''}"
-                                    placeholder="name product" path="code"/>
+                                    placeholder="Nhập mã sản phẩm" path="code"/>
 
                         ${errorCode}
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Mô tả</label>
-                        <form:input type="text" class="form-control" placeholder="name product" path="describe"/>
+                        <form:input type="text" class="form-control" placeholder="Mô tả" path="describe"/>
                     </div>
                     <div class="mt-3">
                         <label class="form-label">Danh mục</label>
@@ -63,7 +63,6 @@
                         </form:select>
                     </div>
                     <div class="mt-3">
-
                         <form:radiobutton path="status" value="1" class="form-check-input"/>Active
                         <form:radiobutton path="status" value="0" class="form-check-input"/>Anactive
                     </div>

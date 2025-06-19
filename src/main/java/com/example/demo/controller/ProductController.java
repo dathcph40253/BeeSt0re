@@ -3,11 +3,11 @@ package com.example.demo.controller;
 import com.example.demo.Entity.Brand;
 import com.example.demo.Entity.Category;
 import com.example.demo.Entity.Material;
-import com.example.demo.Entity.SanPham;
+import com.example.demo.Entity.Product;
 import com.example.demo.service.BrandService;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.MaterialService;
-import com.example.demo.service.SanPhamService;
+import com.example.demo.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,23 +18,24 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @Controller
-public class SanPhamController {
-    private final SanPhamService sanPhamService;
+public class ProductController {
+    private final ProductService productService;
     private final BrandService brandService;
     private final CategoryService categoryService;
     private final MaterialService materialService;
 
-    public SanPhamController(SanPhamService sanPhamService, BrandService brandService,
+    public ProductController(ProductService productService, BrandService brandService,
                              CategoryService categoryService,
                              MaterialService materialService) {
 
-        this.sanPhamService = sanPhamService;
+        this.productService = productService;
         this.brandService = brandService;
         this.categoryService = categoryService;
         this.materialService = materialService;
@@ -73,54 +74,53 @@ public class SanPhamController {
 
     @GetMapping("/product")
     public String getProduct(Model model){
-        List<SanPham> products = sanPhamService.getAll();
+        List<Product> products = productService.getAll();
         model.addAttribute("products", products);
-        return "/san-pham/show";
+        return "/admin/product/show";
     }
 
     @GetMapping("/product/create")
     public String getCreateProductPage(Model model) {
-        model.addAttribute("newProduct", new SanPham());
-        return "/san-pham/create";
+        model.addAttribute("newProduct", new Product());
+        return "/admin/product/create";
     }
 
     @PostMapping("/product/create")
-    public String createProduct(@Valid @ModelAttribute("newProduct") SanPham sanPham, BindingResult bindingResult) {
+    public String createProduct(@Valid @ModelAttribute("newProduct") Product product, BindingResult bindingResult) {
         List<FieldError> errors = bindingResult.getFieldErrors();
         for(FieldError error : errors){
             System.out.println(">>>>>>" + error.getField() + "-" + error.getDefaultMessage());
         }
         if(bindingResult.hasErrors()){
-            return "/san-pham/create";
+            return "/admin/product/create";
         }
-        sanPham.setCreate_date(new Date());
-        sanPham.setDelete_flag(1);
-        sanPham.setGender(1);
-        sanPhamService.handleSaveProduct(sanPham);
+        product.setCreate_date(LocalDateTime.now());
+        product.setDelete_flag(1);
+        product.setGender(1);
+        productService.handleSaveProduct(product);
         return "redirect:/product";
     }
 
     @GetMapping("/product/update/{id}")
     public String getPageUpdate(Model model, @PathVariable("id") Long id){
-        SanPham product = sanPhamService.getProductById(id);
+        Product product = this.productService.getProductById(id);
         model.addAttribute("product", product);
-        return "san-pham/update";
+        return "/admin/product/update";
     }
 
     @PostMapping("/product/update")
-    public String updateProduct(@Valid @ModelAttribute("product") SanPham sanPham, BindingResult bindingResult){
-        System.out.println(">>>>>>>>>>>>" + sanPham.getCreate_date());
+    public String updateProduct(@Valid @ModelAttribute("product") Product product, BindingResult bindingResult){
+        System.out.println(">>>>>>>>>>>>" + product.getCreate_date());
         if(bindingResult.hasErrors()){
             List<FieldError> errors = bindingResult.getFieldErrors();
             for(FieldError error : errors){
                 System.out.println(">>>>>>" + error.getField() + "-" + error.getDefaultMessage());
             }
-            return "/san-pham/update";
+            return "/admin/product/update";
         }
 
-        sanPham.setUpdated_date(new Date());
-        sanPhamService.handleSaveProduct(sanPham);
-
+        product.setUpdated_date(LocalDateTime.now());
+        productService.handleSaveProduct(product);
         return "redirect:/product";
     }
 
