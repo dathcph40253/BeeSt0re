@@ -8,10 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
@@ -80,12 +77,11 @@ public class ProductDetailController {
             return "/admin/product-detail/create";
         }
         productDetailService.handleSaveProductDetail(productDetail);
-        saveImage(file, productDetail);
+        saveImage(new Image(), file, productDetail);
 
-        return "/admin/product-detail/show";
+        return "redirect:/product-detail";
     }
-    public void saveImage(MultipartFile file, ProductDetail productDetail){
-        Image image = new Image();
+    public void saveImage(Image image, MultipartFile file, ProductDetail productDetail){
         String imgProduct = uploadService.handleSaveUploadFile(file,"product");
         image.setCreateDate(LocalDateTime.now());
         image.setLink(imgProduct);
@@ -97,5 +93,42 @@ public class ProductDetailController {
     public String showCreatePage(Model model){
         model.addAttribute("newProductDetail", new ProductDetail());
         return "/admin/product-detail/create";
+    }
+
+    @GetMapping("/product-detail")
+    public String getAllProductDetail(Model model){
+        List<Image> images = imageService.getAll();
+        model.addAttribute("listImage", images);
+        return "/admin/product-detail/show";
+
+    }
+
+    @GetMapping("/product-detail/edit/{idImage}")
+    public String loadPageEdit(@PathVariable("idImage") long id, Model model){
+        Image image = imageService.getImage(id);
+        ProductDetail productDetail = productDetailService.getOneProductDetail(image.getProductDetail().getId());
+        model.addAttribute("img", image);
+        model.addAttribute("productDetail", productDetail);
+        return "/admin/product-detail/update";
+    }
+
+    @PostMapping("/product-detail/update")
+    public String updateProductDetail(@ModelAttribute("productDetail") @Valid ProductDetail productDetail,
+                                      BindingResult bindingResult,
+                                      @RequestParam("imgFile")MultipartFile file){
+        List<FieldError> errors = bindingResult.getFieldErrors();
+        for(FieldError error : errors){
+            System.out.println(">>>>>>" + error.getField() + "-" + error.getDefaultMessage());
+        }
+        if(bindingResult.hasErrors()){
+            return "/admin/product-detail/update";
+        }
+
+        if(!file.isEmpty()){
+            Image newImage = imageService.getImageByProductDetail(productDetail);
+            saveImage(newImage, file, productDetail);
+        }
+        productDetailService.handleSaveProductDetail(productDetail);
+        return "redirect:/product-detail";
     }
 }

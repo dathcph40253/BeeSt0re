@@ -19,4 +19,9 @@ public class ProductDetailService {
     public void handleSaveProductDetail(ProductDetail productDetail){
         this.productDetailRepo.save(productDetail);
     }
+
+    public ProductDetail getOneProductDetail(long id){
+        ProductDetail productDetail = productDetailRepo.findById(id).get();
+        return productDetail;
+    }
 }

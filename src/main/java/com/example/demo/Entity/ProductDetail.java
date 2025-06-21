@@ -3,6 +3,7 @@ package com.example.demo.Entity;
 import com.example.demo.Custom.IntegerOnly;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.File;
+import java.util.List;
 
 @Getter
 @Setter
@@ -25,13 +27,12 @@ public class ProductDetail {
     @Column
     private String barcode;
     @Column
-    @NotBlank(message = "giá không được bỏ trống")
+    @NotNull(message = "giá không được bỏ trống")
     @PositiveOrZero(message = "giá phải lớn hơn hoặc bằng 0")
     private Double price;
     @Column
-    @NotBlank(message = "số lượng không được bỏ trống")
+    @NotNull(message = "số lượng không được bỏ trống")
     @PositiveOrZero(message = "số lượng phải lớn hơn hoặc bằng 0")
-    @IntegerOnly
     private Integer quantity;
     @ManyToOne
     @JoinColumn(name = "color_id")

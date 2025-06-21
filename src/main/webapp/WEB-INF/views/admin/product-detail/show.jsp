@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý sản phẩm - Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
     <link rel="stylesheet" href="css/style.css">
     <style>
         .products-header {
@@ -27,6 +28,7 @@
             align-items: center;
             gap: 5px;
             transition: background 0.3s ease;
+            text-decoration: none;
         }
 
         .btn-add:hover {
@@ -88,49 +90,49 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <div class="logo">
-            <img src="https://via.placeholder.com/50" alt="Logo">
+            <img src="" alt="Logo">
             <h2>Admin Panel</h2>
         </div>
         <nav>
             <ul>
                 <li>
-                    <a href="index.html">
+                    <a href="#">
                         <i class="fas fa-home"></i>
                         <span>Trang chủ</span>
                     </a>
                 </li>
                 <li class="active">
-                    <a href="products.html">
+                    <a href="#">
                         <i class="fas fa-box"></i>
                         <span>Sản phẩm</span>
                     </a>
                 </li>
                 <li>
-                    <a href="orders.html">
+                    <a href="#">
                         <i class="fas fa-shopping-cart"></i>
                         <span>Đơn hàng</span>
                     </a>
                 </li>
                 <li>
-                    <a href="customers.html">
+                    <a href="#">
                         <i class="fas fa-users"></i>
                         <span>Khách hàng</span>
                     </a>
                 </li>
                 <li>
-                    <a href="categories.html">
+                    <a href="#">
                         <i class="fas fa-tags"></i>
                         <span>Danh mục</span>
                     </a>
                 </li>
                 <li>
-                    <a href="reports.html">
+                    <a href="#">
                         <i class="fas fa-chart-bar"></i>
                         <span>Báo cáo</span>
                     </a>
                 </li>
                 <li>
-                    <a href="settings.html">
+                    <a href="#">
                         <i class="fas fa-cog"></i>
                         <span>Cài đặt</span>
                     </a>
@@ -153,7 +155,7 @@
                     <span class="badge">3</span>
                 </div>
                 <div class="user">
-                    <img src="https://via.placeholder.com/40" alt="User">
+                    <img src="" alt="User">
                     <span>Admin User</span>
                 </div>
             </div>
@@ -162,10 +164,10 @@
         <!-- Products Content -->
         <div class="products-header">
             <h1>Quản lý sản phẩm</h1>
-            <button class="btn-add">
+            <a href="/product-detail/create" class="btn-add btn">
                 <i class="fas fa-plus"></i>
                 Thêm sản phẩm
-            </button>
+            </a>
         </div>
 
         <!-- Filters -->
@@ -202,39 +204,39 @@
             <table>
                 <thead>
                 <tr>
+                    <th>Hình ảnh</th>
                     <th>Tên sản phẩm</th>
-                    <th>Mã sản phẩm</th>
                     <th>Danh mục</th>
-                    <th>Mô tả</th>
-                    <th>Ngày tạo</th>
-                    <th>Ngày sửa</th>
-                    <th>Thương hiệu</th>
-                    <th>Chất liệu</th>
+                    <th>Size</th>
+                    <th>Màu sắc</th>
+                    <th>Giá</th>
                     <th>Tồn kho</th>
-                    <th>Trạng thái</th>
                     <th>Thao tác</th>
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="product" items="${products}">
+                <c:forEach items="${listImage}" var="image">
                     <tr>
-                        <td>${product.name}</td>
-                        <td>${product.code}</td>
-                        <td>${product.category.name}</td>
-                        <td>${product.describe}</td>
-                        <td>${product.create_date}</td>
-                        <td>${product.updated_date}</td>
-                        <td>${product.brand.name}</td>
-                        <td>${product.material.name}</td>
-                        <td></td>
-                        <td>${product.status}</td>
+                        <td><img src="/images/product/${image.link}" class="product-image" alt="image product"></td>
+                        <td>${image.productDetail.product.name}</td>
+                        <td>${image.productDetail.product.category.name}</td>
+                        <td>${image.productDetail.size.name}</td>
+                        <td>${image.productDetail.color.name}</td>
+                        <td>${image.productDetail.price}</td>
+                        <td>${image.productDetail.quantity}</td>
+
                         <td class="product-actions">
-                            <a class="btn-edit" href="/product/update/${product.id}"><i class="fas fa-edit"></i></a>
-                            <a class="btn-delete" href="/product/delete/${product.id}"><i class="fas fa-trash"></i></a>
+                            <a href="/product-detail/edit/${image.id}" class="btn-edit">
+                                <i class="fas fa-edit">
+
+                                </i></a>
+                            <a class="btn-delete" href="/product-detail/delete/${image.productDetail.id}">
+                                <i class="fas fa-trash">
+
+                                </i></a>
                         </td>
                     </tr>
                 </c:forEach>
-
                 </tbody>
             </table>
         </div>

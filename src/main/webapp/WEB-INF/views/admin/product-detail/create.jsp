@@ -45,7 +45,9 @@
                         <label class="form-label">Giá</label>
                         <form:input type = "text" path="price" class="form-control ${not empty errorPrice ? 'is-invalid' : ''}"
                                     placeholder="Nhập giá sản phẩm"/>
+                            ${errorPrice}
                     </div>
+
                     <c:set var="errorQuantity">
                         <form:errors path="quantity" cssClass="invalid-feedback"/>
                     </c:set>
@@ -53,7 +55,9 @@
                         <label class="form-label">Số lượng</label>
                         <form:input type = "text" path="quantity" class="form-control ${not empty errorQuantity ? 'is-invalid' : ''}"
                                     placeholder="Số lượng"/>
+                            ${errorQuantity}
                     </div>
+
                     <div class="mt-3">
                         <label class="form-label">Size</label>
                         <form:select path="size.id" items="${listSize}" class="form-select">
