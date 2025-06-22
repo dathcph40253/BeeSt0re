@@ -10,6 +10,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -39,7 +40,7 @@ public class Product {
    @Column
    private LocalDateTime updated_date;
    @Column
-   private int delete_flag;
+   private boolean delete_flag;
    @Column
    private int gender;
    @ManyToOne
@@ -51,22 +52,14 @@ public class Product {
    @ManyToOne
    @JoinColumn(name = "material_id")
    private Material material;
+   @OneToMany(mappedBy = "product")
+   List<ProductDetail> productDetailList;
 
-   @Override
-   public String toString() {
-      return "SanPham{" +
-              "id=" + id +
-              ", code='" + code + '\'' +
-              ", create_date=" + create_date +
-              ", describe='" + describe + '\'' +
-              ", name='" + name + '\'' +
-              ", status=" + status +
-              ", updated_date=" + updated_date +
-              ", delete_flag=" + delete_flag +
-              ", gender=" + gender +
-              ", brand=" + brand +
-              ", category=" + category +
-              ", material=" + material +
-              '}';
+   @Transient
+   public int getTotalQuantity() {
+      if (productDetailList == null) return 0;
+      return productDetailList.stream()
+              .mapToInt(ProductDetail::getQuantity)
+              .sum();
    }
 }

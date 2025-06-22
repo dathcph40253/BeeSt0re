@@ -15,12 +15,12 @@
     <script>
         $(document).ready(() => {
             const imageFile = $("#imgFile");
-            const orgImage = "${img.link}"
-            if(orgImage){
-                const urlImage = "/images/product/" + orgImage;
-                $("#imagePreview").attr("src", urlImage);
-                $("#imagePreview").css({"display":"block"});
-            }
+            //const orgImage = "${img.link}"
+            // if(orgImage){
+            //     const urlImage = "/images/product/" + orgImage;
+            //     $("#imagePreview").attr("src", urlImage);
+            //     $("#imagePreview").css({"display":"block"});
+            // }
             imageFile.change(function (e){
                 const imgURL = URL.createObjectURL(e.target.files[0]);
                 $("#imagePreview").attr("src", imgURL);
@@ -82,7 +82,11 @@
                     <input class="form-control" type="file" name="imgFile" id="imgFile" accept=".png, .jpg, .jpeg"/>
                 </div>
                 <div class="mt-3">
-                    <img style="max-height: 250px; display: none" alt="image preview" id="imagePreview"/>
+                    <c:forEach items="${productDetail.imageList}" var="img">
+                        <img style="max-height: 250px; display: block" alt="image preview" id="imagePreview"
+                             src="/images/product/${img.link}"
+                        />
+                    </c:forEach>
                 </div>
                 <div class="mt-3">
                     <button class="btn btn-primary">Update</button>

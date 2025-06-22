@@ -215,22 +215,25 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach items="${listImage}" var="image">
+                <c:forEach items="${productDetails}" var="productDetail">
                     <tr>
-                        <td><img src="/images/product/${image.link}" class="product-image" alt="image product"></td>
-                        <td>${image.productDetail.product.name}</td>
-                        <td>${image.productDetail.product.category.name}</td>
-                        <td>${image.productDetail.size.name}</td>
-                        <td>${image.productDetail.color.name}</td>
-                        <td>${image.productDetail.price}</td>
-                        <td>${image.productDetail.quantity}</td>
-
+                        <td>
+                            <c:forEach items="${productDetail.imageList}" var ="img">
+                                <img src="/images/product/${img.link}" alt="image product detail" class="product-image">
+                            </c:forEach>
+                        </td>
+                        <td>${productDetail.product.name}</td>
+                        <td>${productDetail.product.category.name}</td>
+                        <td>${productDetail.size.name}</td>
+                        <td>${productDetail.color.name}</td>
+                        <td>${productDetail.price}</td>
+                        <td>${productDetail.quantity}</td>
                         <td class="product-actions">
-                            <a href="/product-detail/edit/${image.id}" class="btn-edit">
+                            <a href="/product-detail/edit/${productDetail.id}" class="btn-edit">
                                 <i class="fas fa-edit">
 
                                 </i></a>
-                            <a class="btn-delete" href="/product-detail/delete/${image.productDetail.id}">
+                            <a class="btn-delete" href="/product-detail/delete/${productDetail.id}">
                                 <i class="fas fa-trash">
 
                                 </i></a>

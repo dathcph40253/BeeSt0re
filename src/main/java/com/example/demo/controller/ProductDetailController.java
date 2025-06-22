@@ -77,8 +77,15 @@ public class ProductDetailController {
             return "/admin/product-detail/create";
         }
         productDetailService.handleSaveProductDetail(productDetail);
-        saveImage(new Image(), file, productDetail);
-
+        if(!file.isEmpty()) {
+            saveImage(new Image(), file, productDetail);
+        }
+//        else{
+//            Image image = new Image();
+//            image.setProductDetail(productDetail);
+//            image.setLink(null);
+//            imageService.handleSaveImage(image);
+//        }
         return "redirect:/product-detail";
     }
     public void saveImage(Image image, MultipartFile file, ProductDetail productDetail){
@@ -97,17 +104,15 @@ public class ProductDetailController {
 
     @GetMapping("/product-detail")
     public String getAllProductDetail(Model model){
-        List<Image> images = imageService.getAll();
-        model.addAttribute("listImage", images);
+        List<ProductDetail> productDetails = productDetailService.getAll();
+        model.addAttribute("productDetails", productDetails);
         return "/admin/product-detail/show";
 
     }
 
-    @GetMapping("/product-detail/edit/{idImage}")
-    public String loadPageEdit(@PathVariable("idImage") long id, Model model){
-        Image image = imageService.getImage(id);
-        ProductDetail productDetail = productDetailService.getOneProductDetail(image.getProductDetail().getId());
-        model.addAttribute("img", image);
+    @GetMapping("/product-detail/edit/{id}")
+    public String loadPageEdit(@PathVariable("id") long id, Model model){
+        ProductDetail productDetail = productDetailService.getOneProductDetail(id);
         model.addAttribute("productDetail", productDetail);
         return "/admin/product-detail/update";
     }

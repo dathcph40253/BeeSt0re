@@ -75,6 +75,7 @@ public class ProductController {
     @GetMapping("/product")
     public String getProduct(Model model){
         List<Product> products = productService.getAll();
+        //Product product = productService.aaa();
         model.addAttribute("products", products);
         return "/admin/product/show";
     }
@@ -95,7 +96,7 @@ public class ProductController {
             return "/admin/product/create";
         }
         product.setCreate_date(LocalDateTime.now());
-        product.setDelete_flag(1);
+        product.setDelete_flag(true);
         product.setGender(1);
         productService.handleSaveProduct(product);
         return "redirect:/product";
@@ -124,4 +125,11 @@ public class ProductController {
         return "redirect:/product";
     }
 
+    @GetMapping("/product/delete/{id}")
+    public String deleteProduct(@PathVariable("id") long id){
+        Product product = productService.getProductById(id);
+        product.setDelete_flag(false);
+        productService.handleSaveProduct(product);
+        return "redirect:/product";
+    }
 }

@@ -16,12 +16,14 @@ public class ProductService {
         return this.productRepo.save(product);
     }
     public List<Product> getAll(){
-        List<Product> products = productRepo.findAll();
+        List<Product> products = productRepo.findByDeleteFlag(true);
         return products;
     }
     public Product getProductById(Long id){
         Product product = this.productRepo.findById(id).get();
         return product;
     }
+
+
 
 }

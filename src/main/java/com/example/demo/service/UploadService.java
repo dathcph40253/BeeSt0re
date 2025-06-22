@@ -15,7 +15,7 @@ public class UploadService {
     public UploadService(ServletContext servletContext){
         this.servletContext = servletContext;
     }
-    public String handleSaveUploadFile(MultipartFile file, String targetFoler ){
+    public String handleSaveUploadFile(MultipartFile file, String targetFoler){
         String finalName = "";
         try {
             byte[] bytes = file.getBytes();
@@ -33,5 +33,22 @@ public class UploadService {
             e.printStackTrace();
         }
         return finalName;
+    }
+
+    public static void deleteImage(String imageName, String targetFoler) {
+        // Đường dẫn tương đối đến thư mục chứa ảnh trong project
+        String relativePath = "src/main/webapp/resources/images/"+ targetFoler + imageName;
+
+        File file = new File(relativePath);
+
+        if (file.exists()) {
+            if (file.delete()) {
+                System.out.println("Đã xóa ảnh: " + imageName);
+            } else {
+                System.out.println("Không thể xóa ảnh: " + imageName);
+            }
+        } else {
+            System.out.println("Ảnh không tồn tại: " + imageName);
+        }
     }
 }

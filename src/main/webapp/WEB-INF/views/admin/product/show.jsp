@@ -27,6 +27,7 @@
             align-items: center;
             gap: 5px;
             transition: background 0.3s ease;
+            text-decoration: none;
         }
 
         .btn-add:hover {
@@ -94,43 +95,43 @@
         <nav>
             <ul>
                 <li>
-                    <a href="index.html">
+                    <a href="">
                         <i class="fas fa-home"></i>
                         <span>Trang chủ</span>
                     </a>
                 </li>
                 <li class="active">
-                    <a href="products.html">
+                    <a href="">
                         <i class="fas fa-box"></i>
                         <span>Sản phẩm</span>
                     </a>
                 </li>
                 <li>
-                    <a href="orders.html">
+                    <a href="">
                         <i class="fas fa-shopping-cart"></i>
                         <span>Đơn hàng</span>
                     </a>
                 </li>
                 <li>
-                    <a href="customers.html">
+                    <a href="">
                         <i class="fas fa-users"></i>
                         <span>Khách hàng</span>
                     </a>
                 </li>
                 <li>
-                    <a href="categories.html">
+                    <a href="">
                         <i class="fas fa-tags"></i>
                         <span>Danh mục</span>
                     </a>
                 </li>
                 <li>
-                    <a href="reports.html">
+                    <a href="">
                         <i class="fas fa-chart-bar"></i>
                         <span>Báo cáo</span>
                     </a>
                 </li>
                 <li>
-                    <a href="settings.html">
+                    <a href="">
                         <i class="fas fa-cog"></i>
                         <span>Cài đặt</span>
                     </a>
@@ -162,10 +163,10 @@
         <!-- Products Content -->
         <div class="products-header">
             <h1>Quản lý sản phẩm</h1>
-            <button class="btn-add">
+            <a class="btn-add" href="/product/create">
                 <i class="fas fa-plus"></i>
                 Thêm sản phẩm
-            </button>
+            </a>
         </div>
 
         <!-- Filters -->
@@ -226,15 +227,14 @@
                         <td>${product.updated_date}</td>
                         <td>${product.brand.name}</td>
                         <td>${product.material.name}</td>
-                        <td></td>
-                        <td>${product.status}</td>
+                        <td>${product.getTotalQuantity()}</td>
+                        <td>${product.status == 1 ? "Hoạt động" : "Ngừng hoạt động"}</td>
                         <td class="product-actions">
                             <a class="btn-edit" href="/product/update/${product.id}"><i class="fas fa-edit"></i></a>
                             <a class="btn-delete" href="/product/delete/${product.id}"><i class="fas fa-trash"></i></a>
                         </td>
                     </tr>
                 </c:forEach>
-
                 </tbody>
             </table>
         </div>

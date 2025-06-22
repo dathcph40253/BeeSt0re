@@ -43,5 +43,6 @@ public class ProductDetail {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
-
+    @OneToMany(mappedBy = "productDetail")
+    private List<Image> imageList;
 }
