@@ -47,9 +47,9 @@ public class ColorController {
         }
         try {
             Color color = Color.builder()
-                    .code(code).name(name).build();
+                    .code(code).name(name).delete(false).build();
             colorRepo.save(color);
-            redirectAttributes.addFlashAttribute("messageType", "sửa màu thành công");
+            redirectAttributes.addFlashAttribute("message", "sửa màu thành công");
             redirectAttributes.addFlashAttribute("messageType", "success");
         }catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", "thêm màu thất bại");

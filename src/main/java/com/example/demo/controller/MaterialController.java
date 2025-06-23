@@ -47,7 +47,8 @@ public class MaterialController {
         try{
             Material material = Material.builder().
                     code(code)
-                    .status(status)
+                    .status(status).
+                    delete(false)
                     .name(name).build();
             materialRepo.save(material);
             redirectAttributes.addFlashAttribute("message", "thêm thành công");
