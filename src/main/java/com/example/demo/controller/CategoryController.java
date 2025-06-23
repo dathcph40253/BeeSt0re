@@ -37,7 +37,7 @@ public class CategoryController {
     @PostMapping("/Category/add")
     public String addCategory(@RequestParam String code,
                               @RequestParam String name,
-                              @RequestParam String status,
+                              @RequestParam Boolean status,
                               RedirectAttributes redirectAttributes) {
         List<Category> categories = categoryRepo.findByCode(code);
         if(!categories.isEmpty()) {

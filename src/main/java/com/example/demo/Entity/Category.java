@@ -23,7 +23,7 @@ public class Category {
     private String name;
 
     @Column(name = "status")
-    private String status;
+    private Boolean status;
 
     @Column(name = "delete_flag")
     private Boolean delete;
