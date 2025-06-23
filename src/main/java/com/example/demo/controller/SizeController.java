@@ -21,7 +21,8 @@ public class SizeController {
 
     @GetMapping("/Size")
     public String Size(Model model) {
-        List<Size> sizes = sizeRepo.findByDeleteFalse();
+        List<Size> sizes;
+        sizes = sizeRepo.findByDeleteFalse();
         model.addAttribute("sizes", sizes);
         return "size";
     }
