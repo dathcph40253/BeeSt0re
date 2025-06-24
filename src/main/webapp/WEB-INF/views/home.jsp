@@ -406,7 +406,7 @@
                     <i class="fas fa-shopping-bag"></i> MUA SẮM
                 </div>
                 
-                <a href="/BeeStore/Products" class="menu-item">
+                <a href="/BeeStore/Product" class="menu-item">
                     <i class="fas fa-tshirt"></i> Xem sản phẩm
                 </a>
                 

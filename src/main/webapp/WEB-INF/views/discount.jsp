@@ -12,12 +12,15 @@
     <h2 class="mb-4">Quản Lý Discount</h2>
     <a class="btn btn-secondary mb-3" href="/BeeStore/Home">🏠 Trang chủ</a>
 
-    <form class="row g-3 mb-4" method="get" action="/BeeStore/Discount">
+    <form class="row g-3 mb-4" method="get" action="/BeeStore/Discount/search">
         <div class="col-auto">
             <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
         </div>
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
+        </div>
+        <div class="col-auto">
+            <a href="/BeeStore/Discount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
 
