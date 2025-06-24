@@ -27,9 +27,5 @@ public class RegistDto {
 
     private LocalDateTime birthDay;
 
-    private Long roleId;
-
-    @Builder.Default
-    private Boolean isNonLocked = true;
 
 }

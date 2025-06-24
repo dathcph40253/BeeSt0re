@@ -71,33 +71,6 @@
                 <form:password path="password" cssClass="form-control" id="password"/>
                 <form:errors path="password" cssClass="text-danger"/>
             </div>
-
-            <!-- Ngày sinh -->
-            <div class="mb-3">
-                <label for="birthDay" class="form-label">Ngày sinh:</label>
-                <form:input path="birthDay" type="datetime-local" cssClass="form-control" id="birthDay"/>
-            </div>
-
-            <!-- Vai trò -->
-            <div class="mb-3">
-                <label for="roleId" class="form-label">Vai trò:</label>
-                <form:select path="roleId" cssClass="form-select" id="roleId">
-                    <form:option value="">-- Chọn vai trò --</form:option>
-                    <form:option value="1">Admin</form:option>
-                    <form:option value="2">Nhân viên</form:option>
-                    <form:option value="3">Người dùng</form:option>
-                </form:select>
-            </div>
-
-            <!-- Trạng thái tài khoản -->
-            <div class="mb-3">
-                <label class="form-label">Trạng thái:</label>
-                <form:select path="isNonLocked" cssClass="form-select">
-                    <form:option value="true">Hoạt động</form:option>
-                    <form:option value="false">Bị khóa</form:option>
-                </form:select>
-            </div>
-
             <button type="submit" class="btn btn-success w-100">Đăng ký</button>
             <div class="mt-3">
                 Nếu bạn đã có tài khoản,

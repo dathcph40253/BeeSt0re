@@ -79,9 +79,6 @@ public class RegistController {
             user.setEmail(registDto.getEmail());
             user.setCustomer(newCustomer);
             user.setPassword(passWord);
-            user.setBirthDay(registDto.getBirthDay());
-            Role role = userService.NameRoleById(registDto.getRoleId());
-            user.setRole(role);
             user.setCode(userService.generateAccountCode());
             // Mặc định trạng thái là true nếu không được chọn
             if (user.getIsNonLocked() == null) {
