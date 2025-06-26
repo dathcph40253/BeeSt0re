@@ -1,31 +1,35 @@
 package com.example.demo.Entity;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
-
-@Builder
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "image")
+@Entity
+@Table(name= "image" )
 public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
     private Long id;
-
     @Column(name = "create_date")
     private LocalDateTime createDate;
-
     @Column(name = "file_type")
-    private String file;
-
-    @Column(name = "link")
+    private String type;
+    @Column
     private String link;
-
-    @Column(name = "name")
+    @Column
     private String name;
+    @Column(name = "update_date")
+    private LocalDateTime updateDate;
+    @ManyToOne
+    @JoinColumn(name = "product_detail_id")
+    private ProductDetail productDetail;
+
 }

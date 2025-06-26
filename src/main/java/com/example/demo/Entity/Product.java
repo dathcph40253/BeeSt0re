@@ -1,56 +1,65 @@
 package com.example.demo.Entity;
 
-
 import jakarta.persistence.*;
-import lombok.*;
+import jakarta.validation.constraints.NotBlank;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+import java.util.List;
+
+
 @Entity
-@Builder
+@Table(name = "product")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "product")
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "code")
+    @Column
+    private long id;
+    @Column
+    @NotBlank(message = "Mã sản phẩm không được để trống")
     private String code;
-
-    @Column(name = "create_date")
-    private LocalDateTime createDate;
-
-    @Column(name = "delete_flag")
-    private Boolean deleteFlag;
-
-    @Column(name = "describe")
+    @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime create_date;
+    @Column
     private String describe;
-
-    @Column(name = "gender")
-    private Boolean gender;
-
-    @Column(name = "name")
+    @Column
+    @NotBlank(message = "Tên sản phẩm không được để trống")
     private String name;
-
-    @Column(name = "price")
-    private Float price;
-
-    @Column(name = "status")
-    private String status;
-
+    @Column
+    private int status;
+    @Column
+    private LocalDateTime updated_date;
+    @Column
+    private boolean delete_flag;
+    @Column
+    private int gender;
     @ManyToOne
-    @JoinColumn(name = "brand_id", nullable = false)
+    @JoinColumn(name = "brand_id")
     private Brand brand;
-
     @ManyToOne
-    @JoinColumn(name = "category_id", nullable = false)
+    @JoinColumn(name="category_id")
     private Category category;
-
     @ManyToOne
-    @JoinColumn(name = "material_id", nullable = false)
+    @JoinColumn(name = "material_id")
     private Material material;
+    @OneToMany(mappedBy = "product")
+    List<ProductDetail> productDetailList;
+
+    @Transient
+    public int getTotalQuantity() {
+        if (productDetailList == null) return 0;
+        return productDetailList.stream()
+                .mapToInt(ProductDetail::getQuantity)
+                .sum();
+    }
 }
