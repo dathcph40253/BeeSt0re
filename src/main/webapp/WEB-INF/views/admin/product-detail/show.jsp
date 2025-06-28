@@ -88,78 +88,12 @@
 <body>
 <div class="container">
     <!-- Sidebar -->
-    <div class="sidebar">
-        <div class="logo">
-            <img src="" alt="Logo">
-            <h2>Admin Panel</h2>
-        </div>
-        <nav>
-            <ul>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-home"></i>
-                        <span>Trang chủ</span>
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="#">
-                        <i class="fas fa-box"></i>
-                        <span>Sản phẩm</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-shopping-cart"></i>
-                        <span>Đơn hàng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-users"></i>
-                        <span>Khách hàng</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-tags"></i>
-                        <span>Danh mục</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-chart-bar"></i>
-                        <span>Báo cáo</span>
-                    </a>
-                </li>
-                <li>
-                    <a href="#">
-                        <i class="fas fa-cog"></i>
-                        <span>Cài đặt</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+    <jsp:include page="../layout/sidebar.jsp"/>
 
     <!-- Main Content -->
     <div class="main-content">
         <!-- Top Bar -->
-        <div class="top-bar">
-            <div class="search-box">
-                <i class="fas fa-search"></i>
-                <input type="text" placeholder="Tìm kiếm sản phẩm...">
-            </div>
-            <div class="user-info">
-                <div class="notifications">
-                    <i class="fas fa-bell"></i>
-                    <span class="badge">3</span>
-                </div>
-                <div class="user">
-                    <img src="" alt="User">
-                    <span>Admin User</span>
-                </div>
-            </div>
-        </div>
+     <jsp:include page="../layout/header.jsp"/>
 
         <!-- Products Content -->
         <div class="products-header">
