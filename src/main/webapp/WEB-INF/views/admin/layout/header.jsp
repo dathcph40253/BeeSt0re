@@ -1,7 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="top-bar">
-    <div>
-
+    <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Tìm kiếm...">
     </div>
     <div class="user-info">
         <div class="notifications">

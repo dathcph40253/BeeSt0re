@@ -9,6 +9,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
     <style>
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.375rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+            border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .btn-info {
+            color: #000;
+            background-color: #0dcaf0;
+            border-color: #0dcaf0;
+        }
         .products-header {
             display: flex;
             justify-content: space-between;
@@ -137,6 +161,7 @@
             <table>
                 <thead>
                 <tr>
+                    <th>Hình ảnh</th>
                     <th>Tên sản phẩm</th>
                     <th>Mã sản phẩm</th>
                     <th>Danh mục</th>
@@ -153,6 +178,7 @@
                 <tbody>
                 <c:forEach var="product" items="${products}">
                     <tr>
+                        <td><img src="/images/product/${product.productDetailList[0].imageList[0].link}" alt="Product" class="product-image"></td>
                         <td>${product.name}</td>
                         <td>${product.code}</td>
                         <td>${product.category.name}</td>
@@ -171,6 +197,10 @@
                 </c:forEach>
                 </tbody>
             </table>
+            <div style="display: flex">
+                <a href="/BeeStore/Home" class="btn btn-info" style="margin-top:48px">Quay lại</a>
+                <a href="/product-detail" class="btn btn-info" style="margin-top:48px; margin-left: 30px">Trang chi tiết</a>
+            </div>
         </div>
     </div>
 </div>

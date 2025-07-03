@@ -3,6 +3,8 @@ package com.example.demo.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @Setter
@@ -24,6 +26,5 @@ public class Color {
     private String name;
 
     @Column(name = "delete_flag")
-    private Boolean delete = false  ;
-
+    private Boolean delete = false;
 }

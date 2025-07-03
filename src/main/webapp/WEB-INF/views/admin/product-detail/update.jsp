@@ -8,9 +8,11 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Update Product Detail</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(() => {
@@ -21,17 +23,20 @@
             //     $("#imagePreview").attr("src", urlImage);
             //     $("#imagePreview").css({"display":"block"});
             // }
-            imageFile.change(function (e){
+            imageFile.change(function (e) {
                 const imgURL = URL.createObjectURL(e.target.files[0]);
                 $("#imagePreview").attr("src", imgURL);
-                $("#imagePreview").css({"display":"block"});
+                $("#imagePreview").css({"display": "block"});
             });
         });
     </script>
 </head>
-<body>
-    <div class="container mt-5">
-        <div class="row">
+<body style="min-height: 100vh; display: flex">
+<jsp:include page="../layout/sidebar.jsp"/>
+<div class="main-content">
+    <jsp:include page="../layout/header.jsp"/>
+    <div class="row mt-5">
+        <div class="col-md-6 col-12 mx-auto">
             <h3>Update Product Detail ${productDetail.id}</h3>
             <hr/>
             <form:form action="/product-detail/update" enctype="multipart/form-data"
@@ -52,7 +57,7 @@
                 </c:set>
                 <div class="mt-3">
                     <label class="form-label">Giá</label>
-                    <form:input type = "text" path="price"
+                    <form:input type="text" path="price"
                                 class="form-control ${not empty errorPrice ? 'is-invalid' : ''}"
                                 placeholder="Nhập giá sản phẩm"/>
                 </div>
@@ -61,7 +66,7 @@
                 </c:set>
                 <div class="mt-3">
                     <label class="form-label">Số lượng</label>
-                    <form:input type = "text" path="quantity"
+                    <form:input type="text" path="quantity"
                                 class="form-control ${not empty errorQuantity ? 'is-invalid' : ''}"
                                 placeholder="Số lượng"/>
                 </div>
@@ -88,11 +93,13 @@
                         />
                     </c:forEach>
                 </div>
-                <div class="mt-3">
+                <div class="mt-3 d-flex">
                     <button class="btn btn-primary">Update</button>
+                    <a href="/product-detail" class="btn btn-info ms-3">Quay lại</a>
                 </div>
             </form:form>
         </div>
     </div>
+</div>
 </body>
 </html>

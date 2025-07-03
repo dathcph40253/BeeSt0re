@@ -131,7 +131,7 @@ public class ProductController {
     @GetMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable("id") long id){
         Product product = productService.getProductById(id);
-        product.setDelete_flag(false);
+        product.setDelete_flag(true);
         productService.handleSaveProduct(product);
         return "redirect:/product";
     }

@@ -127,7 +127,6 @@ public class ProductDetailController {
         if(bindingResult.hasErrors()){
             return "admin/product-detail/update";
         }
-
         if(!file.isEmpty()){
             Image newImage = imageService.getImageByProductDetail(productDetail);
             saveImage(newImage, file, productDetail);

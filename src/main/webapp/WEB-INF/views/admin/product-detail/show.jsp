@@ -10,11 +10,98 @@
 
     <link rel="stylesheet" href="css/style.css">
     <style>
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.375rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+            border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .btn-info {
+            color: #000;
+            background-color: #0dcaf0;
+            border-color: #0dcaf0;
+        }
+
+        .btn-info:hover {
+            color: #000;
+            background-color: #31d2f2;
+            border-color: #25cff2;
+        }
+
+        .btn-info:focus {
+            color: #000;
+            background-color: #31d2f2;
+            border-color: #25cff2;
+            box-shadow: 0 0 0 0.25rem rgba(11, 172, 204, 0.5);
+        }
+
+        .btn-info:active {
+            color: #000;
+            background-color: #3dd5f3;
+            border-color: #25cff2;
+        }
+
         .products-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            text-align: center;
+            text-decoration: none;
+            vertical-align: middle;
+            cursor: pointer;
+            user-select: none;
+            background-color: transparent;
+            border: 1px solid transparent;
+            padding: 0.375rem 0.75rem;
+            font-size: 1rem;
+            border-radius: 0.375rem;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+            border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .btn-info {
+            color: #000;
+            background-color: #0dcaf0;
+            border-color: #0dcaf0;
+        }
+
+        .btn-info:hover {
+            color: #000;
+            background-color: #31d2f2;
+            border-color: #25cff2;
+        }
+
+        .btn-info:focus {
+            color: #000;
+            background-color: #31d2f2;
+            border-color: #25cff2;
+            box-shadow: 0 0 0 0.25rem rgba(11, 172, 204, 0.5);
+        }
+
+        .btn-info:active {
+            color: #000;
+            background-color: #3dd5f3;
+            border-color: #25cff2;
         }
 
         .btn-add {
@@ -97,42 +184,12 @@
 
         <!-- Products Content -->
         <div class="products-header">
-            <h1>Quản lý sản phẩm</h1>
+            <h1>Chi tiết sản phẩm</h1>
             <a href="/product-detail/create" class="btn-add btn">
                 <i class="fas fa-plus"></i>
                 Thêm sản phẩm
             </a>
         </div>
-
-        <!-- Filters -->
-        <div class="filters">
-            <div class="filter-group">
-                <label>Danh mục:</label>
-                <select>
-                    <option value="">Tất cả</option>
-                    <option value="1">Điện thoại</option>
-                    <option value="2">Laptop</option>
-                    <option value="3">Phụ kiện</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>Trạng thái:</label>
-                <select>
-                    <option value="">Tất cả</option>
-                    <option value="1">Còn hàng</option>
-                    <option value="2">Hết hàng</option>
-                </select>
-            </div>
-            <div class="filter-group">
-                <label>Sắp xếp:</label>
-                <select>
-                    <option value="1">Mới nhất</option>
-                    <option value="2">Giá tăng dần</option>
-                    <option value="3">Giá giảm dần</option>
-                </select>
-            </div>
-        </div>
-
         <!-- Products Table -->
         <div class="table-container">
             <table>
@@ -176,6 +233,10 @@
                 </c:forEach>
                 </tbody>
             </table>
+            <div>
+                <a href="/product" class="btn btn-info" style="margin-top:48px">Quay lại</a>
+            </div>
+
         </div>
     </div>
 </div>

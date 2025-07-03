@@ -9,9 +9,11 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Create Product Deatail</title>
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script>
         $(document).ready(() => {
@@ -24,8 +26,11 @@
         });
     </script>
 </head>
-<body>
-    <div class="container mt-5">
+<body style="min-height: 100vh; display: flex">
+<jsp:include page="../layout/sidebar.jsp"/>
+<div class="main-content">
+    <jsp:include page="../layout/header.jsp"/>
+    <div class="mt-5">
         <div class="row">
             <div class="col-md-6 col-12 mx-auto">
                 <h3>Create Product Deatail</h3>
@@ -84,5 +89,7 @@
             </div>
         </div>
     </div>
+</div>
+
 </body>
 </html>

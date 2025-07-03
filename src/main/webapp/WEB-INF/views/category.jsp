@@ -4,10 +4,13 @@
 <head>
     <title>Quản lý Loại Sản Phẩm</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-light">
-
-<div class="container mt-5">
+<body style="min-with:100vh; display:flex">
+<jsp:include page="admin/layout/sidebar.jsp"/>
+<div class="main-content">
+    <jsp:include page="admin/layout/header.jsp"/>
     <h2 class="mb-4">Quản lý Loại Sản Phẩm</h2>
     <div class="d-flex justify-content-between mb-3">
         <a class="btn btn-secondary" href="/BeeStore/Home">🏠 Trang chủ</a>
@@ -128,11 +131,11 @@
             <form method="post" action="/BeeStore/Category/add">
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">Mã loại SP <span class="text-danger">*</span></label>
+                        <label class="form-label">Mã Danh Mục <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="code">
                     </div>
                     <div class="mb-3">
-                        <label class="form-label">Tên loại SP <span class="text-danger">*</span></label>
+                        <label class="form-label">Tên Danh Mục <span class="text-danger">*</span></label>
                         <input type="text" class="form-control" name="name">
                     </div>
                     <div class="mb-3">

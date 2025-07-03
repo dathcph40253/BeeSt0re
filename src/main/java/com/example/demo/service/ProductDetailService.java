@@ -24,4 +24,9 @@ public class ProductDetailService {
         ProductDetail productDetail = productDetailRepo.findById(id).get();
         return productDetail;
     }
+
+    public List<ProductDetail> getProductByProductId(Long id){
+        List<ProductDetail> productDetails = productDetailRepo.findByProductId(id);
+        return productDetails;
+    }
 }

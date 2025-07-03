@@ -5,10 +5,13 @@
     <title>Quản lý Thương Hiệu</title>
     <!-- Link Bootstrap 5 CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-light">
-
-<div class="container mt-5">
+<body style="min-with:100vh; display:flex">
+<jsp:include page="admin/layout/sidebar.jsp"/>
+<div class="main-content">
+    <jsp:include page="admin/layout/header.jsp"/>
     <h2 class="mb-4">Quản lý Thương Hiệu</h2>
     <div class="d-flex justify-content-between mb-3">
         <a class="btn btn-secondary" href="/BeeStore/Home">🏠 Trang chủ</a>
@@ -16,7 +19,6 @@
             ➕ Thêm Thương Hiệu
         </button>
     </div>
-
     <!-- Hiển thị thông báo -->
     <c:if test="${not empty message}">
         <div class="alert ${messageType == 'success' ? 'alert-success' : 'alert-danger'} alert-dismissible fade show" role="alert">
