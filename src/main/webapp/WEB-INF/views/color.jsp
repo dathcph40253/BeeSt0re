@@ -15,7 +15,7 @@
     <jsp:include page="admin/layout/header.jsp"/>
     <h2 class="mb-4">Quản Lý Màu Sắc</h2>
     <div class="d-flex justify-content-between mb-3">
-        <a class="btn btn-secondary" href="/BeeStore/Home">🏠 Trang chủ</a>
+        <a class="btn btn-secondary" href="/Home">🏠 Trang chủ</a>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addColorModal">
             ➕ Thêm Màu Sắc
         </button>
@@ -29,7 +29,7 @@
         </div>
     </c:if>
 
-    <form class="row g-3 mb-4" method="get" action="/BeeStore/Color/search">
+    <form class="row g-3 mb-4" method="get" action="/Color/search">
         <div class="col-auto">
             <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
         </div>
@@ -37,7 +37,7 @@
             <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
         </div>
         <div class="col-auto">
-            <a href="/BeeStore/Color" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+            <a href="/Color" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
 
@@ -59,14 +59,14 @@
                     <td>${color.name}</td>
 
                     <td>
-                        <a href="/BeeStore/Color/update"
+                        <a href="/Color/update"
                            class="btn btn-warning btn-sm"
                            role="button"
                            data-bs-toggle="modal"
                            data-bs-target="#editColorModal${color.id}">
                             Sửa
                         </a>
-                        <a href="/BeeStore/Color/delete?id=${color.id}"
+                        <a href="/Color/delete?id=${color.id}"
                            class="btn btn-sm btn-danger" onclick="return confirm('Bạn có muốn xóa màu sắc này không?')"
                         >Xóa</a>
                     </td>
@@ -76,7 +76,7 @@
                 <div class="modal fade" id="editColorModal${color.id}" tabindex="-1" aria-labelledby="editColorModalLabel${color.id}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form method="post" action="/BeeStore/Color/update">
+                            <form method="post" action="/Color/update">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editColorModalLabel${color.id}">Sửa Màu Sắc</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -117,7 +117,7 @@
                 <h5 class="modal-title" id="addColorModalLabel">Thêm Màu Sắc Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="post" action="/BeeStore/Color/add">
+            <form method="post" action="/Color/add">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="colorCode" class="form-label">Mã Màu Sắc <span class="text-danger">*</span></label>

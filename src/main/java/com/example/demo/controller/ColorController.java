@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/BeeStore")
 public class ColorController {
 
     @Autowired
@@ -33,7 +32,7 @@ public class ColorController {
             colors.setDelete(true);
             colorRepo.save(colors);
         }
-        return "redirect:/BeeStore/Color";
+        return "redirect:/Color";
     }
     @PostMapping("/Color/add")
     public String addColor(@RequestParam String code,
@@ -43,11 +42,10 @@ public class ColorController {
         if(!colors.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "mã màu bị trùng ");
             redirectAttributes.addFlashAttribute("messageType", "danger");
-            return  "redirect:/BeeStore/Color";
+            return  "redirect:/Color";
         }
         try {
-            Color color = Color.builder()
-                    .code(code).name(name).delete(false).build();
+            Color color = Color.builder().code(code).name(name).delete(false).build();
             colorRepo.save(color);
             redirectAttributes.addFlashAttribute("message", "sửa màu thành công");
             redirectAttributes.addFlashAttribute("messageType", "success");
@@ -55,7 +53,7 @@ public class ColorController {
             redirectAttributes.addFlashAttribute("message", "thêm màu thất bại");
             redirectAttributes.addFlashAttribute("messageType", "error");
     }
-        return "redirect:/BeeStore/Color";
+        return "redirect:/Color";
     }
     @PostMapping("/Color/update")
     public String updateColor(@ModelAttribute Color color, RedirectAttributes redirectAttributes) {
@@ -71,7 +69,7 @@ public class ColorController {
             redirectAttributes.addFlashAttribute("message","Thêm màu thất bại");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/BeeStore/Color";
+        return "redirect:/Color";
     }
     @GetMapping("/Color/search")
     public String searchColor(@RequestParam(name = "id") String id, Model model) {

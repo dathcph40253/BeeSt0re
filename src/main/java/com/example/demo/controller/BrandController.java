@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/BeeStore")
 public class BrandController {
 
     @Autowired
@@ -32,7 +31,7 @@ public class BrandController {
             brand.setDelete(true);
             repo.save(brand);
         }
-        return "redirect:/BeeStore/Brand";
+        return "redirect:/Brand";
     }
 
     @PostMapping("/Brand/add")
@@ -44,7 +43,7 @@ public class BrandController {
         if(!brands.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "mã code đã tồn tại");
             redirectAttributes.addFlashAttribute("messageType","danger");
-            return  "redirect:/BeeStore/Brand";
+            return  "redirect:/Brand";
         }
         try {
             Brand brand = Brand.builder()
@@ -60,7 +59,7 @@ public class BrandController {
             redirectAttributes.addFlashAttribute("message", "Lỗi khi thêm thương hiệu: " + e.getMessage());
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/BeeStore/Brand";
+        return "redirect:/Brand";
     }
 
     @PostMapping("/Brand/update")
@@ -79,7 +78,7 @@ public class BrandController {
             redirectAttributes.addFlashAttribute("message", "Không tìm thấy thương hiệu!");
             redirectAttributes.addFlashAttribute("messageType", "danger");
         }
-        return "redirect:/BeeStore/Brand";
+        return "redirect:/Brand";
     }
     @GetMapping("/Brand/search")
     public String searchBrand(@RequestParam(name = "id") String id, Model model) {

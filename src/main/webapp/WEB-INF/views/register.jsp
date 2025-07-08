@@ -56,7 +56,7 @@
     <div class="register-form">
         <h2 class="text-center mb-4">Đăng kí tài khoản</h2>
 
-        <form:form modelAttribute="RegistDto" action="/BeeStore/DangKy" method="post">
+        <form:form modelAttribute="RegistDto" action="/DangKy" method="post">
 
             <!-- Email (dùng làm tên đăng nhập) -->
             <div class="mb-3">
@@ -74,7 +74,7 @@
             <button type="submit" class="btn btn-success w-100">Đăng ký</button>
             <div class="mt-3">
                 Nếu bạn đã có tài khoản,
-                <a href="/BeeStore/Login">đăng nhập tại đây</a>
+                <a href="/Login">đăng nhập tại đây</a>
             </div>
         </form:form>
     </div>

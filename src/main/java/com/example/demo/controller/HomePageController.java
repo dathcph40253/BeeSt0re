@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.List;
 
 @Controller
-@RequestMapping("/BeeStore")
 public class HomePageController {
     private final ProductDetailService productDetailService;
     private final ProductService productService;

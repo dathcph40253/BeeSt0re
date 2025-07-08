@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/BeeStore")
 public class MaterialController {
 
     @Autowired
@@ -31,7 +30,7 @@ public class MaterialController {
             material.setDelete(true);
             materialRepo.save(material);
         }
-        return "redirect:/BeeStore/Material";
+        return "redirect:/Material";
     }
     @PostMapping("/Material/add")
     public String addMaterial(@RequestParam String code,
@@ -42,7 +41,7 @@ public class MaterialController {
         if(!materials.isEmpty()){
             redirectAttributes.addFlashAttribute("message","bị trùng");
             redirectAttributes.addFlashAttribute("messageType", "danger");
-            return "redirect:/BeeStore/Material";
+            return "redirect:/Material";
         }
         try{
             Material material = Material.builder().
@@ -57,7 +56,7 @@ public class MaterialController {
             redirectAttributes.addFlashAttribute("message", "thêm thất bại");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/BeeStore/Material";
+        return "redirect:/Material";
     }
     @PostMapping("/Material/update")
     public String updateMaterial(@ModelAttribute Material material, RedirectAttributes redirectAttributes){
@@ -74,7 +73,7 @@ public class MaterialController {
             redirectAttributes.addFlashAttribute("message", "sửa thất bại");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/BeeStore/Material";
+        return "redirect:/Material";
     }
     @GetMapping("/Material/search")
     public String searchMaterial(@RequestParam(name = "id") String id, Model model){

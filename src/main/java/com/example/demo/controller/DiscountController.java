@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/BeeStore")
 public class DiscountController {
     @Autowired
     private DiscountRepo discountRepo;
@@ -29,7 +28,7 @@ public class DiscountController {
             discounts.setDelete(true);
             discountRepo.save(discounts);
         }
-        return "redirect:/BeeStore/Discount";
+        return "redirect:/Discount";
     }
     @GetMapping("/Discount/search")
     public String search(@RequestParam(name = "id") String id, Model model) {

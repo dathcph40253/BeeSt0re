@@ -13,7 +13,7 @@
     <jsp:include page="admin/layout/header.jsp"/>
     <h2 class="mb-4">Quản Lý Kích Thước</h2>
     <div class="d-flex justify-content-between mb-3">
-        <a class="btn btn-secondary" href="/BeeStore/Home">🏠 Trang chủ</a>
+        <a class="btn btn-secondary" href="/Home">🏠 Trang chủ</a>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addSizeModal">
             ➕ Thêm Kích Thước
         </button>
@@ -26,7 +26,7 @@
         </div>
     </c:if>
 
-    <form class="row g-3 mb-4" method="get" action="/BeeStore/Size/search">
+    <form class="row g-3 mb-4" method="get" action="/Size/search">
         <div class="col-auto">
             <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
         </div>
@@ -34,7 +34,7 @@
             <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
         </div>
         <div class="col-auto">
-            <a href="/BeeStore/Size" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+            <a href="/Size" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
 
@@ -55,11 +55,11 @@
                     <td>${size.code}</td>
                     <td>${size.name}</td>
                     <td>
-                        <a href="/BeeStore/Size/update"
+                        <a href="/Size/update"
                            class="btn btn-warning btn-sm"
                            data-bs-toggle="modal"
                            data-bs-target="#editSizeModal${size.id}">Sửa</a>
-                        <a href="/BeeStore/Size/delete?id=${size.id}"
+                        <a href="/Size/delete?id=${size.id}"
                            class="btn btn-danger btn-sm"
                            onclick="return confirm('Bạn có muốn xóa kích thước này không?')">Xóa</a>
                     </td>
@@ -69,7 +69,7 @@
                 <div class="modal fade" id="editSizeModal${size.id}" tabindex="-1" aria-labelledby="editSizeModalLabel${size.id}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form method="post" action="/BeeStore/Size/update">
+                            <form method="post" action="/Size/update">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editSizeModalLabel${size.id}">Sửa Kích Thước</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -107,7 +107,7 @@
                 <h5 class="modal-title" id="addSizeModalLabel">Thêm Kích Thước Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="post" action="/BeeStore/Size/add">
+            <form method="post" action="/Size/add">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="sizeCode" class="form-label">Mã Kích Thước <span class="text-danger">*</span></label>

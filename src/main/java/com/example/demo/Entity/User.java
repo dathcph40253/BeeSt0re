@@ -66,12 +66,6 @@ public class User {
     }
 
 
-
-    // Thêm method để tương thích với view cũ
-    public String getHoTen() {
-        return this.email; // Tạm thời trả về email
-    }
-
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;

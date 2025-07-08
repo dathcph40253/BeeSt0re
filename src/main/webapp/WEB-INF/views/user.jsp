@@ -43,7 +43,7 @@
 </c:if>
 <div class="login-box">
     <h2 class="mb-4">Đăng nhập</h2>
-    <form action="/BeeStore/Login" method="post">
+    <form action="/Login" method="post">
         <div class="mb-3 text-start">
             <label class="form-label">Tên tài khoản:</label>
             <input type="text" name="name" class="form-control"/>
@@ -55,7 +55,7 @@
         <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
         <div class="mt-3">
             Nếu bạn chưa có tài khoản,
-            <a href="/BeeStore/DangKy">đăng ký tại đây</a>
+            <a href="/DangKy">đăng ký tại đây</a>
         </div>
     </form>
 </div>

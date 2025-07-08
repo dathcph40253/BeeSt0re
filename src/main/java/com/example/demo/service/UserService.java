@@ -1,4 +1,4 @@
-package com.example.demo.service.UserService;
+package com.example.demo.service;
 
 import com.example.demo.Entity.Role;
 import com.example.demo.Entity.User;
@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {

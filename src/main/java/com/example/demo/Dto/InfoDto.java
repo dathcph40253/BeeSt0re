@@ -16,4 +16,7 @@ public class InfoDto {
 
     @NotBlank(message = "không được để trống số điện thoại")
     private String phoneNumber;
+
+    @NotBlank(message = "không được để trống địa chỉ")
+    private String address;
 }

@@ -15,7 +15,7 @@ public class PasswordEncodeUtil {
 
     public static void main(String[] args) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String rawPassword = "password123";//tự chỉnh theo ý thích
+        String rawPassword = "123123";//tự chỉnh theo ý thích
         String encodedPassword = passwordEncoder.encode(rawPassword);
         System.out.println(encodedPassword);
     }

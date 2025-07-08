@@ -68,7 +68,7 @@
 <body>
 <div class="form-container">
     <h2>Cập nhật thông tin</h2>
-    <form:form action="${pageContext.request.contextPath}/BeeStore/postFile" method="post" modelAttribute="InfoDto">
+    <form:form action="${pageContext.request.contextPath}/postFile" method="post" modelAttribute="InfoDto">
         <!-- Họ và tên -->
         <div class="mb-3">
             <label for="name" class="form-label">Họ và tên</label>
@@ -82,7 +82,12 @@
             <form:input path="phoneNumber" type="text" cssClass="form-control" id="phoneNumber"/>
             <form:errors path="phoneNumber" cssClass="text-danger"/>
         </div>
-
+        <!-- địa chỉ -->
+        <div class="mb-3">
+            <label for="address" class="form-label">Địa chỉ</label>
+            <form:input path="address" type="text" cssClass="form-control" id="address"/>
+            <form:errors path="address" cssClass="address"/>
+        </div>
         <!-- Submit -->
         <button type="submit">Xác nhận</button>
     </form:form>

@@ -29,7 +29,7 @@
         <c:forEach items="${products}" var="product">
             <div class="item_products_home">
                 <div class="image_home_item">
-                    <a href="/BeeStore/product/${product.id}">
+                    <a href="/product/${product.id}">
                         <img src="/images/product/${product.productDetailList[0].imageList[0].link}"
                              alt="image product" class="image_products_home">
                     </a>

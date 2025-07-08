@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/BeeStore")
 public class CategoryController {
 
     @Autowired
@@ -32,7 +31,7 @@ public class CategoryController {
             category.setDelete(true);
             categoryRepo.save(category);
         }
-        return "redirect:/BeeStore/Category";
+        return "redirect:/Category";
     }
     @PostMapping("/Category/add")
     public String addCategory(@RequestParam String code,
@@ -43,7 +42,7 @@ public class CategoryController {
         if(!categories.isEmpty()) {
             redirectAttributes.addFlashAttribute("message", "Bị trùng");
             redirectAttributes.addFlashAttribute("messageType", "danger");
-            return "redirect:/BeeStore/Category";
+            return "redirect:/Category";
         }try{
             Category category = Category.builder()
                     .code(code)
@@ -57,7 +56,7 @@ public class CategoryController {
             redirectAttributes.addFlashAttribute("message", "thêm thất bại");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/BeeStore/Category";
+        return "redirect:/Category";
     }
     @PostMapping("/Category/update")
     public String updateCategory(@ModelAttribute Category category, RedirectAttributes redirectAttributes) {
@@ -74,7 +73,7 @@ public class CategoryController {
             redirectAttributes.addFlashAttribute("message" , "sửa thất bại");
             redirectAttributes.addFlashAttribute("messageType", "error");
         }
-        return "redirect:/BeeStore/Category";
+        return "redirect:/Category";
     }
     @GetMapping("/Category/search")
     public String searchCategory(@RequestParam(name = "id") String id, Model model) {

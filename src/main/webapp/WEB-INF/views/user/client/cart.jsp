@@ -72,7 +72,7 @@
             </li>
         </ul>
         <button class="btn_continue">
-            <a href="/BeeStore" class="text_btn_continue">Tiếp tục xem sản phẩm</a>
+            <a href="/Home" class="text_btn_continue">Tiếp tục xem sản phẩm</a>
         </button>
     </div>
 </div>

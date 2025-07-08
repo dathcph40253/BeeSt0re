@@ -13,7 +13,7 @@
     <jsp:include page="admin/layout/header.jsp"/>
     <h2 class="mb-4">Quản lý Loại Sản Phẩm</h2>
     <div class="d-flex justify-content-between mb-3">
-        <a class="btn btn-secondary" href="/BeeStore/Home">🏠 Trang chủ</a>
+        <a class="btn btn-secondary" href="/Home">🏠 Trang chủ</a>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
             ➕ Thêm Loại SP
         </button>
@@ -26,7 +26,7 @@
         </div>
     </c:if>
 
-    <form class="row g-3 mb-4" method="get" action="/BeeStore/Category/search">
+    <form class="row g-3 mb-4" method="get" action="/Category/search">
         <div class="col-auto">
             <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
         </div>
@@ -34,7 +34,7 @@
             <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
         </div>
         <div class="col-auto">
-            <a href="/BeeStore/Category" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+            <a href="/Category" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
 
@@ -61,14 +61,14 @@
                         </span>
                     </td>
                     <td>
-                        <a href="/BeeStore/Category/update"
+                        <a href="/Category/update"
                            class="btn btn-warning btn-sm"
                            role="button"
                            data-bs-toggle="modal"
                            data-bs-target="#editCategoryModal${category.id}">
                             Sửa
                         </a>
-                        <a href="/BeeStore/Category/delete?id=${category.id}"
+                        <a href="/Category/delete?id=${category.id}"
                            class="btn btn-sm btn-danger"
                            onclick="return confirm('Bạn có muốn xóa loại sản phẩm này không?')">
                             Xóa
@@ -80,7 +80,7 @@
                 <div class="modal fade" id="editCategoryModal${category.id}" tabindex="-1" aria-labelledby="editCategoryModalLabel${category.id}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form method="post" action="/BeeStore/Category/update">
+                            <form method="post" action="/Category/update">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editCategoryModalLabel${category.id}">Sửa Loại Sản Phẩm</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -128,7 +128,7 @@
                 <h5 class="modal-title" id="addCategoryModalLabel">Thêm Loại SP Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <form method="post" action="/BeeStore/Category/add">
+            <form method="post" action="/Category/add">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label class="form-label">Mã Danh Mục <span class="text-danger">*</span></label>

@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@RequestMapping("/BeeStore")
 public class SizeController {
 
     @Autowired
@@ -34,7 +33,7 @@ public class SizeController {
             size.setDelete(true);
             sizeRepo.save(size);
         }
-        return "redirect:/BeeStore/Size";
+        return "redirect:/Size";
     }
     @PostMapping("/Size/add")
     public String SizeAdd(@RequestParam String name,
@@ -44,7 +43,7 @@ public class SizeController {
         if(!sizes.isEmpty()) {
             redirectAttributes.addFlashAttribute("message","bị trùng");
             redirectAttributes.addFlashAttribute("messageType","danger");
-            return "redirect:/BeeStore/Size";
+            return "redirect:/Size";
         }
         try{
             Size size = Size.builder()
@@ -59,7 +58,7 @@ public class SizeController {
             redirectAttributes.addFlashAttribute("message","thêm thất bại");
             redirectAttributes.addFlashAttribute("messageType","error");
         }
-        return "redirect:/BeeStore/Size";
+        return "redirect:/Size";
     }
     @PostMapping("/Size/update")
     public String updateAdd(@ModelAttribute Size size, RedirectAttributes redirectAttributes) {
@@ -75,7 +74,7 @@ public class SizeController {
             redirectAttributes.addFlashAttribute("message","sửa thất bại");
             redirectAttributes.addFlashAttribute("messageType","error");
         }
-        return "redirect:/BeeStore/Size";
+        return "redirect:/Size";
     }
     @GetMapping("/Size/search")
     public String searchSize(@RequestParam(name = "id") String id, Model model) {

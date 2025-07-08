@@ -4,7 +4,7 @@ import com.example.demo.Dto.LoginDto;
 import com.example.demo.Entity.User;
 import com.example.demo.repository.CustomerRepo;
 import com.example.demo.repository.UserRepone;
-import com.example.demo.service.CustomerService.CustomerService;
+import com.example.demo.service.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.*;
 
 @Controller
-@RequestMapping("/BeeStore")
 public class UserController {
 
     @Autowired
@@ -23,10 +22,6 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    @Autowired
-    private CustomerRepo customerRepo;
-    @Autowired
-    private CustomerService customerService;
 
     @GetMapping("/Home")
     public String home() {
@@ -51,16 +46,16 @@ public class UserController {
                     session.setAttribute("user", user);
                     session.setAttribute("customer", user.getCustomer());
                     re.addFlashAttribute("message", "Đăng nhập thành công " + user.getEmail());
-                    return "redirect:/BeeStore/Home?User=" + user.getId();
+                    return "redirect:/Home?User=" + user.getId();
                 } else {
                     re.addFlashAttribute("message", "Tài khoản đã bị khóa");
-                    return "redirect:/BeeStore/Login";
+                    return "redirect:/Login";
                 }
             }
         }
 
         re.addFlashAttribute("message", "Email hoặc mật khẩu không đúng");
-        return "redirect:/BeeStore/Login";
+        return "redirect:/Login";
     }
     
     @GetMapping("/Logout")
@@ -72,7 +67,7 @@ public class UserController {
         // Thêm thông báo đăng xuất thành công
         redirectAttributes.addFlashAttribute("message", "Đăng xuất thành công");
         // Chuyển hướng về trang home thay vì trang đăng nhập
-        return "redirect:/BeeStore/Home";
+        return "redirect:/Home";
     }
 
 }

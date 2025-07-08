@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -30,5 +32,6 @@ public class Customer {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-
+    @OneToMany(mappedBy = "customer")
+    private List<AddressShipping> addressShipping;
 }

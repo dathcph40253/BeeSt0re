@@ -14,7 +14,7 @@
     <jsp:include page="admin/layout/header.jsp"/>
     <h2 class="mb-4">Quản Lý Chất Liệu</h2>
     <div class="d-flex justify-content-between mb-3">
-        <a class="btn btn-secondary" href="/BeeStore/Home">🏠 Trang chủ</a>
+        <a class="btn btn-secondary" href=/Home">🏠 Trang chủ</a>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addMaterialModal">
             ➕ Thêm Chất Liệu
         </button>
@@ -28,7 +28,7 @@
         </div>
     </c:if>
 
-    <form class="row g-3 mb-4" method="get" action="/BeeStore/Material/search">
+    <form class="row g-3 mb-4" method="get" action=/Material/search">
         <div class="col-auto">
             <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
         </div>
@@ -36,7 +36,7 @@
             <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
         </div>
         <div class="col-auto">
-            <a href="/BeeStore/Material" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+            <a href=/Material" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
 
@@ -63,14 +63,14 @@
                         </span>
                     </td>
                     <td>
-                        <a href="/BeeStore/Material/update"
+                        <a href=/Material/update"
                            class="btn btn-warning btn-sm"
                            role="button"
                            data-bs-toggle="modal"
                            data-bs-target="#editMaterialModal${material.id}">
                             Sửa
                         </a>
-                        <a href="/BeeStore/Material/delete?id=${material.id}"
+                        <a href=/Material/delete?id=${material.id}"
                            class="btn btn-sm btn-danger" onclick="return confirm('bạn có muốn xóa chất liệu này ko?')"
                         >Xóa</a>
                     </td>
@@ -80,7 +80,7 @@
                 <div class="modal fade" id="editMaterialModal${material.id}" tabindex="-1" aria-labelledby="editMaterialModalLabel${material.id}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form method="post" action="/BeeStore/Material/update">
+                            <form method="post" action=/Material/update">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editMaterialModalLabel${material.id}">Sửa Chất Liệu</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -129,7 +129,7 @@
                 <h5 class="modal-title" id="addMaterialModalLabel">Thêm Chất Liệu Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="post" action="/BeeStore/Material/add">
+            <form method="post" action=/Material/add">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="materialCode" class="form-label">Mã Chất Liệu <span class="text-danger">*</span></label>

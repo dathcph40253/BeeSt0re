@@ -10,9 +10,9 @@
 
 <div class="container mt-5">
     <h2 class="mb-4">Quản Lý Discount</h2>
-    <a class="btn btn-secondary mb-3" href="/BeeStore/Home">🏠 Trang chủ</a>
+    <a class="btn btn-secondary mb-3" href="/Home">🏠 Trang chủ</a>
 
-    <form class="row g-3 mb-4" method="get" action="/BeeStore/Discount/search">
+    <form class="row g-3 mb-4" method="get" action="/Discount/search">
         <div class="col-auto">
             <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
         </div>
@@ -20,7 +20,7 @@
             <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
         </div>
         <div class="col-auto">
-            <a href="/BeeStore/Discount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+            <a href="/Discount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
 
@@ -60,7 +60,7 @@
                     <td>${discount.type}</td>
 
                     <td>
-                        <a href="/BeeStore/Color/delete?id=${discount.id}"
+                        <a href="/Color/delete?id=${discount.id}"
                            class="btn btn-sm btn-danger" onclick="return confirm('bạn có muốn xóa thương hiệu này ko?')"
                         >Xóa</a>
                     </td>

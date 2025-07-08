@@ -14,7 +14,7 @@
     <jsp:include page="admin/layout/header.jsp"/>
     <h2 class="mb-4">Quản lý Thương Hiệu</h2>
     <div class="d-flex justify-content-between mb-3">
-        <a class="btn btn-secondary" href="/BeeStore/Home">🏠 Trang chủ</a>
+        <a class="btn btn-secondary" href="/Home">🏠 Trang chủ</a>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addBrandModal">
             ➕ Thêm Thương Hiệu
         </button>
@@ -27,7 +27,7 @@
         </div>
     </c:if>
 
-    <form class="row g-3 mb-4" method="get" action="/BeeStore/Brand/search">
+    <form class="row g-3 mb-4" method="get" action="/Brand/search">
         <div class="col-auto">
             <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
         </div>
@@ -35,7 +35,7 @@
             <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
         </div>
         <div class="col-auto">
-            <a href="/BeeStore/Brand" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+            <a href="/Brand" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
 
@@ -62,14 +62,14 @@
                         </span>
                         </td>
                         <td>
-                            <a href="/BeeStore/Brand/update"
+                            <a href="/Brand/update"
                                class="btn btn-warning btn-sm"
                                role="button"
                                data-bs-toggle="modal"
                                data-bs-target="#editBrandModal${brand.id}">
                                 Sửa
                             </a>
-                            <a href="/BeeStore/Brand/delete?id=${brand.id}"
+                            <a href="/Brand/delete?id=${brand.id}"
                                class="btn btn-sm btn-danger" onclick="return confirm('bạn có muốn xóa thương hiệu này ko?')"
                             >Xóa</a>
                         </td>
@@ -79,7 +79,7 @@
                 <div class="modal fade" id="editBrandModal${brand.id}" tabindex="-1" aria-labelledby="editBrandModalLabel${brand.id}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form method="post" action="/BeeStore/Brand/update">
+                            <form method="post" action="/Brand/update">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editBrandModalLabel${brand.id}">Sửa Thương Hiệu</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
@@ -128,7 +128,7 @@
                 <h5 class="modal-title" id="addBrandModalLabel">Thêm Thương Hiệu Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form method="post" action="/BeeStore/Brand/add">
+            <form method="post" action="/Brand/add">
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="brandCode" class="form-label">Mã Thương Hiệu <span class="text-danger">*</span></label>

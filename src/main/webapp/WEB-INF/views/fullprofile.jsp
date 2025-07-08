@@ -32,6 +32,9 @@
                 <li class="list-group-item">
                     <strong>Số điện thoại:</strong> <span class="text-muted"><c:out value="${customer.phoneNumber}"/></span>
                 </li>
+                <li class="list-group-item">
+                    <strong>Địa chỉ:</strong> <span class="text-muted"><c:out value="${address.address}"/></span>
+                </li>
             </ul>
         </div>
         <div class="card-footer text-center">
