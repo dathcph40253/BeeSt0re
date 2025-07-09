@@ -86,7 +86,7 @@
         <div class="mb-3">
             <label for="address" class="form-label">Địa chỉ</label>
             <form:input path="address" type="text" cssClass="form-control" id="address"/>
-            <form:errors path="address" cssClass="address"/>
+            <form:errors path="address" cssClass="text-danger"/>
         </div>
         <!-- Submit -->
         <button type="submit">Xác nhận</button>

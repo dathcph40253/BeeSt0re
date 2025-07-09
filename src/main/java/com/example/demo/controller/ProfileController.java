@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.Dto.InfoDto;
 import com.example.demo.Entity.AddressShipping;
 import com.example.demo.Entity.Customer;
+import com.example.demo.Entity.User;
 import com.example.demo.service.AddressService;
 import com.example.demo.service.CustomerService;
 import jakarta.servlet.http.HttpSession;
@@ -36,7 +37,19 @@ public class ProfileController {
         if (customer == null) {
             return "redirect:/Home";
         }
+
+        // Lấy thông tin User để có email đăng nhập
+        User user = (User) session.getAttribute("user");
+
         Customer customer1 = customerService.findCustomerById(customer.getId());
+
+        // Nếu customer chưa có email, lấy email từ User account
+        if (customer1.getEmail() == null && user != null && user.getEmail() != null) {
+            customer1.setEmail(user.getEmail());
+            customer1 = customerService.saveCustomer(customer1);
+            session.setAttribute("customer", customer1); // Cập nhật session
+        }
+
         List<AddressShipping> address = customer1.getAddressShipping();
         if( customer1.getPhoneNumber() == null || customer1.getName() == null
             || address == null || address.isEmpty() ) {
@@ -53,15 +66,22 @@ public class ProfileController {
         model.addAttribute("address", address.get(0));
         return "fullprofile";
     }
-    @PostMapping("/fullProFile")
+    @PostMapping("/postFile")
     public String postFile(@ModelAttribute("InfoDto") @Valid InfoDto infoDto,BindingResult result,HttpSession session, RedirectAttributes redirectAttributes, Model model) {
+        System.out.println("=== DEBUG POSTFILE ===");
+        System.out.println("Name: " + infoDto.getName());
+        System.out.println("Phone: " + infoDto.getPhoneNumber());
+        System.out.println("Address: " + infoDto.getAddress());
+        System.out.println("Has errors: " + result.hasErrors());
+
         if(result.hasErrors()){
+            System.out.println("Validation errors: " + result.getAllErrors());
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.InfoDto", result);
             redirectAttributes.addFlashAttribute("InfoDto", infoDto);
             return "profile";
         }
         Customer customer = (Customer) session.getAttribute("customer");
-        if (customer == null) { return "redirect:/BeeStore/Home"; }
+        if (customer == null) { return "redirect:/Home"; }
         AddressShipping address = new AddressShipping();
         address.setAddress(infoDto.getAddress());
         customer.setName(infoDto.getName());

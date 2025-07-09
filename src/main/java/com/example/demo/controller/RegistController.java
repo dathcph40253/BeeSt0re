@@ -8,7 +8,7 @@ import com.example.demo.service.CustomerService;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,9 +24,6 @@ public class RegistController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private CustomerService customerService;
@@ -64,14 +61,13 @@ public class RegistController {
             customer.setEmail(registDto.getEmail());
             customer.setCode(customerService.generateCustomerCode());
             Customer newCustomer = customerService.saveCustomer(customer);
-            String passWord = passwordEncoder.encode(registDto.getPassword());
             if(repone.findByEmail(registDto.getEmail()).isPresent()) {
                 redirectAttributes.addFlashAttribute("message", "bị trùng email");
                 return "redirect:/DangKy";
             }
             user.setEmail(registDto.getEmail());
             user.setCustomer(newCustomer);
-            user.setPassword(passWord);
+            user.setPassword(registDto.getPassword()); // Để UserService tự mã hóa
             user.setCode(userService.generateAccountCode());
             // Mặc định trạng thái là true nếu không được chọn
             if (user.getIsNonLocked() == null) {
