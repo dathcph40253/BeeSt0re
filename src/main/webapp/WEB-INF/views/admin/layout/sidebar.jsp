@@ -11,7 +11,6 @@
             <li><a href="/Home"><i class="fas fa-home"></i><span>Trang chủ</span></a></li>
             <li><a href="/product"><i class="fas fa-box"></i><span>Sản phẩm</span></a></li>
             <li><a href="/admin/order"><i class="fas fa-shopping-cart"></i><span>Đơn hàng</span></a></li>
-            <li><a href="/profile"><i class="fas fa-users"></i><span>Khách hàng</span></a></li>
 
             <!-- Chỉ hiện với EMPLOYEE hoặc ADMIN -->
             <c:if test="${user.role.name == 'ROLE_EMPLOYEE' || user.role.name == 'ROLE_ADMIN'}">

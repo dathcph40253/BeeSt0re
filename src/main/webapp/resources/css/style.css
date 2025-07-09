@@ -331,3 +331,65 @@ th {
         grid-template-columns: 1fr;
     }
 }
+.menu {
+    position: absolute;
+    top: 40px;
+    right: 0;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    border-radius: 6px;
+    padding: 10px 0;
+    z-index: 999;
+    min-width: 180px;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.menu ul li {
+    padding: 10px 16px;
+    transition: background 0.2s;
+}
+
+.menu ul li:hover {
+    background-color: #f2f2f2;
+}
+
+.menu ul li a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+/* Lớp để ẩn menu */
+.hidden {
+    display: none;
+}
+
+/* Hiệu ứng nhẹ khi hiển thị menu */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.user .icon {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* khoảng cách giữa icon và email */
+}
+
+.user .icon span {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #2c3e50;
+    white-space: nowrap; /* tránh bị xuống dòng */
+}

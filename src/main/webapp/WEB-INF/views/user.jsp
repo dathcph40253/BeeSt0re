@@ -35,6 +35,7 @@
         }
     </style>
 </head>
+
 <body>
 <c:if test="${not empty message}">
     <div id="message" class="message-top-right">
