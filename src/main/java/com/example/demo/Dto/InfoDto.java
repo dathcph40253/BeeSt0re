@@ -11,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 public class InfoDto {
 
+
     @NotBlank(message = "không được để trống tên")
     private String name;
 

@@ -37,13 +37,54 @@
                 </li>
             </ul>
         </div>
-        <div class="card-footer text-center">
+        <div class="card-footer text-center d-flex justify-content-between">
             <a href="Home" class="btn btn-outline-primary">← Trở về trang chủ</a>
+            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Cập nhật thông tin</button>
         </div>
     </div>
 </div>
 
-<!-- Bootstrap JS (tuỳ chọn) -->
+<!-- Modal cập nhật thông tin cá nhân -->
+<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" action="/fullProFile/update">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="updateProfileModalLabel">Cập nhật thông tin</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="mb-3">
+                        <label class="form-label">Họ tên</label>
+                        <input type="text" class="form-control" name="name" value="${infoDto.name}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" name="email" value="${infoDto.email}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" name="phoneNumber" value="${infoDto.phoneNumber}" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Địa chỉ</label>
+                        <input type="text" class="form-control" name="address" value="${infoDto.address}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary">Lưu thay đổi</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

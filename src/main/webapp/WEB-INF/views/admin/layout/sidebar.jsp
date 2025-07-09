@@ -14,17 +14,17 @@
 
             <!-- Chỉ hiện với EMPLOYEE hoặc ADMIN -->
             <c:if test="${user.role.name == 'ROLE_EMPLOYEE' || user.role.name == 'ROLE_ADMIN'}">
-                <li><a href="/Category"><i class="fas fa-tags"></i><span>Danh mục</span></a></li>
-                <li><a href="/Color"><i class="fas fa-tags"></i><span>Màu sắc</span></a></li>
-                <li><a href="/Size"><i class="fas fa-tags"></i><span>Kích thước</span></a></li>
-                <li><a href="/Brand"><i class="fas fa-tags"></i><span>Thương hiệu</span></a></li>
-                <li><a href="/Material"><i class="fas fa-tags"></i><span>Chất liệu</span></a></li>
+                <li><a href="/Category"><i class="fas fa-tags"></i><span>Quản lí danh mục</span></a></li>
+                <li><a href="/Color"><i class="fas fa-tags"></i><span>Quản lí màu sắc</span></a></li>
+                <li><a href="/Size"><i class="fas fa-tags"></i><span>quản lí kích thước</span></a></li>
+                <li><a href="/Brand"><i class="fas fa-tags"></i><span>quản lí thương hiệu</span></a></li>
+                <li><a href="/Material"><i class="fas fa-tags"></i><span>quản lí chất liệu</span></a></li>
             </c:if>
 
             <!-- Chỉ hiện với ADMIN -->
             <c:if test="${user.role.name == 'ROLE_ADMIN'}">
-                <li><a href="/admin/User"><i class="fas fa-tags"></i><span>Tài khoản</span></a></li>
-                <li><a href="/report"><i class="fas fa-chart-bar"></i><span>Báo cáo</span></a></li>
+                <li><a href="/admin/account"><i class="fas fa-tags"></i><span>Tài khoản</span></a></li>
+                <li><a href="/admin/report"><i class="fas fa-chart-bar"></i><span>Báo cáo</span></a></li>
             </c:if>
         </ul>
     </nav>

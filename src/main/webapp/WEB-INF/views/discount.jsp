@@ -10,8 +10,6 @@
 
 <div class="container mt-5">
     <h2 class="mb-4">Quản Lý Discount</h2>
-    <a class="btn btn-secondary mb-3" href="/Home">🏠 Trang chủ</a>
-
     <form class="row g-3 mb-4" method="get" action="/Discount/search">
         <div class="col-auto">
             <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">

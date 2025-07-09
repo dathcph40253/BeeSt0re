@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin")
 public class QuanLiNguoiDung {
 
     @Autowired
     private UserRepone xyz;
 
-    @GetMapping("/QuanLiNguoiDung")
+    @GetMapping("/account")
     public String QuanLiNguoiDung(@RequestParam(name = "id", required = false) List<Long> keyword, Model model) {
         List<User> users;
         if(keyword != null && !keyword.isEmpty()) {

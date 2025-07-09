@@ -52,7 +52,7 @@ public class ProfileController {
         model.addAttribute("address", address.get(0));
         return "fullprofile";
     }
-    @PostMapping("/postFile")
+    @PostMapping("/fullProFile")
     public String postFile(@ModelAttribute("InfoDto") @Valid InfoDto infoDto,BindingResult result,HttpSession session, RedirectAttributes redirectAttributes, Model model) {
         if(result.hasErrors()){
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.InfoDto", result);
@@ -74,5 +74,10 @@ public class ProfileController {
         redirectAttributes.addFlashAttribute("message", "vui long dien du tt");
         return "redirect:profile";
     }
-
+    @PostMapping("/fullProFile/update")
+    public String updateProFile(@ModelAttribute InfoDto infoDto, Model model){
+        customerService.updateCustomer(infoDto);
+        model.addAttribute("InfoDto", infoDto);
+        return "fullprofile";
+    }
 }

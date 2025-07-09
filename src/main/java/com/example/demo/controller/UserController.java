@@ -46,7 +46,7 @@ public class UserController {
                     session.setAttribute("user", user);
                     session.setAttribute("customer", user.getCustomer());
                     re.addFlashAttribute("message", "Đăng nhập thành công " + user.getEmail());
-                    return "redirect:/Home?User=" + user.getId();
+                    return "redirect:/Home?Id=" + user.getId();
                 } else {
                     re.addFlashAttribute("message", "Tài khoản đã bị khóa");
                     return "redirect:/Login";

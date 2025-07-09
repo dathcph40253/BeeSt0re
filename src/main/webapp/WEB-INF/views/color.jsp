@@ -15,7 +15,6 @@
     <jsp:include page="admin/layout/header.jsp"/>
     <h2 class="mb-4">Quản Lý Màu Sắc</h2>
     <div class="d-flex justify-content-between mb-3">
-        <a class="btn btn-secondary" href="/Home">🏠 Trang chủ</a>
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addColorModal">
             ➕ Thêm Màu Sắc
         </button>

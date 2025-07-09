@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
+import com.example.demo.Dto.InfoDto;
+import com.example.demo.Entity.AddressShipping;
 import com.example.demo.Entity.Customer;
 import com.example.demo.repository.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -31,5 +34,17 @@ public class CustomerService {
             }
         }
         return String.format("KH%04d", nextNumber);
+    }
+    public void updateCustomer(InfoDto dto){
+        AddressShipping address = new AddressShipping();
+        address.setAddress(dto.getAddress());
+        Customer customer = repo.findByName(dto.getName());
+        customer.setName(dto.getName());
+        address.setCustomer(customer);
+        customer.setPhoneNumber(dto.getPhoneNumber());
+        List<AddressShipping> addressList = new ArrayList<>();
+        addressList.add(address);
+        customer.setAddressShipping(addressList);
+        repo.save(customer);
     }
 }

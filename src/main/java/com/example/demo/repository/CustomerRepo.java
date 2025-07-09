@@ -11,4 +11,5 @@ import java.util.List;
 public interface CustomerRepo extends JpaRepository<Customer,Long> {
     List<Customer> findByCodeStartingWithOrderByCodeDesc(String code);
 
+    Customer findByName(String name);
 }
