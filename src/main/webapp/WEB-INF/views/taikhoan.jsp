@@ -19,6 +19,11 @@
         <div class="col-auto">
             <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
         </div>
+        <div class="col-auto">
+            <a href="/Home" class="btn btn-outline-primary">
+                ← Trở về trang chủ
+            </a>
+        </div>
     </form>
 
     <div class="table-responsive">

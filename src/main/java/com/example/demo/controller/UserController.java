@@ -71,7 +71,7 @@ public class UserController {
         return "redirect:/Home";
     }
     @GetMapping("/search")
-    public String searchName(@RequestParam("keyword") String keyword, RedirectAttributes redirect) {
+    public String searchName(@RequestParam("keyword") String keyword) {
         String newKeyword = keyword.toLowerCase();
         switch (newKeyword) {
             case "home":
@@ -95,7 +95,6 @@ public class UserController {
             case "report":
                 return "redirect:/admin/report";
             default:
-                redirect.addFlashAttribute("error", "không tìm thấy tên");
                 return "home";
         }
     }
