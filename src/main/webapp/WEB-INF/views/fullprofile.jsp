@@ -24,7 +24,17 @@
                     <strong>Mã khách hàng:</strong> <span class="text-muted"><c:out value="${customer.code}"/></span>
                 </li>
                 <li class="list-group-item">
-                    <strong>Email khách hàng:</strong> <span class="text-muted"><c:out value="${customer.email}"/></span>
+                    <strong>Email khách hàng:</strong>
+                    <span class="text-muted">
+                        <c:choose>
+                            <c:when test="${not empty customer.email}">
+                                <c:out value="${customer.email}"/>
+                            </c:when>
+                            <c:otherwise>
+                                <em>Chưa cập nhật</em>
+                            </c:otherwise>
+                        </c:choose>
+                    </span>
                 </li>
                 <li class="list-group-item">
                     <strong>Tên khách hàng:</strong> <span class="text-muted"><c:out value="${customer.name}"/></span>
@@ -37,42 +47,47 @@
                 </li>
             </ul>
         </div>
-        <div class="card-footer text-center d-flex justify-content-between">
-            <a href="Home" class="btn btn-outline-primary">← Trở về trang chủ</a>
-            <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateProfileModal">Cập nhật thông tin</button>
+        <div class="card-footer text-center">
+            <a href="Home" class="btn btn-outline-primary me-2">← Trở về trang chủ</a>
+            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+                <i class="fas fa-edit"></i> Sửa thông tin
+            </button>
         </div>
     </div>
 </div>
 
-<!-- Modal cập nhật thông tin cá nhân -->
-<div class="modal fade" id="updateProfileModal" tabindex="-1" aria-labelledby="updateProfileModalLabel" aria-hidden="true">
+<!-- Modal sửa thông tin -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" action="/fullProFile/update">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="updateProfileModalLabel">Cập nhật thông tin</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Sửa thông tin cá nhân</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="${pageContext.request.contextPath}/updateProfile" method="post">
                 <div class="modal-body">
-
+                    <!-- Email -->
                     <div class="mb-3">
-                        <label class="form-label">Họ tên</label>
-                        <input type="text" class="form-control" name="name" value="${infoDto.name}" required>
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" value="${customer.email}" placeholder="Nhập email của bạn">
                     </div>
 
+                    <!-- Tên khách hàng -->
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" name="email" value="${infoDto.email}" required>
+                        <label for="editName" class="form-label">Tên khách hàng</label>
+                        <input type="text" class="form-control" id="editName" name="name" value="${customer.name}" required>
                     </div>
 
+                    <!-- Số điện thoại -->
                     <div class="mb-3">
-                        <label class="form-label">Số điện thoại</label>
-                        <input type="text" class="form-control" name="phoneNumber" value="${infoDto.phoneNumber}" required>
+                        <label for="editPhone" class="form-label">Số điện thoại</label>
+                        <input type="text" class="form-control" id="editPhone" name="phoneNumber" value="${customer.phoneNumber}" required>
                     </div>
 
+                    <!-- Địa chỉ -->
                     <div class="mb-3">
-                        <label class="form-label">Địa chỉ</label>
-                        <input type="text" class="form-control" name="address" value="${infoDto.address}">
+                        <label for="editAddress" class="form-label">Địa chỉ</label>
+                        <input type="text" class="form-control" id="editAddress" name="address" value="${address.address}" required>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -83,6 +98,8 @@
         </div>
     </div>
 </div>
+
+
 
 <!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -37,8 +38,8 @@ public class ProfileController {
         }
         Customer customer1 = customerService.findCustomerById(customer.getId());
         List<AddressShipping> address = customer1.getAddressShipping();
-        if( customer1.getEmail() == null || customer1.getPhoneNumber() == null
-            || customer1.getName() == null || address == null || address.isEmpty() ) {
+        if( customer1.getPhoneNumber() == null || customer1.getName() == null
+            || address == null || address.isEmpty() ) {
             InfoDto dto  = new InfoDto();
             dto.setName(customer1.getName());
             dto.setPhoneNumber( customer1.getPhoneNumber() );
@@ -70,14 +71,56 @@ public class ProfileController {
         session.setAttribute("customer", newCustomer);
         AddressShipping newAddress = addressService.saveAddress(address);
         session.setAttribute("address", newAddress);
-        if(newCustomer.getEmail() != null || customer.getEmail() != null){ model.addAttribute("customer", newCustomer); return "fullprofile";}
-        redirectAttributes.addFlashAttribute("message", "vui long dien du tt");
+        // Kiểm tra thông tin cần thiết để chuyển sang fullprofile (không yêu cầu email)
+        if(newCustomer.getPhoneNumber() != null && newCustomer.getName() != null && newAddress != null) {
+            model.addAttribute("customer", newCustomer);
+            model.addAttribute("address", newAddress);
+            return "fullprofile";
+        }
+
+        redirectAttributes.addFlashAttribute("message", "Vui lòng điền đầy đủ thông tin");
         return "redirect:profile";
     }
-    @PostMapping("/fullProFile/update")
-    public String updateProFile(@ModelAttribute InfoDto infoDto, Model model){
-        customerService.updateCustomer(infoDto);
-        model.addAttribute("InfoDto", infoDto);
-        return "fullprofile";
+
+    @PostMapping("/updateProfile")
+    public String updateProfile(@RequestParam("email") String email,
+                               @RequestParam("name") String name,
+                               @RequestParam("phoneNumber") String phoneNumber,
+                               @RequestParam("address") String address,
+                               HttpSession session,
+                               RedirectAttributes redirectAttributes) {
+        Customer customer = (Customer) session.getAttribute("customer");
+        if (customer == null) {
+            return "redirect:/Home";
+        }
+
+        // Cập nhật thông tin customer
+        customer.setEmail(email.trim().isEmpty() ? null : email.trim());
+        customer.setName(name);
+        customer.setPhoneNumber(phoneNumber);
+        Customer updatedCustomer = customerService.saveCustomer(customer);
+
+        // Cập nhật địa chỉ
+        List<AddressShipping> addresses = updatedCustomer.getAddressShipping();
+        AddressShipping addressShipping;
+        if (addresses != null && !addresses.isEmpty()) {
+            // Cập nhật địa chỉ hiện có
+            addressShipping = addresses.get(0);
+            addressShipping.setAddress(address);
+        } else {
+            // Tạo địa chỉ mới
+            addressShipping = new AddressShipping();
+            addressShipping.setAddress(address);
+            addressShipping.setCustomer(updatedCustomer);
+        }
+        AddressShipping updatedAddress = addressService.saveAddress(addressShipping);
+
+        // Cập nhật session
+        session.setAttribute("customer", updatedCustomer);
+        session.setAttribute("address", updatedAddress);
+
+        redirectAttributes.addFlashAttribute("message", "Cập nhật thông tin thành công!");
+        return "redirect:/profile";
     }
+
 }

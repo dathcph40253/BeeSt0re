@@ -198,7 +198,7 @@
                 </tbody>
             </table>
             <div style="display: flex">
-                <a href="/BeeStore/Home" class="btn btn-info" style="margin-top:48px">Quay lại</a>
+                <a href="/Home" class="btn btn-info" style="margin-top:48px">Quay lại</a>
                 <a href="/product-detail" class="btn btn-info" style="margin-top:48px; margin-left: 30px">Trang chi tiết</a>
             </div>
         </div>
