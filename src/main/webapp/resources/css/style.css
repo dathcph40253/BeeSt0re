@@ -15,6 +15,10 @@ body, html {
 .container {
     display: flex;
     min-height: 100vh;
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
 }
 
 /* Sidebar */
@@ -195,6 +199,52 @@ body, html {
 .dashboard {
     padding: 20px;
     margin-top: 0;
+}
+
+/* Admin Tables */
+.dashboard .table-responsive {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.dashboard .table {
+    margin-bottom: 0;
+}
+
+.dashboard .table th {
+    background: #2c3e50 !important;
+    color: #fff !important;
+    border: none !important;
+    font-weight: 600;
+    padding: 15px 12px;
+}
+
+.dashboard .table td {
+    padding: 12px;
+    vertical-align: middle;
+    border-color: #e9ecef;
+}
+
+.dashboard .table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.dashboard .btn {
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+.dashboard .btn-primary {
+    background: #1abc9c;
+    border-color: #1abc9c;
+}
+
+.dashboard .btn-primary:hover {
+    background: #16a085;
+    border-color: #16a085;
 }
 
 .dashboard h1 {
