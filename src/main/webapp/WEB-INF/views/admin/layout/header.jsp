@@ -7,10 +7,11 @@
     }
 </script>
 <div class="top-bar">
-    <div class="search-box">
+    <form action="/search" method="get" class="search-box">
         <i class="fas fa-search"></i>
-        <input type="text" placeholder="Tìm kiếm...">
-    </div>
+        <input type="text" name="keyword" placeholder="Tìm kiếm..." required>
+    </form>
+
     <div class="user-info">
         <div class="notifications">
             <i class="fas fa-bell"></i>

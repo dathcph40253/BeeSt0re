@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import ch.qos.logback.core.model.Model;
 import com.example.demo.Dto.LoginDto;
 import com.example.demo.Entity.User;
 import com.example.demo.repository.CustomerRepo;
@@ -69,5 +70,32 @@ public class UserController {
         // Chuyển hướng về trang home thay vì trang đăng nhập
         return "redirect:/Home";
     }
-
+    @GetMapping("/search")
+    public String searchName(@RequestParam("keyword") String keyword) {
+        String newKeyword = keyword.toLowerCase();
+        switch (newKeyword) {
+            case "home":
+                return "redirect:/Home";
+            case "product":
+                return "redirect:/product";
+            case "order":
+                return "redirect:/admin/order";
+            case "category":
+                return "redirect:/Category";
+            case "color":
+                return "redirect:/Color";
+            case "size":
+                return "redirect:/Size";
+            case "brand":
+                return "redirect:/Brand";
+            case "material":
+                return "redirect:/Material";
+            case "account":
+                return "redirect:/admin/account";
+            case "report":
+                return "redirect:/admin/report";
+            default:
+                return "home";
+        }
+    }
 }
