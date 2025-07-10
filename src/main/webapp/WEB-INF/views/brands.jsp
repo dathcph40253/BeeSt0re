@@ -42,6 +42,7 @@
         <table class="table table-bordered table-striped table-hover align-middle">
             <thead class="table-dark">
             <tr>
+                <th scope="col">STT</th>
                 <th scope="col">ID</th>
                 <th scope="col">Mã Thương hiệu</th>
                 <th scope="col">Tên thương hiệu</th>
@@ -50,8 +51,9 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="brand" items="${brands}">
+            <c:forEach var="brand" items="${brands}" varStatus="status">
                     <tr>
+                        <td>${status.index + 1}</td>
                         <td>${brand.id}</td>
                         <td>${brand.code}</td>
                         <td>${brand.name}</td>

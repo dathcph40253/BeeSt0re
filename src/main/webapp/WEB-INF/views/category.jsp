@@ -41,6 +41,7 @@
         <table class="table table-bordered table-striped table-hover align-middle">
             <thead class="table-dark">
             <tr>
+                <th scope="col">STT</th>
                 <th scope="col">ID</th>
                 <th scope="col">Mã loại sản phẩm</th>
                 <th scope="col">Tên loại sản phẩm</th>
@@ -49,8 +50,9 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="category" items="${categories}">
+            <c:forEach var="category" items="${categories}" varStatus="status">
                 <tr>
+                    <td>${status.index + 1}</td>
                     <td>${category.id}</td>
                     <td>${category.code}</td>
                     <td>${category.name}</td>

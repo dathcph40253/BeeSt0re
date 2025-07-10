@@ -43,6 +43,7 @@
         <table class="table table-bordered table-striped table-hover align-middle">
             <thead class="table-dark">
             <tr>
+                <th scope="col">STT</th>
                 <th scope="col">ID</th>
                 <th scope="col">Mã chất liệu</th>
                 <th scope="col">Tên chất liệu</th>
@@ -51,8 +52,9 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="material" items="${materials}">
+            <c:forEach var="material" items="${materials}" varStatus="status">
                 <tr>
+                    <td>${status.index + 1}</td>
                     <td>${material.id}</td>
                     <td>${material.code}</td>
                     <td>${material.name}</td>

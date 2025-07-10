@@ -41,6 +41,7 @@
         <table class="table table-bordered table-striped table-hover align-middle">
             <thead class="table-dark">
             <tr>
+                <th>STT</th>
                 <th>ID</th>
                 <th>Mã kích thước</th>
                 <th>Tên kích thước</th>
@@ -48,8 +49,9 @@
             </tr>
             </thead>
             <tbody>
-            <c:forEach var="size" items="${sizes}">
+            <c:forEach var="size" items="${sizes}" varStatus="status">
                 <tr>
+                    <td>${status.index + 1}</td>
                     <td>${size.id}</td>
                     <td>${size.code}</td>
                     <td>${size.name}</td>

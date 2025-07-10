@@ -34,6 +34,7 @@
                 <table class="table table-bordered table-striped table-hover align-middle">
                     <thead class="table-dark">
                     <tr>
+                        <th scope="col">STT</th>
                         <th scope="col">ID</th>
                         <th scope="col">Mã tài khoản</th>
                         <th scope="col">Email</th>
@@ -43,8 +44,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="acc" items="${users}">
+                    <c:forEach var="acc" items="${users}" varStatus="status">
                         <tr>
+                            <td>${status.index + 1}</td>
                             <td>${acc.id}</td>
                             <td>${acc.code}</td>
                             <td>${acc.email}</td>

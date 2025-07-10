@@ -161,6 +161,8 @@
             <table>
                 <thead>
                 <tr>
+                    <th>STT</th>
+                    <th>ID</th>
                     <th>Hình ảnh</th>
                     <th>Tên sản phẩm</th>
                     <th>Mã sản phẩm</th>
@@ -176,8 +178,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <c:forEach var="product" items="${products}">
+                <c:forEach var="product" items="${products}" varStatus="status">
                     <tr>
+                        <td>${status.index + 1}</td>
+                        <td>${product.id}</td>
                         <td><img src="/images/product/${product.productDetailList[0].imageList[0].link}" alt="Product" class="product-image"></td>
                         <td>${product.name}</td>
                         <td>${product.code}</td>
