@@ -13,13 +13,16 @@ public interface ProductDetailRepo extends JpaRepository<ProductDetail, Long> {
     @Query("SELECT pd FROM ProductDetail pd WHERE pd.product.id = :productId")
     List<ProductDetail> findByProductId(@Param("productId") Long productId);
 
-    boolean existsByColorId(Long colorId);
-    boolean existsBySizeId(Long sizeId);
-    boolean existsByProductId(Long productId);
+
+    boolean existsByProductBrandIdAndQuantityGreaterThan(Long brandId, Integer quantity);
 
     boolean existsByColor_IdAndQuantityGreaterThan(Long colorId, Integer quantity);
 
     boolean existsBySize_IdAndQuantityGreaterThan(Long sizeId, Integer quantity);
 
     boolean existsByProduct_IdAndQuantityGreaterThan(Long productId, Integer quantity);
+
+    boolean existsByProductCategoryIdAndQuantityGreaterThan(Long CategoryId, Integer quantity);
+
+    boolean existsByProductMaterialIdAndQuantityGreaterThan(Long MaterialId, Integer quantity);
 }

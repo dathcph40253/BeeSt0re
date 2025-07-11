@@ -31,18 +31,11 @@ public class CategoryController {
     @GetMapping("/Category/delete")
     public String deleteCategory(@RequestParam(required = false) Long id, RedirectAttributes redirectAttributes) {
         // Kiểm tra xem danh mục có đang được sử dụng không
-        if (categoryService.isCategoryInUse(id)) {
-            redirectAttributes.addFlashAttribute("message", "Không thể xóa danh mục này vì đang có sản phẩm sử dụng!");
-            redirectAttributes.addFlashAttribute("messageType", "danger");
-            return "redirect:/Category";
-        }
-
-        Category category = categoryRepo.findById(id).orElse(null);
-        if(category != null) {
-            category.setDelete(true);
-            categoryRepo.save(category);
-            redirectAttributes.addFlashAttribute("message", "Xóa danh mục thành công!");
-            redirectAttributes.addFlashAttribute("messageType", "success");
+        try {
+            categoryService.deleteCategory(id);
+            redirectAttributes.addFlashAttribute("success", "xóa thành công");
+        }catch (IllegalStateException e){
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/Category";
     }

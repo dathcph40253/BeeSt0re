@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.Entity.Category;
 import com.example.demo.Entity.Material;
 import com.example.demo.repository.MaterialRepo;
+import com.example.demo.repository.ProductDetailRepo;
 import com.example.demo.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +17,22 @@ public class MaterialService {
 
     @Autowired
     private ProductRepo productRepo;
+    @Autowired
+    private ProductDetailRepo productDetailRepo;
 
     public List<Material> getAllMaterial(){
         return materialRepo.findAll();
     }
 
-    public boolean isMaterialInUse(Long materialId) {
-        return productRepo.existsByMaterialId(materialId);
+    public void deleteMaterial(Long materialId){
+        boolean existsMaterial = productDetailRepo.existsByProductMaterialIdAndQuantityGreaterThan(materialId, 0);
+        if(existsMaterial){
+            throw new IllegalStateException("không xóa được do sản phẩm còn hàng");
+        }
+        Material material = materialRepo.findById(materialId).orElse(null);
+        if(material!=null){
+            material.setDelete(true);
+            materialRepo.save(material);
+        }
     }
 }

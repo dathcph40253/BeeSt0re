@@ -30,18 +30,11 @@ public class MaterialController {
     @GetMapping("/Material/delete")
     public String deleteStatus(@RequestParam(required = false) Long id, RedirectAttributes redirectAttributes) {
         // Kiểm tra xem chất liệu có đang được sử dụng không
-        if (materialService.isMaterialInUse(id)) {
-            redirectAttributes.addFlashAttribute("message", "Không thể xóa chất liệu này vì đang có sản phẩm sử dụng!");
-            redirectAttributes.addFlashAttribute("messageType", "danger");
-            return "redirect:/Material";
-        }
-
-        Material material = materialRepo.findById(id).orElse(null);
-        if( material != null ) {
-            material.setDelete(true);
-            materialRepo.save(material);
-            redirectAttributes.addFlashAttribute("message", "Xóa chất liệu thành công!");
-            redirectAttributes.addFlashAttribute("messageType", "success");
+        try {
+            materialService.deleteMaterial(id);
+            redirectAttributes.addFlashAttribute("success", "xóa thành công");
+        }catch (IllegalStateException e){
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/Material";
     }

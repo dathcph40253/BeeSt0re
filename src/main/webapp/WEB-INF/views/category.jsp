@@ -36,7 +36,12 @@
             <a href="/Category" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
-
+    <c:if test="${not empty success}">
+        <div class="alert alert-success">${success}</div>
+    </c:if>
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">${error}</div>
+    </c:if>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover align-middle">
             <thead class="table-dark">
