@@ -132,6 +132,7 @@ public class ProductDetailController {
             saveImage(newImage, file, productDetail);
         }
         productDetailService.handleSaveProductDetail(productDetail);
+        productService.updateProductStatus(productDetail.getProduct().getId());
         return "redirect:/product-detail";
     }
 }

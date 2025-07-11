@@ -3,6 +3,7 @@ package com.example.demo.service;
 import com.example.demo.Entity.Color;
 import com.example.demo.repository.ColorRepo;
 import com.example.demo.repository.ProductDetailRepo;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,8 +22,16 @@ public class ColorService {
         List<Color> colors = colorRepo.findAll();
         return colors;
     }
-
-    public boolean isColorInUse(Long colorId) {
-        return productDetailRepo.existsByColorId(colorId);
-    }
+    public void deleteColor(Long colorId){
+        boolean existsColor = productDetailRepo.existsByColor_IdAndQuantityGreaterThan(colorId, 0);
+            if(existsColor){
+                throw new IllegalStateException("không xóa được do sản phẩm vẫn còn hàng");
+            }
+            Color color = colorRepo.findById(colorId).orElse(null);
+            if(color != null){
+                color.setDelete(true);
+                colorRepo.save(color);
+            }
+        }
 }
+

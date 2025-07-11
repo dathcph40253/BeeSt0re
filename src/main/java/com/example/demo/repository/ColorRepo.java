@@ -11,4 +11,5 @@ public interface ColorRepo extends JpaRepository<Color, Long> {
     List<Color> findByDeleteFalse();
 
     List<Color> findByCode(String code);
+
 }

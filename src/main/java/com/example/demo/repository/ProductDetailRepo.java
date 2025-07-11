@@ -16,4 +16,10 @@ public interface ProductDetailRepo extends JpaRepository<ProductDetail, Long> {
     boolean existsByColorId(Long colorId);
     boolean existsBySizeId(Long sizeId);
     boolean existsByProductId(Long productId);
+
+    boolean existsByColor_IdAndQuantityGreaterThan(Long colorId, Integer quantity);
+
+    boolean existsBySize_IdAndQuantityGreaterThan(Long sizeId, Integer quantity);
+
+    boolean existsByProduct_IdAndQuantityGreaterThan(Long productId, Integer quantity);
 }

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Entity.Color;
 import com.example.demo.Entity.Size;
 import com.example.demo.repository.SizeRepo;
 import com.example.demo.repository.ProductDetailRepo;
@@ -22,7 +23,15 @@ public class SizeService {
         return sizes;
     }
 
-    public boolean isSizeInUse(Long sizeId) {
-        return productDetailRepo.existsBySizeId(sizeId);
+    public void deleteSize(Long colorId){
+        boolean existsColor = productDetailRepo.existsBySize_IdAndQuantityGreaterThan(colorId, 0);
+        if(existsColor){
+            throw new IllegalStateException("không xóa được do sản phẩm vẫn còn hàng");
+        }
+        Size size = sizeRepo.findById(colorId).orElse(null);
+        if(size != null){
+            size.setDelete(true);
+            sizeRepo.save(size);
+        }
     }
 }
