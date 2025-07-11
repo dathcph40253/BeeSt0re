@@ -13,4 +13,8 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
     @Query("select p from Product p where p.delete_flag = :delete_flag")
     List<Product> findByDeleteFlag(@Param("delete_flag") boolean deleteFlag);
     Product findByName(String name);
+
+    boolean existsByBrandId(Long brandId);
+    boolean existsByCategoryId(Long categoryId);
+    boolean existsByMaterialId(Long materialId);
 }

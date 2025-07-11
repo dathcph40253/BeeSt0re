@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.Entity.Material;
 import com.example.demo.repository.MaterialRepo;
+import com.example.demo.service.MaterialService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,9 @@ public class MaterialController {
     @Autowired
     private MaterialRepo materialRepo;
 
+    @Autowired
+    private MaterialService materialService;
+
     @GetMapping("/Material")
     public String material(Model model) {
         List<Material> materials = materialRepo.findByDeleteFalse();
@@ -24,11 +28,20 @@ public class MaterialController {
         return "material";
     }
     @GetMapping("/Material/delete")
-    public String deleteStatus(@RequestParam(required = false) Long id) {
+    public String deleteStatus(@RequestParam(required = false) Long id, RedirectAttributes redirectAttributes) {
+        // Kiểm tra xem chất liệu có đang được sử dụng không
+        if (materialService.isMaterialInUse(id)) {
+            redirectAttributes.addFlashAttribute("message", "Không thể xóa chất liệu này vì đang có sản phẩm sử dụng!");
+            redirectAttributes.addFlashAttribute("messageType", "danger");
+            return "redirect:/Material";
+        }
+
         Material material = materialRepo.findById(id).orElse(null);
         if( material != null ) {
             material.setDelete(true);
             materialRepo.save(material);
+            redirectAttributes.addFlashAttribute("message", "Xóa chất liệu thành công!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         }
         return "redirect:/Material";
     }

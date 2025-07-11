@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.Entity.Brand;
 import com.example.demo.Entity.Color;
 import com.example.demo.repository.ColorRepo;
+import com.example.demo.service.ColorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,9 @@ public class ColorController {
     @Autowired
     private ColorRepo colorRepo;
 
+    @Autowired
+    private ColorService colorService;
+
     @GetMapping("/Color")
     public String color(Model model) {
         List<Color> colors = colorRepo.findByDeleteFalse();
@@ -26,11 +30,20 @@ public class ColorController {
     }
 
     @GetMapping("/Color/delete")
-    public String delete(@RequestParam(required = false) Long id) {
-       Color colors = colorRepo.findById(id).orElse(null);
+    public String delete(@RequestParam(required = false) Long id, RedirectAttributes redirectAttributes) {
+        // Kiểm tra xem màu sắc có đang được sử dụng không
+        if (colorService.isColorInUse(id)) {
+            redirectAttributes.addFlashAttribute("message", "Không thể xóa màu sắc này vì đang có sản phẩm sử dụng!");
+            redirectAttributes.addFlashAttribute("messageType", "danger");
+            return "redirect:/Color";
+        }
+
+        Color colors = colorRepo.findById(id).orElse(null);
         if (colors != null) {
             colors.setDelete(true);
             colorRepo.save(colors);
+            redirectAttributes.addFlashAttribute("message", "Xóa màu sắc thành công!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         }
         return "redirect:/Color";
     }

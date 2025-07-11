@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.Entity.Brand;
 import com.example.demo.repository.BrandRepo;
+import com.example.demo.service.BrandService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,9 @@ public class BrandController {
     @Autowired
     private BrandRepo repo;
 
+    @Autowired
+    private BrandService brandService;
+
     @GetMapping("/Brand")
     public String Brand( Model model) {
         List<Brand> brands;
@@ -25,11 +29,20 @@ public class BrandController {
         return "brands";
     }
     @GetMapping("/Brand/delete")
-    public String BrandDelete(@RequestParam(required = false) Long id) {
+    public String BrandDelete(@RequestParam(required = false) Long id, RedirectAttributes redirectAttributes) {
+        // Kiểm tra xem thương hiệu có đang được sử dụng không
+        if (brandService.isBrandInUse(id)) {
+            redirectAttributes.addFlashAttribute("message", "Không thể xóa thương hiệu này vì đang có sản phẩm sử dụng!");
+            redirectAttributes.addFlashAttribute("messageType", "danger");
+            return "redirect:/Brand";
+        }
+
         Brand brand = repo.findById(id).orElse(null);
         if(brand != null) {
             brand.setDelete(true);
             repo.save(brand);
+            redirectAttributes.addFlashAttribute("message", "Xóa thương hiệu thành công!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         }
         return "redirect:/Brand";
     }

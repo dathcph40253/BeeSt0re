@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.Entity.Size;
 import com.example.demo.repository.MaterialRepo;
 import com.example.demo.repository.SizeRepo;
+import com.example.demo.service.SizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,9 @@ public class SizeController {
     @Autowired
     private SizeRepo sizeRepo;
 
+    @Autowired
+    private SizeService sizeService;
+
     @GetMapping("/Size")
     public String Size(Model model) {
         List<Size> sizes;
@@ -27,11 +31,20 @@ public class SizeController {
     }
 
     @GetMapping("/Size/delete")
-    public String SizeDelete(@RequestParam(required = false) Long id) {
+    public String SizeDelete(@RequestParam(required = false) Long id, RedirectAttributes redirectAttributes) {
+        // Kiểm tra xem size có đang được sử dụng không
+        if (sizeService.isSizeInUse(id)) {
+            redirectAttributes.addFlashAttribute("message", "Không thể xóa size này vì đang có sản phẩm sử dụng!");
+            redirectAttributes.addFlashAttribute("messageType", "danger");
+            return "redirect:/Size";
+        }
+
         Size size = sizeRepo.findById(id).orElse(null);
         if (size != null) {
             size.setDelete(true);
             sizeRepo.save(size);
+            redirectAttributes.addFlashAttribute("message", "Xóa size thành công!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         }
         return "redirect:/Size";
     }

@@ -3,6 +3,7 @@ package com.example.demo.controller;
 
 import com.example.demo.Entity.Category;
 import com.example.demo.repository.CategoryRepo;
+import com.example.demo.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,9 @@ public class CategoryController {
     @Autowired
     private CategoryRepo categoryRepo;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @GetMapping("/Category")
     public String category(Model model) {
         List<Category>  categories = categoryRepo.findByDeleteFalse();
@@ -25,11 +29,20 @@ public class CategoryController {
         return "category";
     }
     @GetMapping("/Category/delete")
-    public String deleteCategory(@RequestParam(required = false) Long id) {
+    public String deleteCategory(@RequestParam(required = false) Long id, RedirectAttributes redirectAttributes) {
+        // Kiểm tra xem danh mục có đang được sử dụng không
+        if (categoryService.isCategoryInUse(id)) {
+            redirectAttributes.addFlashAttribute("message", "Không thể xóa danh mục này vì đang có sản phẩm sử dụng!");
+            redirectAttributes.addFlashAttribute("messageType", "danger");
+            return "redirect:/Category";
+        }
+
         Category category = categoryRepo.findById(id).orElse(null);
         if(category != null) {
             category.setDelete(true);
             categoryRepo.save(category);
+            redirectAttributes.addFlashAttribute("message", "Xóa danh mục thành công!");
+            redirectAttributes.addFlashAttribute("messageType", "success");
         }
         return "redirect:/Category";
     }
