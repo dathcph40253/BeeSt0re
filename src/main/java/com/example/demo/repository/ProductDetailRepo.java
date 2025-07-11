@@ -12,4 +12,9 @@ import java.util.List;
 public interface ProductDetailRepo extends JpaRepository<ProductDetail, Long> {
     @Query("SELECT pd FROM ProductDetail pd WHERE pd.product.id = :productId")
     List<ProductDetail> findByProductId(@Param("productId") Long productId);
+
+    Boolean existsByColorIdAndQuantityGreaterThan(Long colorId, Integer quantity);
+
+    Boolean existsBySizeIdAndQuantityGreaterThan(Long sizeId, Integer quantity);
+
 }

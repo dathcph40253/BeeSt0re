@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.Entity.Size;
 import com.example.demo.repository.MaterialRepo;
 import com.example.demo.repository.SizeRepo;
+import com.example.demo.service.SizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,9 @@ public class SizeController {
     @Autowired
     private SizeRepo sizeRepo;
 
+    @Autowired
+    private SizeService sizeService;
+
     @GetMapping("/Size")
     public String Size(Model model) {
         List<Size> sizes;
@@ -27,11 +31,12 @@ public class SizeController {
     }
 
     @GetMapping("/Size/delete")
-    public String SizeDelete(@RequestParam(required = false) Long id) {
-        Size size = sizeRepo.findById(id).orElse(null);
-        if (size != null) {
-            size.setDelete(true);
-            sizeRepo.save(size);
+    public String SizeDelete(@RequestParam("id") Long id, RedirectAttributes attributes) {
+        try{
+            sizeService.deleteSize(id);
+            attributes.addFlashAttribute("success", "xóa thành công");
+        }catch (IllegalStateException e){
+            attributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/Size";
     }

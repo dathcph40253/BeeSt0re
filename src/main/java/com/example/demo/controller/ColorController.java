@@ -3,7 +3,10 @@ package com.example.demo.controller;
 import com.example.demo.Entity.Brand;
 import com.example.demo.Entity.Color;
 import com.example.demo.repository.ColorRepo;
+import com.example.demo.repository.ProductDetailRepo;
+import com.example.demo.service.ColorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +21,8 @@ public class ColorController {
     @Autowired
     private ColorRepo colorRepo;
 
+    @Autowired
+    private ColorService colorService;
     @GetMapping("/Color")
     public String color(Model model) {
         List<Color> colors = colorRepo.findByDeleteFalse();
@@ -26,11 +31,12 @@ public class ColorController {
     }
 
     @GetMapping("/Color/delete")
-    public String delete(@RequestParam(required = false) Long id) {
-       Color colors = colorRepo.findById(id).orElse(null);
-        if (colors != null) {
-            colors.setDelete(true);
-            colorRepo.save(colors);
+    public String deleteColor(@RequestParam("id") Long id, RedirectAttributes attributes){
+        try{
+            colorService.deleteColor(id);
+            attributes.addFlashAttribute("success", "xóa thành công");
+        }catch (IllegalStateException e){
+            attributes.addFlashAttribute("error", e.getMessage());
         }
         return "redirect:/Color";
     }
