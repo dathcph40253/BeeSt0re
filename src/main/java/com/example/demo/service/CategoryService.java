@@ -1,7 +1,9 @@
 package com.example.demo.service;
 
+import com.example.demo.Entity.Brand;
 import com.example.demo.Entity.Category;
 import com.example.demo.repository.CategoryRepo;
+import com.example.demo.repository.ProductDetailRepo;
 import com.example.demo.repository.ProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +17,22 @@ public class CategoryService {
 
     @Autowired
     private ProductRepo productRepo;
+    @Autowired
+    private ProductDetailRepo productDetailRepo;
 
     public List<Category> getAllCategory(){
         return categoryRepo.findAll();
     }
 
-    public boolean isCategoryInUse(Long categoryId) {
-        return productRepo.existsByCategoryId(categoryId);
+    public void deleteCategory(Long categoryId){
+        boolean existsCategory = productDetailRepo.existsByProductCategoryIdAndQuantityGreaterThan(categoryId, 0);
+        if(existsCategory){
+            throw new IllegalStateException("không xóa được do sản phẩm còn hàng");
+        }
+        Category category = categoryRepo.findById(categoryId).orElse(null);
+        if(category != null){
+            category.setDelete(true);
+            categoryRepo.save(category);
+        }
     }
 }

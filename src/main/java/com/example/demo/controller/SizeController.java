@@ -31,20 +31,13 @@ public class SizeController {
     }
 
     @GetMapping("/Size/delete")
-    public String SizeDelete(@RequestParam(required = false) Long id, RedirectAttributes redirectAttributes) {
+    public String SizeDelete(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         // Kiểm tra xem size có đang được sử dụng không
-        if (sizeService.isSizeInUse(id)) {
-            redirectAttributes.addFlashAttribute("message", "Không thể xóa size này vì đang có sản phẩm sử dụng!");
-            redirectAttributes.addFlashAttribute("messageType", "danger");
-            return "redirect:/Size";
-        }
-
-        Size size = sizeRepo.findById(id).orElse(null);
-        if (size != null) {
-            size.setDelete(true);
-            sizeRepo.save(size);
-            redirectAttributes.addFlashAttribute("message", "Xóa size thành công!");
-            redirectAttributes.addFlashAttribute("messageType", "success");
+        try{
+            sizeService.deleteSize(id);
+            redirectAttributes.addFlashAttribute("success", "xóa thành công");
+        }catch (IllegalStateException e){
+            redirectAttributes.addFlashAttribute("error",e.getMessage());
         }
         return "redirect:/Size";
     }

@@ -38,7 +38,12 @@
             <a href=/Material" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
         </div>
     </form>
-
+    <c:if test="${not empty success}">
+        <div class="alert alert-success">${success}</div>
+    </c:if>
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">${error}</div>
+    </c:if>
     <div class="table-responsive">
         <table class="table table-bordered table-striped table-hover align-middle">
             <thead class="table-dark">
@@ -71,7 +76,7 @@
                            data-bs-target="#editMaterialModal${material.id}">
                             Sửa
                         </a>
-                        <a href=/Material/delete?id=${material.id}"
+                        <a href="/Material/delete?id=${material.id}"
                            class="btn btn-sm btn-danger" onclick="return confirm('bạn có muốn xóa chất liệu này ko?')"
                         >Xóa</a>
                     </td>

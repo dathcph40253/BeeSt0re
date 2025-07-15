@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
+@RequestMapping("/admin")
 public class DiscountController {
     @Autowired
     private DiscountRepo discountRepo;
@@ -19,7 +20,7 @@ public class DiscountController {
     public String discount(Model model) {
         List<Discount> discounts = discountRepo.findByDeleteFalse();
         model.addAttribute("discounts", discounts);
-        return "discount";
+        return "admin/discount/discount";
     }
     @GetMapping("/Discount/delete")
     public String delete(@RequestParam(required = false) Long id) {
