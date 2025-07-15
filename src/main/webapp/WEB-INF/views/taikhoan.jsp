@@ -44,21 +44,39 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach var="acc" items="${users}" varStatus="status">
-                        <tr>
-                            <td>${status.index + 1}</td>
-                            <td>${acc.id}</td>
-                            <td>${acc.code}</td>
-                            <td>${acc.email}</td>
-                            <td>
-                                <span class="badge ${acc.isNonLocked ? 'bg-success' : 'bg-danger'}">
-                                        ${acc.isNonLocked ? 'Hoạt động' : 'Bị khóa'}
-                                </span>
-                            </td>
-                            <td>${acc.role.name}</td>
-                            <td>${acc.createDate}</td>
-                        </tr>
-                    </c:forEach>
+<%--                    <c:forEach var="acc" items="${users}" varStatus="status">--%>
+<%--                        <tr>--%>
+<%--                            <td>${status.index + 1}</td>--%>
+<%--                            <td>${acc.id}</td>--%>
+<%--                            <td>${acc.code}</td>--%>
+<%--                            <td>${acc.email}</td>--%>
+<%--                            <td>--%>
+<%--                                <span class="badge ${acc.isNonLocked ? 'bg-success' : 'bg-danger'}">--%>
+<%--                                        ${acc.isNonLocked ? 'Hoạt động' : 'Bị khóa'}--%>
+<%--                                </span>--%>
+<%--                            </td>--%>
+<%--                            <td>${acc.role.name}</td>--%>
+<%--                            <td>${acc.createDate}</td>--%>
+<%--                        </tr>--%>
+<%--                    </c:forEach>--%>
+
+                        <c:forEach var="acc" items="${users}" varStatus="status">
+                            <c:if test="${acc.role.name == 'ROLE_USER'}">
+                                <tr>
+                                    <td>${status.index + 1}</td>
+                                    <td>${acc.id}</td>
+                                    <td>${acc.code}</td>
+                                    <td>${acc.email}</td>
+                                    <td>
+                                        <span class="badge ${acc.isNonLocked ? 'bg-success' : 'bg-danger'}">
+                                                ${acc.isNonLocked ? 'Hoạt động' : 'Bị khóa'}
+                                        </span>
+                                    </td>
+                                    <td>${acc.role.name}</td>
+                                    <td>${acc.createDate}</td>
+                                </tr>
+                            </c:if>
+                        </c:forEach>
                     </tbody>
                 </table>
             </div>
