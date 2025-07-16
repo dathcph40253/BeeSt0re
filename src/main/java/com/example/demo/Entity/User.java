@@ -50,26 +50,20 @@ public class User {
             isNonLocked = true;
         }
     }
-
     @PreUpdate
     protected void onUpdate() {
         updateDate = LocalDateTime.now();
     }
-
     // Getter và setter cho compatibility với code cũ
     public String getName() {
         return this.email; // Sử dụng email làm tên đăng nhập
     }
-
     public void setName(String name) {
         this.email = name;
     }
-
-
     @ManyToOne
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
-
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;

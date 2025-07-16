@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-
+@RequestMapping("/admin")
 public class ProductController {
     private final ProductService productService;
     private final BrandService brandService;
@@ -102,7 +102,7 @@ public class ProductController {
         product.setDelete_flag(false);
         product.setGender(1);
         productService.handleSaveProduct(product);
-        return "redirect:/product";
+        return "redirect:/admin/product";
     }
 
     @GetMapping("/product/update/{id}")
@@ -125,7 +125,7 @@ public class ProductController {
 
         product.setUpdated_date(LocalDateTime.now());
         productService.handleSaveProduct(product);
-        return "redirect:/product";
+        return "redirect:/admin/product";
     }
 
     @GetMapping("/product/delete/{id}")
@@ -133,7 +133,7 @@ public class ProductController {
         Product product = productService.getProductById(id);
         product.setDelete_flag(true);
         productService.handleSaveProduct(product);
-        return "redirect:/product";
+        return "redirect:/admin/product";
     }
 }
 

@@ -73,16 +73,10 @@ public class RegistController {
             if (user.getIsNonLocked() == null) {
                 user.setIsNonLocked(true);
             }
-            if(user.getEmail().startsWith("admin")){
-                user.setRole(userService.NameRoleById(1L));
-            }else if (user.getEmail().startsWith("employee")){
-                user.setRole(userService.NameRoleById(2L));
-            }else{
-                user.setRole(userService.NameRoleById(3L));
-            }
+            user.setRole(userService.NameRoleById(3L));
             userService.saveUser(user);
             redirectAttributes.addFlashAttribute("message", "Đăng ký thành công");
-            return "redirect:/Home?id=" + user.getId();
+            return "redirect:";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", "Đăng ký thất bại: " + e.getMessage());
             redirectAttributes.addFlashAttribute("user", user);
