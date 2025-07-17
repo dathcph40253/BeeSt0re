@@ -69,7 +69,7 @@
                         </span>
                     </td>
                     <td>
-                        <a href=/Material/update"
+                        <a href="/Material/update"
                            class="btn btn-warning btn-sm"
                            role="button"
                            data-bs-toggle="modal"
@@ -86,7 +86,7 @@
                 <div class="modal fade" id="editMaterialModal${material.id}" tabindex="-1" aria-labelledby="editMaterialModalLabel${material.id}" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <form method="post" action=/Material/update">
+                            <form method="post" action="/Material/update">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="editMaterialModalLabel${material.id}">Sửa Chất Liệu</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>

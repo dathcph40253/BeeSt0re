@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@RequestMapping("/admin")
 public class ProductDetailController {
     private final SizeService sizeService;
     private final ColorService colorService;
@@ -85,7 +84,7 @@ public class ProductDetailController {
 //            image.setLink(null);
 //            imageService.handleSaveImage(image);
 //        }
-        return "redirect:/admin/product-detail";
+        return "redirect:/product-detail";
     }
     public void saveImage(Image image, MultipartFile file, ProductDetail productDetail){
         String imgProduct = uploadService.handleSaveUploadFile(file,"product");
@@ -135,7 +134,7 @@ public class ProductDetailController {
         productDetail.setProduct(product);
         productDetailService.handleSaveProductDetail(productDetail);
 
-        return "redirect:/admin/product-detail/" + productDetail.getProduct().getId();
+        return "redirect:/product-detail/" + productDetail.getProduct().getId();
     }
 }
 

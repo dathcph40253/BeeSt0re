@@ -39,7 +39,7 @@
         <div class="col-md-6 col-12 mx-auto">
             <h3>Update Product Detail ${productDetail.id}</h3>
             <hr/>
-            <form:form action="/admin/product-detail/update" enctype="multipart/form-data"
+            <form:form action="/product-detail/update" enctype="multipart/form-data"
                        method="post" modelAttribute="productDetail">
                 <div>
                     <label class="form-label">ID</label>
@@ -92,7 +92,7 @@
                 </div>
                 <div class="mt-3 d-flex">
                     <button class="btn btn-primary">Update</button>
-                    <a href="/admin/product-detail" class="btn btn-info ms-3">Quay lại</a>
+                    <a href="/product-detail" class="btn btn-info ms-3">Quay lại</a>
                 </div>
             </form:form>
         </div>

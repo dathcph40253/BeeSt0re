@@ -184,7 +184,7 @@
         <!-- Products Content -->
         <div class="products-header">
             <h1>Chi tiết sản phẩm</h1>
-            <a href="/admin/product-detail/create" class="btn-add btn">
+            <a href="/product-detail/create" class="btn-add btn">
                 <i class="fas fa-plus"></i>
                 Thêm sản phẩm
             </a>
@@ -219,10 +219,10 @@
                         <td>${productDetail.price}</td>
                         <td>${productDetail.quantity}</td>
                         <td class="product-actions">
-                            <a href="/admin/product-detail/edit/${productDetail.id}" class="btn-edit">
+                            <a href="/product-detail/edit/${productDetail.id}" class="btn-edit">
                                 <i class="fas fa-edit">
                                 </i></a>
-                            <a class="btn-delete" href="/admin/product-detail/delete/${productDetail.id}">
+                            <a class="btn-delete" href="/product-detail/delete/${productDetail.id}">
                                 <i class="fas fa-trash">
                                 </i></a>
                         </td>
@@ -231,7 +231,7 @@
                 </tbody>
             </table>
             <div>
-                <a href="/admin/product" class="btn btn-info" style="margin-top:48px">Quay lại</a>
+                <a href="/product" class="btn btn-info" style="margin-top:48px">Quay lại</a>
             </div>
 
         </div>

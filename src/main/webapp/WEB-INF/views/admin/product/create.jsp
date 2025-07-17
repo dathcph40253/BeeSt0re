@@ -22,7 +22,7 @@
             <div class="col-md-6 col-12 mx-auto">
                 <h3>CREATE PRODUCT</h3>
                 <hr/>
-                <form:form action="/admin/product/create" method="post" modelAttribute="newProduct">
+                <form:form action="/product/create" method="post" modelAttribute="newProduct">
                     <div class="mb-3">
                         <label class="form-label">Tên sản phẩm</label>
                         <c:set var="errorName">
