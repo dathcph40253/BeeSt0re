@@ -77,7 +77,7 @@ public class RegistController {
             user.setRole(userService.NameRoleById(3L));
             userService.saveUser(user);
             redirectAttributes.addFlashAttribute("message", "Đăng ký thành công");
-            return "redirect:/Home?id=" + user.getId();
+            return "redirect:";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("message", "Đăng ký thất bại: " + e.getMessage());
             redirectAttributes.addFlashAttribute("user", user);

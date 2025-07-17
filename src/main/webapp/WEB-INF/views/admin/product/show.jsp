@@ -87,6 +87,14 @@
             border-radius: 3px;
             cursor: pointer;
         }
+        .btn-detail {
+            background: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
 
         .filters {
             display: flex;
@@ -121,7 +129,7 @@
         <!-- Products Content -->
         <div class="products-header">
             <h1>Quản lý sản phẩm</h1>
-            <a class="btn-add" href="/product/create">
+            <a class="btn-add" href="/admin/product/create">
                 <i class="fas fa-plus"></i>
                 Thêm sản phẩm
             </a>
@@ -194,16 +202,16 @@
                         <td>${product.getTotalQuantity()}</td>
                         <td>${product.status == 1 ? "Hoạt động" : "Ngừng hoạt động"}</td>
                         <td class="product-actions">
-                            <a class="btn-edit" href="/product/update/${product.id}"><i class="fas fa-edit"></i></a>
-                            <a class="btn-delete" href="/product/delete/${product.id}"><i class="fas fa-trash"></i></a>
+                            <a class="btn-edit" href="/admin/product/update/${product.id}"><i class="fas fa-edit"></i></a>
+                            <a class="btn-delete" href="/admin/product/delete/${product.id}"><i class="fas fa-trash"></i></a>
+                            <a href="/admin/product-detail/${product.id}" class="btn-detail"><i class="fa-solid fa-info"></i></a>
                         </td>
                     </tr>
                 </c:forEach>
                 </tbody>
             </table>
             <div style="display: flex">
-                <a href="/Home" class="btn btn-info" style="margin-top:48px">Quay lại</a>
-                <a href="/product-detail" class="btn btn-info" style="margin-top:48px; margin-left: 30px">Trang chi tiết</a>
+                <a href="/admin/Home" class="btn btn-info" style="margin-top:48px">Quay lại</a>
             </div>
         </div>
     </div>

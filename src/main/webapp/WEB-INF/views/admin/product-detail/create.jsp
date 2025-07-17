@@ -35,7 +35,7 @@
             <div class="col-md-6 col-12 mx-auto">
                 <h3>Create Product Deatail</h3>
                 <hr/>
-                <form:form action="/product-detail/create" enctype="multipart/form-data"
+                <form:form action="/admin/product-detail/create" enctype="multipart/form-data"
                            method="post" modelAttribute="newProductDetail">
                     <div class="mt-3">
                         <label class="form-label">Sản phẩm</label>

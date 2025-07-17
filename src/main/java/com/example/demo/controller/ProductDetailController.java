@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-
+@RequestMapping("/admin")
 public class ProductDetailController {
     private final SizeService sizeService;
     private final ColorService colorService;
@@ -85,7 +85,7 @@ public class ProductDetailController {
 //            image.setLink(null);
 //            imageService.handleSaveImage(image);
 //        }
-        return "redirect:/product-detail";
+        return "redirect:/admin/product-detail";
     }
     public void saveImage(Image image, MultipartFile file, ProductDetail productDetail){
         String imgProduct = uploadService.handleSaveUploadFile(file,"product");
@@ -101,9 +101,9 @@ public class ProductDetailController {
         return "admin/product-detail/create";
     }
 
-    @GetMapping("/product-detail")
-    public String getAllProductDetail(Model model){
-        List<ProductDetail> productDetails = productDetailService.getAll();
+    @GetMapping("/product-detail/{id}")
+    public String getAllProductDetail(Model model, @PathVariable("id")Long id){
+        List<ProductDetail> productDetails = productDetailService.getProductByProductId(id);
         model.addAttribute("productDetails", productDetails);
         return "admin/product-detail/show";
 
@@ -131,9 +131,11 @@ public class ProductDetailController {
             Image newImage = imageService.getImageByProductDetail(productDetail);
             saveImage(newImage, file, productDetail);
         }
+        Product product = productService.getProductByName(productDetail.getProduct().getName());
+        productDetail.setProduct(product);
         productDetailService.handleSaveProductDetail(productDetail);
-        productService.updateProductStatus(productDetail.getProduct().getId());
-        return "redirect:/product-detail";
+
+        return "redirect:/admin/product-detail/" + productDetail.getProduct().getId();
     }
 }
 

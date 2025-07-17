@@ -8,6 +8,11 @@ import com.example.demo.repository.UserRepone;
 import com.example.demo.service.CustomerService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -45,9 +50,16 @@ public class UserController {
                 // Kiểm tra tài khoản có bị khóa không
                 if (user.getIsNonLocked()) {
                     session.setAttribute("user", user);
-                    session.setAttribute("customer", user.getCustomer());
+                    String roleName = user.getRole().getName(); // VD: ROLE_ADMIN
+                    List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(roleName));
+                    Authentication authToken = new UsernamePasswordAuthenticationToken(user, null, authorities);
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
                     re.addFlashAttribute("message", "Đăng nhập thành công " + user.getEmail());
-                    return "redirect:/Home?Id=" + user.getId();
+                    if ("ROLE_ADMIN".equals(roleName)) {
+                        return "redirect:/admin/Home";
+                    } else {
+                        return "redirect:";
+                    }
                 } else {
                     re.addFlashAttribute("message", "Tài khoản đã bị khóa");
                     return "redirect:/Login";

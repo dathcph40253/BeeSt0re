@@ -39,18 +39,15 @@
         <div class="col-md-6 col-12 mx-auto">
             <h3>Update Product Detail ${productDetail.id}</h3>
             <hr/>
-            <form:form action="/product-detail/update" enctype="multipart/form-data"
+            <form:form action="/admin/product-detail/update" enctype="multipart/form-data"
                        method="post" modelAttribute="productDetail">
-
                 <div>
                     <label class="form-label">ID</label>
                     <form:input path="id" class="form-control" readonly="true"/>
                 </div>
                 <div class="mt-3">
                     <label class="form-label">Sản phẩm</label>
-                    <form:select path="product.id" items="${listProduct}" class="form-select">
-                        <form:options itemValue="${product.id}" itemLabel="${product.name}"/>
-                    </form:select>
+                    <form:input path="product.name" class="form-control" readonly="true"/>
                 </div>
                 <c:set var="errorPrice">
                     <form:errors path="price" cssClass="invalid-feedback"/>
@@ -95,7 +92,7 @@
                 </div>
                 <div class="mt-3 d-flex">
                     <button class="btn btn-primary">Update</button>
-                    <a href="/product-detail" class="btn btn-info ms-3">Quay lại</a>
+                    <a href="/admin/product-detail" class="btn btn-info ms-3">Quay lại</a>
                 </div>
             </form:form>
         </div>
