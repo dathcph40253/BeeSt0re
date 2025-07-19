@@ -69,10 +69,70 @@ public class ProductController {
     }
 
     @GetMapping("/product")
-    public String getProduct(Model model){
+    public String getProduct(Model model,
+                           @RequestParam(value = "categoryId", required = false) Long categoryId,
+                           @RequestParam(value = "status", required = false) String status,
+                           @RequestParam(value = "sortBy", required = false) String sortBy){
+
         List<Product> products = productService.getAll();
-        //Product product = productService.aaa();
+
+        // Set default sort if not specified
+        if (sortBy == null || sortBy.isEmpty()) {
+            sortBy = "newest";
+        }
+
+        // Filter by category
+        if (categoryId != null && categoryId > 0) {
+            products = products.stream()
+                    .filter(p -> p.getCategory().getId().equals(categoryId))
+                    .collect(java.util.stream.Collectors.toList());
+        }
+
+        // Filter by status (stock availability)
+        if (status != null && !status.isEmpty()) {
+            if ("1".equals(status)) { // Còn hàng
+                products = products.stream()
+                        .filter(p -> p.getTotalQuantity() > 0)
+                        .collect(java.util.stream.Collectors.toList());
+            } else if ("0".equals(status)) { // Hết hàng
+                products = products.stream()
+                        .filter(p -> p.getTotalQuantity() == 0)
+                        .collect(java.util.stream.Collectors.toList());
+            }
+        }
+
+        // Sort products
+        if (sortBy != null && !sortBy.isEmpty()) {
+            switch (sortBy) {
+                case "newest":
+                    products.sort((p1, p2) -> p2.getCreate_date().compareTo(p1.getCreate_date()));
+                    break;
+                case "price_asc":
+                    products.sort((p1, p2) -> {
+                        double price1 = p1.getProductDetailList().isEmpty() ? 0 :
+                                p1.getProductDetailList().get(0).getPrice();
+                        double price2 = p2.getProductDetailList().isEmpty() ? 0 :
+                                p2.getProductDetailList().get(0).getPrice();
+                        return Double.compare(price1, price2);
+                    });
+                    break;
+                case "price_desc":
+                    products.sort((p1, p2) -> {
+                        double price1 = p1.getProductDetailList().isEmpty() ? 0 :
+                                p1.getProductDetailList().get(0).getPrice();
+                        double price2 = p2.getProductDetailList().isEmpty() ? 0 :
+                                p2.getProductDetailList().get(0).getPrice();
+                        return Double.compare(price2, price1);
+                    });
+                    break;
+            }
+        }
+
         model.addAttribute("products", products);
+        model.addAttribute("selectedCategoryId", categoryId);
+        model.addAttribute("selectedStatus", status);
+        model.addAttribute("selectedSortBy", sortBy);
+
         return "admin/product/show";
     }
 

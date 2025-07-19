@@ -183,57 +183,98 @@
 
         <!-- Products Content -->
         <div class="products-header">
-            <h1>Chi tiết sản phẩm</h1>
-            <a href="/product-detail/create" class="btn-add btn">
-                <i class="fas fa-plus"></i>
-                Thêm sản phẩm
-            </a>
+            <h1>Chi tiết sản phẩm
+                <c:if test="${not empty product}">
+                    - ${product.name}
+                </c:if>
+            </h1>
         </div>
         <!-- Products Table -->
         <div class="table-container">
-            <table>
-                <thead>
-                <tr>
-                    <th>Hình ảnh</th>
-                    <th>Tên sản phẩm</th>
-                    <th>Danh mục</th>
-                    <th>Size</th>
-                    <th>Màu sắc</th>
-                    <th>Giá</th>
-                    <th>Tồn kho</th>
-                    <th>Thao tác</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${productDetails}" var="productDetail">
-                    <tr>
-                        <td>
-                            <c:forEach items="${productDetail.imageList}" var ="img">
-                                <img src="/images/product/${img.link}" alt="image product detail" class="product-image">
-                            </c:forEach>
-                        </td>
-                        <td>${productDetail.product.name}</td>
-                        <td>${productDetail.product.category.name}</td>
-                        <td>${productDetail.size.name}</td>
-                        <td>${productDetail.color.name}</td>
-                        <td>${productDetail.price}</td>
-                        <td>${productDetail.quantity}</td>
-                        <td class="product-actions">
-                            <a href="/product-detail/edit/${productDetail.id}" class="btn-edit">
-                                <i class="fas fa-edit">
-                                </i></a>
-                            <a class="btn-delete" href="/product-detail/delete/${productDetail.id}">
-                                <i class="fas fa-trash">
-                                </i></a>
-                        </td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
-            <div>
-                <a href="/product" class="btn btn-info" style="margin-top:48px">Quay lại</a>
-            </div>
+            <c:choose>
+                <c:when test="${empty productDetails}">
+                    <!-- Empty State -->
+                    <div style="text-align: center; padding: 60px 20px; background: #f8f9fa; border-radius: 10px; margin: 20px 0;">
+                        <div style="font-size: 4rem; color: #6c757d; margin-bottom: 20px;">
+                            <i class="fas fa-inbox"></i>
+                        </div>
+                        <h3 style="font-size: 1.5rem; font-weight: 600; color: #495057; margin-bottom: 10px;">
+                            Chưa có chi tiết sản phẩm
+                        </h3>
+                        <p style="color: #6c757d; margin-bottom: 30px;">
+                            <c:if test="${not empty product}">
+                                Sản phẩm "<strong>${product.name}</strong>" chưa có các biến thể (size, màu sắc, giá).
+                                <br>
+                            </c:if>
+                            Hãy thêm chi tiết sản phẩm để khách hàng có thể mua hàng.
+                        </p>
 
+                        <div style="display: flex; justify-content: center; gap: 15px;">
+                            <a href="/product-detail/create<c:if test='${not empty product}'>?productId=${product.id}</c:if>"
+                               class="btn-add" style="padding: 12px 30px; font-size: 1.1rem;">
+                                <i class="fas fa-plus"></i> Thêm chi tiết sản phẩm
+                            </a>
+                            <a href="/product" class="btn btn-info" style="padding: 12px 30px;">
+                                <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                            </a>
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <!-- Products Table -->
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Hình ảnh</th>
+                            <th>Tên sản phẩm</th>
+                            <th>Danh mục</th>
+                            <th>Size</th>
+                            <th>Màu sắc</th>
+                            <th>Giá</th>
+                            <th>Tồn kho</th>
+                            <th>Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${productDetails}" var="productDetail">
+                            <tr>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty productDetail.imageList}">
+                                            <c:forEach items="${productDetail.imageList}" var ="img">
+                                                <img src="/images/product/${img.link}" alt="image product detail" class="product-image">
+                                            </c:forEach>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="product-image" style="background: #f8f9fa; display: flex; align-items: center; justify-content: center; color: #6c757d;">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>${productDetail.product.name}</td>
+                                <td>${productDetail.product.category.name}</td>
+                                <td>${productDetail.size.name}</td>
+                                <td>${productDetail.color.name}</td>
+                                <td>${productDetail.price}</td>
+                                <td>${productDetail.quantity}</td>
+                                <td class="product-actions">
+                                    <a href="/product-detail/edit/${productDetail.id}" class="btn-edit">
+                                        <i class="fas fa-edit">
+                                        </i></a>
+                                    <a class="btn-delete" href="/product-detail/delete/${productDetail.id}">
+                                        <i class="fas fa-trash">
+                                        </i></a>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                    <div>
+                        <a href="/product" class="btn btn-info" style="margin-top:48px">Quay lại</a>
+                    </div>
+                </c:otherwise>
+            </c:choose>
         </div>
     </div>
 </div>

@@ -139,27 +139,30 @@
         <div class="filters">
             <div class="filter-group">
                 <label>Danh mục:</label>
-                <select>
+                <select id="categoryFilter" onchange="applyFilters()">
                     <option value="">Tất cả</option>
-                    <option value="1">Điện thoại</option>
-                    <option value="2">Laptop</option>
-                    <option value="3">Phụ kiện</option>
+                    <c:forEach items="${listCategory}" var="category">
+                        <option value="${category.key}"
+                                <c:if test="${selectedCategoryId != null && selectedCategoryId == category.key}">selected</c:if>>
+                            ${category.value}
+                        </option>
+                    </c:forEach>
                 </select>
             </div>
             <div class="filter-group">
                 <label>Trạng thái:</label>
-                <select>
+                <select id="statusFilter" onchange="applyFilters()">
                     <option value="">Tất cả</option>
-                    <option value="1">Còn hàng</option>
-                    <option value="2">Hết hàng</option>
+                    <option value="1" <c:if test="${selectedStatus == '1'}">selected</c:if>>Còn hàng</option>
+                    <option value="0" <c:if test="${selectedStatus == '0'}">selected</c:if>>Hết hàng</option>
                 </select>
             </div>
             <div class="filter-group">
                 <label>Sắp xếp:</label>
-                <select>
-                    <option value="1">Mới nhất</option>
-                    <option value="2">Giá tăng dần</option>
-                    <option value="3">Giá giảm dần</option>
+                <select id="sortFilter" onchange="applyFilters()">
+                    <option value="newest" <c:if test="${selectedSortBy == 'newest'}">selected</c:if>>Mới nhất</option>
+                    <option value="price_asc" <c:if test="${selectedSortBy == 'price_asc'}">selected</c:if>>Giá tăng dần</option>
+                    <option value="price_desc" <c:if test="${selectedSortBy == 'price_desc'}">selected</c:if>>Giá giảm dần</option>
                 </select>
             </div>
         </div>
@@ -170,7 +173,7 @@
                 <thead>
                 <tr>
                     <th>STT</th>
-                    <th>ID</th>
+                    <!-- <th>ID</th> -->
                     <th>Hình ảnh</th>
                     <th>Tên sản phẩm</th>
                     <th>Mã sản phẩm</th>
@@ -189,7 +192,7 @@
                 <c:forEach var="product" items="${products}" varStatus="status">
                     <tr>
                         <td>${status.index + 1}</td>
-                        <td>${product.id}</td>
+                        <!-- <td>${product.id}</td> -->
                         <td><img src="/images/product/${product.productDetailList[0].imageList[0].link}" alt="Product" class="product-image"></td>
                         <td>${product.name}</td>
                         <td>${product.code}</td>
@@ -216,6 +219,33 @@
         </div>
     </div>
 </div>
+
+<script>
+    function applyFilters() {
+        const categoryId = document.getElementById('categoryFilter').value;
+        const status = document.getElementById('statusFilter').value;
+        const sortBy = document.getElementById('sortFilter').value;
+
+        // Build URL with parameters
+        let url = '/product?';
+        const params = [];
+
+        if (categoryId) {
+            params.push('categoryId=' + categoryId);
+        }
+        if (status) {
+            params.push('status=' + status);
+        }
+        if (sortBy) {
+            params.push('sortBy=' + sortBy);
+        }
+
+        url += params.join('&');
+
+        // Redirect to filtered URL
+        window.location.href = url;
+    }
+</script>
 </body>
 </html>
 

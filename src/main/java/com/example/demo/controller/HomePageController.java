@@ -29,8 +29,17 @@ public class HomePageController {
 
     @GetMapping("product/{id}")
     public String getProductDetail(@PathVariable("id") Long id, Model model){
+        Product product = productService.getProductById(id);
         List<ProductDetail> productDetails = productDetailService.getProductByProductId(id);
+
+        model.addAttribute("product", product);
         model.addAttribute("details", productDetails);
+
+        // Nếu không có product details, hiển thị trang với nút thêm
+        if(productDetails.isEmpty()){
+            return "user/client/detail-empty";
+        }
+
         return "user/client/detail";
     }
 

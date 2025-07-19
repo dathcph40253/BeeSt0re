@@ -29,4 +29,8 @@ public class ProductDetailService {
         List<ProductDetail> productDetails = productDetailRepo.findByProductId(id);
         return productDetails;
     }
+
+    public void deleteProductDetail(long id){
+        this.productDetailRepo.deleteById(id);
+    }
 }

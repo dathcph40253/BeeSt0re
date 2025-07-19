@@ -100,12 +100,22 @@ public class ProductDetailController {
         return "admin/product-detail/create";
     }
 
-    @GetMapping("/product-detail/{id}")
-    public String getAllProductDetail(Model model, @PathVariable("id")Long id){
-        List<ProductDetail> productDetails = productDetailService.getProductByProductId(id);
+    @GetMapping("/product-detail")
+    public String getAllProductDetails(Model model){
+        List<ProductDetail> productDetails = productDetailService.getAll();
         model.addAttribute("productDetails", productDetails);
         return "admin/product-detail/show";
+    }
 
+    @GetMapping("/product-detail/{id}")
+    public String getAllProductDetail(Model model, @PathVariable("id")Long id){
+        Product product = productService.getProductById(id);
+        List<ProductDetail> productDetails = productDetailService.getProductByProductId(id);
+
+        model.addAttribute("product", product);
+        model.addAttribute("productDetails", productDetails);
+
+        return "admin/product-detail/show";
     }
 
     @GetMapping("/product-detail/edit/{id}")
@@ -135,6 +145,15 @@ public class ProductDetailController {
         productDetailService.handleSaveProductDetail(productDetail);
 
         return "redirect:/product-detail/" + productDetail.getProduct().getId();
+    }
+
+    @GetMapping("/product-detail/delete/{id}")
+    public String deleteProductDetail(@PathVariable("id") long id){
+        ProductDetail productDetail = productDetailService.getOneProductDetail(id);
+        // Soft delete - có thể thêm trường deleteFlag vào ProductDetail entity
+        // Hoặc hard delete như dưới đây:
+        productDetailService.deleteProductDetail(id);
+        return "redirect:/product-detail";
     }
 }
 
