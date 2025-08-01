@@ -1,81 +1,172 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" %>
-<!doctype html>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Giỏ hàng</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="/css/user/style.css">
-    <link rel="stylesheet" href="/css/user/home.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Giỏ hàng - BeeStore</title>
     <link rel="stylesheet" href="/css/user/cart.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
 <jsp:include page="../layout/header.jsp"/>
-<div class="content">
-    <div class="content_Cart">
-        <ul class="item_content_cart">
-            <li>
-                <p class="lable_products_cart">Sản phẩm</p>
-                <div class="products_cart">
-                    <img src="../img/Cart/tee-electric-white_1.jpg" alt="" class="image_products_cart">
-                    <p class="name_products_cart">T-Shirt The Universe - M</p>
-                </div>
-            </li>
-            <li>
-                <p class="lable_products_cart">Giá</p>
-                <div class="products_cart">
-                    <p class="price_cart">320.000VND</p>
-                </div>
-            </li>
-            <img src="" alt="">
-            <li>
-                <p class="lable_products_cart">Số lượng</p>
 
-                <div class="products_cart">
-                    <ul class="quantity_cart">
-                        <button class="quantity_detail_Cart" style="background-color: transparent;border: none;">-</button>
-                        <li class="quantity_detail_Cart">1</li>
-                        <button class="quantity_detail_Cart" style="background-color: transparent;border: none;">+</button>
-                    </ul>
+<div class="container mt-4">
+    <h1 class="mb-4">Giỏ hàng của bạn</h1>
+
+    <c:if test="${not empty error}">
+        <div class="alert alert-danger">${error}</div>
+    </c:if>
+
+    <c:if test="${not empty success}">
+        <div class="alert alert-success">${success}</div>
+    </c:if>
+
+    <c:choose>
+        <c:when test="${empty cartItems}">
+            <div class="text-center py-5">
+                <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                <h3>Giỏ hàng trống</h3>
+                <p class="text-muted">Hãy thêm sản phẩm vào giỏ hàng để tiếp tục mua sắm</p>
+                <a href="/" class="btn btn-primary">Tiếp tục mua sắm</a>
+            </div>
+        </c:when>
+        <c:otherwise>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Sản phẩm trong giỏ hàng (${cartItemCount} sản phẩm)</h5>
+                        </div>
+                        <div class="card-body">
+                            <c:forEach items="${cartItems}" var="item">
+                                <div class="row cart-item mb-3 pb-3 border-bottom" data-cart-id="${item.id}">
+                                    <div class="col-md-2">
+                                        <img src="/images/product/${item.productImage}"
+                                             alt="${item.productName}"
+                                             class="img-fluid rounded">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6>${item.productName}</h6>
+                                        <p class="text-muted mb-1">Màu: ${item.productColor}</p>
+                                        <p class="text-muted mb-1">Size: ${item.productSize}</p>
+                                        <p class="text-primary fw-bold">
+                                            <fmt:formatNumber value="${item.productDetail.price}" type="currency" currencySymbol="₫"/>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button"
+                                                    onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                                            <input type="number" class="form-control text-center"
+                                                   value="${item.quantity}" min="1"
+                                                   onchange="updateQuantity(${item.id}, this.value)">
+                                            <button class="btn btn-outline-secondary btn-sm" type="button"
+                                                    onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                                        </div>
+                                        <small class="text-muted">Còn ${item.productDetail.quantity} sản phẩm</small>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <p class="fw-bold text-primary">
+                                            <fmt:formatNumber value="${item.totalPrice}" type="currency" currencySymbol="₫"/>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-1">
+                                        <button class="btn btn-outline-danger btn-sm"
+                                                onclick="removeFromCart(${item.id})">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </div>
+                    </div>
                 </div>
 
-            </li>
-            <li>
-                <p class="lable_products_cart">Tạm tính</p>
-                <div class="products_cart">
-                    <p class="price_cart">320,000VND</p>
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Tóm tắt đơn hàng</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Tạm tính:</span>
+                                <span><fmt:formatNumber value="${cartTotal}" type="currency" currencySymbol="₫"/></span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Phí vận chuyển:</span>
+                                <span>Miễn phí</span>
+                            </div>
+                            <hr>
+                            <div class="d-flex justify-content-between mb-3">
+                                <strong>Tổng cộng:</strong>
+                                <strong class="text-primary">
+                                    <fmt:formatNumber value="${cartTotal}" type="currency" currencySymbol="₫"/>
+                                </strong>
+                            </div>
+                            <a href="/cart/checkout" class="btn btn-primary w-100 mb-2">
+                                Tiến hành thanh toán
+                            </a>
+                            <a href="/" class="btn btn-outline-secondary w-100">
+                                Tiếp tục mua sắm
+                            </a>
+                        </div>
+                    </div>
                 </div>
-            </li>
-            <li>
-                <p class="lable_products_cart">Tổng giỏ hàng</p>
-                <div class="products_cart_total">
-                    <div class="item_total_cart">
-                        <p class="title_total_cart">Tạm tính</p>
-                        <p class="title_total_cart">320.000VND</p>
-                    </div>
-                    <div class="item_total_cart">
-                        <p class="title_total_cart">Giao hàng</p>
-                        <p class="title_total_cart">32.000VND</p>
-                    </div>
-                    <div class="item_total_cart">
-                        <p class="title_total_cart">Tổng cộng</p>
-                        <p class="title_total_cart">350.000VND</p>
-                    </div>
-                    <button class="btn_itemPay">
-                        <a href="../src/PayCart.html" class="text_btn_itemPay"> Tiến hành thanh toán</a>
-                    </button>
-
-                </div>
-            </li>
-        </ul>
-        <button class="btn_continue">
-            <a href="/Home" class="text_btn_continue">Tiếp tục xem sản phẩm</a>
-        </button>
-    </div>
+            </div>
+        </c:otherwise>
+    </c:choose>
 </div>
+
 <jsp:include page="../layout/footer.jsp"/>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+function updateQuantity(cartId, quantity) {
+    if (quantity < 1) {
+        removeFromCart(cartId);
+        return;
+    }
+
+    fetch('/cart/update', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'cartId=' + cartId + '&quantity=' + quantity
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data.startsWith('success:')) {
+            location.reload();
+        } else {
+            alert(data.replace('error:', ''));
+        }
+    });
+}
+
+function removeFromCart(cartId) {
+    if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+        fetch('/cart/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'cartId=' + cartId
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data.startsWith('success:')) {
+                location.reload();
+            } else {
+                alert(data.replace('error:', ''));
+            }
+        });
+    }
+}
+</script>
 </body>
 </html>

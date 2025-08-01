@@ -103,55 +103,9 @@ header {
     display: block;
 }
 
-/* footer */
-footer{
-    background-color: #000;
-    margin-top: 30px;
-    padding:40px 50px ;
-    display: flex;
-}
-.logo_footer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 20px;
-    margin-right: 50px;
-}
-.logo_footerIcon{
-    width: 100px;
-    height: 100px;
-}
-.title_footer{
-    color: #EE5022;
-    font-weight: bold;
-}
-.contact_footer{
-    display: flex;
-    justify-content: space-between;
-    width: 80%;
-    gap: 30px;
-}
-.item_title_contact{
-    border-bottom: 2px solid #EE5022;
-    padding-bottom: 10px;
+/* Footer styles moved to footer.jsp inline styles */
 
-}
-.title_contact{
-    color: #fff;
-    font-size: 20px;
-}
-.address_contact{
-    color: #bbbbbb;
-    font-size: 16px;
-    margin:18px 0 ;
-}
-.address_contact>.fa-solid{
-    padding-right: 5px;
-}
-.fa-brands {
-    font-size: 30px;
-}
+
 .infProducts_home{
     margin-top: 10px;
 }

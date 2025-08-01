@@ -33,4 +33,12 @@ public class ProductDetailService {
     public void deleteProductDetail(long id){
         this.productDetailRepo.deleteById(id);
     }
+
+    public ProductDetail getProductDetailById(Long id) {
+        return productDetailRepo.findById(id).orElse(null);
+    }
+
+    public ProductDetail save(ProductDetail productDetail) {
+        return productDetailRepo.save(productDetail);
+    }
 }
