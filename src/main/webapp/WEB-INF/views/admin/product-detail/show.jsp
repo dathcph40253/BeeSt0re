@@ -221,6 +221,15 @@
                     </div>
                 </c:when>
                 <c:otherwise>
+                    <!-- Add Product Detail Button -->
+                    <div style="margin-bottom: 20px; text-align: center;">
+                        <a href="/product-detail/create"
+                           style="display: inline-block; padding: 12px 30px; font-size: 1.1rem; text-decoration: none;
+                                  background: #28a745; color: white; border-radius: 5px; transition: all 0.3s ease;">
+                            <i class="fas fa-plus"></i> Thêm chi tiết sản phẩm mới
+                        </a>
+                    </div>
+
                     <!-- Products Table -->
                     <table>
                         <thead>

@@ -10,7 +10,11 @@ import java.util.List;
 
 @Repository
 public interface ProductDetailRepo extends JpaRepository<ProductDetail, Long> {
-    @Query("SELECT pd FROM ProductDetail pd WHERE pd.product.id = :productId")
+    @Query("SELECT pd FROM ProductDetail pd " +
+           "LEFT JOIN FETCH pd.color " +
+           "LEFT JOIN FETCH pd.size " +
+           "LEFT JOIN FETCH pd.product " +
+           "WHERE pd.product.id = :productId")
     List<ProductDetail> findByProductId(@Param("productId") Long productId);
 
 
