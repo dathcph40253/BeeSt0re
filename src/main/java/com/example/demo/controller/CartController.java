@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -192,28 +193,49 @@ public class CartController {
 
             if (discountOpt.isPresent()) {
                 Discount discount = discountOpt.get();
-                double discountAmount = 0;
-
-                if (discount.getPercentage() != null && discount.getPercentage() > 0) {
-                    // Giảm theo phần trăm
-                    discountAmount = totalAmount * discount.getPercentage() / 100;
-                    if (discount.getMaximumAmount() != null && discountAmount > discount.getMaximumAmount()) {
-                        discountAmount = discount.getMaximumAmount();
-                    }
-                } else if (discount.getAmount() != null) {
-                    // Giảm theo số tiền cố định
-                    discountAmount = discount.getAmount();
-                }
-
-                // Kiểm tra điều kiện tối thiểu
-                if (discount.getMinimumAmountInCart() != null && totalAmount < discount.getMinimumAmountInCart()) {
+                
+                // Kiểm tra thời gian hiệu lực
+                LocalDateTime now = LocalDateTime.now();
+                if (discount.getStartDate() != null && now.isBefore(discount.getStartDate())) {
                     response.put("success", false);
-                    response.put("message", "Đơn hàng chưa đạt giá trị tối thiểu để áp dụng mã giảm giá này");
+                    response.put("message", "Mã giảm giá chưa có hiệu lực");
+                    return response;
+                }
+                if (discount.getEndDate() != null && now.isAfter(discount.getEndDate())) {
+                    response.put("success", false);
+                    response.put("message", "Mã giảm giá đã hết hạn");
                     return response;
                 }
 
+                // Kiểm tra điều kiện tối thiểu trước
+                if (discount.getMinimumAmountInCart() != null && totalAmount < discount.getMinimumAmountInCart()) {
+                    response.put("success", false);
+                    String formattedMinAmount = String.format("%,.0f", discount.getMinimumAmountInCart());
+                    response.put("message", "Đơn hàng chưa đạt giá trị tối thiểu " + formattedMinAmount + "đ để áp dụng mã giảm giá này");
+                    return response;
+                }
+
+                double discountAmount = 0;
+                // type = 1: giảm theo %
+                if (discount.getPercentage() != null && discount.getPercentage() > 0) {
+                    discountAmount = totalAmount * (discount.getPercentage() / 100.0);
+                    if (discount.getMaximumAmount() != null && discountAmount > discount.getMaximumAmount()) {
+                        discountAmount = discount.getMaximumAmount();
+                    }
+                }
+                // type = 2: giảm theo số tiền
+                else if (discount.getAmount() != null && discount.getAmount() > 0) {
+                    discountAmount = discount.getAmount();
+                    if (discountAmount > totalAmount) {
+                        discountAmount = totalAmount;
+                    }
+                }
+
+                // Format số tiền theo định dạng Việt Nam
                 response.put("success", true);
-                response.put("discountAmount", discountAmount);
+                response.put("discountAmount", String.format("%,.0f", discountAmount));
+                response.put("finalAmount", String.format("%,.0f", totalAmount - discountAmount));
+                response.put("totalAmount", String.format("%,.0f", totalAmount));
                 response.put("message", "Áp dụng mã giảm giá thành công");
             } else {
                 response.put("success", false);

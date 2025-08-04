@@ -19,6 +19,78 @@
     <div class="contentPayCart">
         <div class="infPay">
             <div class="box_infPay">
+                <p class="lable_infPay"><strong>Mã giảm giá</strong></p>
+                <select id="discount_code_select" name="discount_code" class="input_box_infPay">
+                    <option value="">Chọn mã giảm giá</option>
+                    <c:forEach var="discount" items="${discounts}">
+                        <option value="${discount.id}" data-type="${discount.type}" data-percent="${discount.percentage}" data-amount="${discount.amount}">
+                            ${discount.code} - 
+                            <c:choose>
+                                <c:when test="${discount.type == 1}">
+                                    Giảm ${discount.percentage}%
+                                </c:when>
+                                <c:when test="${discount.type == 2}">
+                                    Giảm ${discount.amount}đ
+                                </c:when>
+                                <c:otherwise>
+                                    Khác
+                                </c:otherwise>
+                            </c:choose>
+                        </option>
+                    </c:forEach>
+                </select>
+                <div id="discount_info" style="margin-top:8px;color:#007bff;font-weight:bold;"></div>
+            </div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const discountSelect = document.getElementById('discount_code_select');
+                    const discountInfo = document.getElementById('discount_info');
+                    discountSelect.addEventListener('change', function() {
+                        const selected = discountSelect.options[discountSelect.selectedIndex];
+                        const type = selected.getAttribute('data-type');
+                        const percent = selected.getAttribute('data-percent');
+                        const amount = selected.getAttribute('data-amount');
+                        if (type == '1') {
+                            discountInfo.textContent = `Giảm ${percent}% trên tổng hóa đơn.`;
+                        } else if (type == '2') {
+                            discountInfo.textContent = `Giảm ${parseInt(amount).toLocaleString()}đ trên tổng hóa đơn.`;
+                        } else {
+                            discountInfo.textContent = '';
+                        }
+                    });
+                });
+            </script>
+            <div class="box_infPay" id="discount_percent_box">
+                <p class="lable_infPay"><strong>Nhập % giảm giá</strong></p>
+                <input type="number" min="1" max="100" name="discount_percent_value" placeholder="Nhập phần trăm giảm giá" class="input_box_infPay">
+            </div>
+            <div class="box_infPay" id="discount_amount_box" style="display:none;">
+                <p class="lable_infPay"><strong>Nhập số tiền giảm</strong></p>
+                <input type="number" min="1000" name="discount_amount_value" placeholder="Nhập số tiền giảm giá" class="input_box_infPay">
+            </div>
+            <script>
+                // Ẩn/hiện input theo loại giảm giá
+                document.addEventListener('DOMContentLoaded', function() {
+                    const percentRadio = document.getElementById('discount_percent');
+                    const amountRadio = document.getElementById('discount_amount');
+                    const percentBox = document.getElementById('discount_percent_box');
+                    const amountBox = document.getElementById('discount_amount_box');
+                    function toggleDiscountInput() {
+                        if (percentRadio.checked) {
+                            percentBox.style.display = '';
+                            amountBox.style.display = 'none';
+                        } else if (amountRadio.checked) {
+                            percentBox.style.display = 'none';
+                            amountBox.style.display = '';
+                        }
+                    }
+                    percentRadio.addEventListener('change', toggleDiscountInput);
+                    amountRadio.addEventListener('change', toggleDiscountInput);
+                    // Khởi tạo đúng trạng thái khi load trang
+                    toggleDiscountInput();
+                });
+            </script>
+            <div class="box_infPay">
                 <p class="lable_infPay"><strong>Họ và tên</strong></p>
                 <input type="text" placeholder="Nhập họ và tên của bạn" class="input_box_infPay">
             </div>

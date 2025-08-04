@@ -9,6 +9,7 @@
     <title>Thanh toán - BeeStore</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="/resources/js/checkout.js"></script>
 
     <style>
         .checkout-container {
@@ -258,13 +259,15 @@
                                     <span>Phí vận chuyển:</span>
                                     <span class="text-success">Miễn phí</span>
                                 </div>
-                                <div class="price-row d-flex justify-content-between" id="discountRow" style="display: none !important;">
+                                <div class="price-row d-flex justify-content-between" id="discountRow">
                                     <span>Giảm giá:</span>
-                                    <span id="discountAmount" class="text-success">0₫</span>
+                                    <span id="discountAmount" class="text-danger">0₫</span>
                                 </div>
+                                <div id="discountMessage" class="text-danger small"></div>
                                 <div class="price-row d-flex justify-content-between">
                                     <strong>Tổng cộng:</strong>
-                                    <strong class="text-primary" id="finalTotal">
+                                    <input type="hidden" id="cartTotal" data-value="${cartTotal}" />
+                                    <strong class="text-primary" id="finalAmount">
                                         <fmt:formatNumber value="${cartTotal}" type="currency" currencySymbol="₫"/>
                                     </strong>
                                 </div>

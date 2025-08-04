@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.Dto;
 
 public class ChatRequest {
     private String message;

@@ -55,7 +55,7 @@ public class BillService {
         // Áp dụng giảm giá
         if (discount != null) {
             double discountAmount = calculateDiscountAmount(totalAmount, discount);
-            bill.setPromotionPrice(discountAmount);
+            bill.setPromotionPrice(discountAmount); // Số tiền giảm giá thực tế, không nhân thêm lần nào
         }
 
         bill = billRepository.save(bill);
@@ -95,14 +95,19 @@ public class BillService {
 
     // Tính toán số tiền giảm giá
     private double calculateDiscountAmount(double totalAmount, Discount discount) {
-        if (discount.getPercentage() != null && discount.getPercentage() > 0) {
-            double discountAmount = totalAmount * discount.getPercentage() / 100;
-            if (discount.getMaximumAmount() != null) {
-                return Math.min(discountAmount, discount.getMaximumAmount());
+        if (discount.getType() != null) {
+            // type = 1: giảm theo %
+            if (discount.getType() == 1 && discount.getPercentage() != null && discount.getPercentage() > 0) {
+                double discountAmount = totalAmount * discount.getPercentage() / 100;
+                if (discount.getMaximumAmount() != null) {
+                    return Math.min(discountAmount, discount.getMaximumAmount());
+                }
+                return discountAmount;
             }
-            return discountAmount;
-        } else if (discount.getAmount() != null) {
-            return discount.getAmount();
+            // type = 2: giảm theo số tiền
+            else if (discount.getType() == 2 && discount.getAmount() != null && discount.getAmount() > 0) {
+                return discount.getAmount();
+            }
         }
         return 0;
     }
