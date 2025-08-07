@@ -11,6 +11,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
+import org.springframework.lang.NonNull;
+
+
 @Configuration
 @EnableWebMvc
 public class WebMvcConfig implements WebMvcConfigurer {
@@ -24,12 +27,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
     }
 
     @Override
-    public void configureViewResolvers(ViewResolverRegistry registry) {
+    public void configureViewResolvers(@NonNull ViewResolverRegistry registry) {
         registry.viewResolver(viewResolver());
     }
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry){
+    public void addResourceHandlers(@NonNull ResourceHandlerRegistry registry){
         registry.addResourceHandler("/css/**").addResourceLocations("/resources/css/");
         registry.addResourceHandler("/js/**").addResourceLocations("/resources/js/");
         registry.addResourceHandler("/images/**").addResourceLocations("/resources/images/");

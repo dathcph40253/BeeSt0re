@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import com.example.demo.Dto.InfoDto;
 import com.example.demo.Entity.AddressShipping;
 import com.example.demo.Entity.Customer;
 import com.example.demo.Entity.User;
+import com.example.demo.dto.InfoDto;
 import com.example.demo.service.AddressService;
 import com.example.demo.service.CustomerService;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -35,7 +34,7 @@ public class ProfileController {
     public String profile(HttpSession session, Model model) {
         Customer customer = (Customer) session.getAttribute("customer");
         if (customer == null) {
-            return "redirect:/Home";
+            return "redirect:/";
         }
 
         // Lấy thông tin User để có email đăng nhập

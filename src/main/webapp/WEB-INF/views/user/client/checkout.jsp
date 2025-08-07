@@ -193,7 +193,7 @@
                     </div>
                 </div>
 
-                <!-- Mã giảm giá -->
+                <!-- Mã giảm giá (chỉ hiển thị mã có percentage) -->
                 <div class="card mb-4">
                     <div class="card-header">
                         <h5 class="mb-0"><i class="fas fa-tags me-2"></i>Mã giảm giá</h5>
@@ -202,103 +202,96 @@
                         <select class="form-select" name="discountId">
                             <option value="">Chọn mã giảm giá</option>
                             <c:forEach items="${discounts}" var="discount">
-                                <option value="${discount.id}">
-                                    ${discount.code} - 
-                                    <c:choose>
-                                        <c:when test="${discount.percentage != null}">
-                                            Giảm ${discount.percentage}%
-                                        </c:when>
-                                        <c:otherwise>
-                                            Giảm <fmt:formatNumber value="${discount.amount}" type="currency" currencySymbol="₫"/>
-                                        </c:otherwise>
-                                    </c:choose>
-                                </option>
+                                <!-- Chỉ hiển thị mã giảm giá theo phần trăm -->
+                                <c:if test="${discount.percentage != null}">
+                                    <option value="${discount.id}" data-percentage="${discount.percentage}">
+                                        ${discount.code} - Giảm ${discount.percentage}%
+                                    </option>
+                                </c:if>
                             </c:forEach>
                         </select>
                     </div>
                 </div>
             </div>
 
-                        <div class="col-lg-4">
-                            <!-- Tóm tắt đơn hàng -->
-                            <div class="order-summary">
-                                <h4 class="section-title"><i class="fas fa-receipt me-2"></i>Tóm tắt đơn hàng</h4>
+            <div class="col-lg-4">
+                <!-- Tóm tắt đơn hàng -->
+                <div class="order-summary">
+                    <h4 class="section-title"><i class="fas fa-receipt me-2"></i>Tóm tắt đơn hàng</h4>
 
-                                <!-- Danh sách sản phẩm -->
-                                <div class="mb-3">
-                                    <h6 class="mb-3">Sản phẩm đã chọn:</h6>
-                                    <c:forEach items="${cartItems}" var="item">
-                                        <div class="product-item cart-item">
-                                            <div class="d-flex align-items-center">
-                                                <img src="/images/product/${item.productImage}"
-                                                     alt="${item.productName}" class="product-image me-3">
-                                                <div class="flex-grow-1">
-                                                    <h6 class="mb-1">${item.productName}</h6>
-                                                    <small class="text-muted">${item.productColor} - ${item.productSize}</small><br>
-                                                    <small class="item-quantity">Số lượng: ${item.quantity}</small>
-                                                </div>
-                                                <div class="text-end">
-                                                    <span class="item-price fw-bold">
-                                                        <fmt:formatNumber value="${item.totalPrice}" type="currency" currencySymbol="₫"/>
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </c:forEach>
+                    <!-- Danh sách sản phẩm -->
+                    <div class="mb-3">
+                        <h6 class="mb-3">Sản phẩm đã chọn:</h6>
+                        <c:forEach items="${cartItems}" var="item">
+                            <div class="product-item cart-item">
+                                <div class="d-flex align-items-center">
+                                    <img src="/images/product/${item.productImage}"
+                                         alt="${item.productName}" class="product-image me-3">
+                                    <div class="flex-grow-1">
+                                        <h6 class="mb-1">${item.productName}</h6>
+                                        <small class="text-muted">${item.productColor} - ${item.productSize}</small><br>
+                                        <small class="item-quantity">Số lượng: ${item.quantity}</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="item-price fw-bold" data-price="${item.totalPrice}">
+                                            <fmt:formatNumber value="${item.totalPrice}" type="currency" currencySymbol="₫"/>
+                                        </span>
+                                    </div>
                                 </div>
-                        
-                                <hr>
-
-                                <!-- Tính toán -->
-                                <div class="price-row d-flex justify-content-between">
-                                    <span>Tạm tính:</span>
-                                    <span><fmt:formatNumber value="${cartTotal}" type="currency" currencySymbol="₫"/></span>
-                                </div>
-                                <div class="price-row d-flex justify-content-between">
-                                    <span>Phí vận chuyển:</span>
-                                    <span class="text-success">Miễn phí</span>
-                                </div>
-                                <div class="price-row d-flex justify-content-between" id="discountRow" style="display: none !important;">
-                                    <span>Giảm giá:</span>
-                                    <span id="discountAmount" class="text-success">0₫</span>
-                                </div>
-                                <div class="price-row d-flex justify-content-between">
-                                    <strong>Tổng cộng:</strong>
-                                    <strong class="text-primary" id="finalTotal">
-                                        <fmt:formatNumber value="${cartTotal}" type="currency" currencySymbol="₫"/>
-                                    </strong>
-                                </div>
-
-                                <!-- Thời gian giao hàng dự kiến -->
-                                <div class="alert alert-info">
-                                    <i class="fas fa-clock me-2"></i>
-                                    <strong>Thời gian giao hàng dự kiến:</strong><br>
-                                    2-3 ngày làm việc (Nội thành)<br>
-                                    3-5 ngày làm việc (Ngoại thành)
-                                </div>
-
-                                <button type="submit" class="btn-checkout">
-                                    <i class="fas fa-credit-card me-2"></i>Đặt hàng ngay
-                                </button>
-                                <a href="/cart" class="btn btn-outline-secondary w-100 mt-3" style="border-radius: 25px;">
-                                    <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
-                                </a>
                             </div>
-                        </div>
+                        </c:forEach>
                     </div>
-                </form>
+            
+                    <hr>
+
+                    <!-- Tính toán -->
+                    <div class="price-row d-flex justify-content-between">
+                        <span>Tạm tính:</span>
+                        <span><fmt:formatNumber value="${cartTotal}" type="currency" currencySymbol="₫"/></span>
+                    </div>
+                    <div class="price-row d-flex justify-content-between">
+                        <span>Phí vận chuyển:</span>
+                        <span class="text-success">Miễn phí</span>
+                    </div>
+                    <div class="price-row d-flex justify-content-between" id="discountRow" style="display: none;">
+                        <span>Giảm giá:</span>
+                        <span id="discountAmount" class="text-success">0%</span>
+                    </div>
+                    <div class="price-row d-flex justify-content-between">
+                        <strong>Tổng cộng:</strong>
+                        <strong class="text-primary" id="finalTotal">
+                            <fmt:formatNumber value="${cartTotal}" type="currency" currencySymbol="₫"/>
+                        </strong>
+                    </div>
+
+                    <!-- Thời gian giao hàng dự kiến -->
+                    <div class="alert alert-info">
+                        <i class="fas fa-clock me-2"></i>
+                        <strong>Thời gian giao hàng dự kiến:</strong><br>
+                        2-3 ngày làm việc (Nội thành)<br>
+                        3-5 ngày làm việc (Ngoại thành)
+                    </div>
+
+                    <button type="submit" class="btn-checkout">
+                        <i class="fas fa-credit-card me-2"></i>Đặt hàng ngay
+                    </button>
+                    <a href="/cart" class="btn btn-outline-secondary w-100 mt-3" style="border-radius: 25px;">
+                        <i class="fas fa-arrow-left me-2"></i>Quay lại giỏ hàng
+                    </a>
+                </div>
+            </div>
+        </div>
+    </form>
             </div>
         </div>
     </div>
 </div>
 
 <jsp:include page="../layout/footer.jsp"/>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 // Biến toàn cục
 let subtotal = 0;
-let currentDiscount = 0;
+let currentDiscountPercentage = 0;
 
 // Tính toán subtotal từ các sản phẩm
 function calculateSubtotal() {
@@ -310,7 +303,7 @@ function calculateSubtotal() {
 
         if (priceElement) {
             // Lấy giá trị từ text và chuyển đổi thành số
-            const priceText = priceElement.textContent.replace(/[^\d]/g, '');
+            const priceText = priceElement.getAttribute('data-price');
             const price = parseFloat(priceText);
             if (!isNaN(price)) {
                 total += price;
@@ -326,70 +319,75 @@ function calculateSubtotal() {
 function formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN', {
         style: 'currency',
-        currency: 'VND'
+        currency: 'VND',
+        maximumFractionDigits: 2,
+        minimumFractionDigits:2
     }).format(amount);
 }
 
-// Cập nhật tổng tiền
+// Tính toán số tiền giảm giá dựa trên phần trăm
+function calculateDiscountAmount(percentage) {
+    return subtotal * (percentage / 100);
+}
+
 function updateTotal() {
-    const finalTotal = subtotal - currentDiscount;
+    const discountAmount = calculateDiscountAmount(currentDiscountPercentage);
+    const finalTotal = subtotal - discountAmount;
+
     const totalElement = document.getElementById('finalTotal');
     if (totalElement) {
         totalElement.textContent = formatCurrency(finalTotal);
     }
+
+    const discountRow = document.getElementById('discountRow');
+    const discountAmountElement = document.getElementById('discountAmount');
+
+    if (currentDiscountPercentage > 0) {
+        if (discountRow) discountRow.style.display = 'flex';
+        if (discountAmountElement) discountAmountElement.textContent = currentDiscountPercentage + '%';
+    } else {
+        if (discountRow) discountRow.style.display = 'none';
+    }
 }
+
 
 // Tính toán lại tổng tiền khi chọn mã giảm giá
 document.addEventListener('DOMContentLoaded', function() {
     // Tính subtotal ban đầu
     calculateSubtotal();
-
+    updateTotal();
     const discountSelect = document.querySelector('select[name="discountId"]');
     const discountRow = document.getElementById('discountRow');
+    const discountAmountElement = document.getElementById('discountAmount');
 
     if (discountSelect) {
         discountSelect.addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
 
             if (selectedOption.value) {
-                // Hiển thị loading
-                document.getElementById('discountAmount').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang tính...';
-                discountRow.style.display = 'flex';
-
-                // Gọi API để tính toán giảm giá
-                fetch('/cart/api/discount/calculate', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        discountId: selectedOption.value,
-                        totalAmount: subtotal
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        currentDiscount = data.discountAmount;
-                        document.getElementById('discountAmount').textContent = formatCurrency(currentDiscount);
-                        updateTotal();
-                    } else {
-                        currentDiscount = 0;
-                        document.getElementById('discountAmount').textContent = '0₫';
-                        discountRow.style.display = 'none';
-                        updateTotal();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    currentDiscount = 0;
-                    document.getElementById('discountAmount').textContent = '0₫';
+                // Lấy phần trăm từ data attribute
+                const percentage = parseFloat(selectedOption.getAttribute('data-percentage'));
+                
+                if (!isNaN(percentage)) {
+                    currentDiscountPercentage = percentage;
+                    
+                    // Hiển thị phần trăm giảm giá
+                    discountAmountElement.textContent = `${percentage}%`;
+                    discountRow.style.display = 'flex';
+                    
+                    // Cập nhật tổng tiền
+                    updateTotal();
+                } else {
+                    // Nếu không có phần trăm hợp lệ, reset về 0
+                    currentDiscountPercentage = 0;
+                    discountAmountElement.textContent = '0%';
                     discountRow.style.display = 'none';
                     updateTotal();
-                });
+                }
             } else {
-                currentDiscount = 0;
-                document.getElementById('discountAmount').textContent = '0₫';
+                // Không chọn mã giảm giá
+                currentDiscountPercentage = 0;
+                discountAmountElement.textContent = '0%';
                 discountRow.style.display = 'none';
                 updateTotal();
             }

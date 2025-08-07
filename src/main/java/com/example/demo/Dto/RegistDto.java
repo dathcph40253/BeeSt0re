@@ -1,14 +1,12 @@
-package com.example.demo.Dto;
+package com.example.demo.dto;
 
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+
 
 @Builder
 @Getter

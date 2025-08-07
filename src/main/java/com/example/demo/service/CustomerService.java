@@ -1,8 +1,8 @@
 package com.example.demo.service;
 
-import com.example.demo.Dto.InfoDto;
 import com.example.demo.Entity.AddressShipping;
 import com.example.demo.Entity.Customer;
+import com.example.demo.dto.InfoDto;
 import com.example.demo.repository.CustomerRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +21,8 @@ public class CustomerService {
     public Customer findCustomerById(Long id) {
         return repo.findById(id).orElse(null);
     }
+
+    
     public String generateCustomerCode(){
         List<Customer> newCode = repo.findByCodeStartingWithOrderByCodeDesc("KH");
         int nextNumber =1;

@@ -48,7 +48,7 @@
             </ul>
         </div>
         <div class="card-footer text-center">
-            <a href="Home" class="btn btn-outline-primary me-2">← Trở về trang chủ</a>
+            <a href="/" class="btn btn-outline-primary me-2">← Trở về trang chủ</a>
             <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editProfileModal">
                 <i class="fas fa-edit"></i> Sửa thông tin
             </button>

@@ -1,8 +1,8 @@
 package com.example.demo.controller;
 
 import com.example.demo.Entity.Customer;
-import com.example.demo.Dto.RegistDto;
 import com.example.demo.Entity.User;
+import com.example.demo.dto.RegistDto;
 import com.example.demo.repository.UserRepone;
 import com.example.demo.service.CustomerService;
 import com.example.demo.service.UserService;

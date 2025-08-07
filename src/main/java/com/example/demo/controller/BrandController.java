@@ -21,8 +21,6 @@ public class BrandController {
 
     @Autowired
     private BrandService brandService;
-    @Autowired
-    private ProductDetailRepo productDetailRepo;
 
     @GetMapping("/Brand")
     public String Brand( Model model) {

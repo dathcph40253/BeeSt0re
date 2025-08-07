@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import com.example.demo.Entity.Brand;
 import com.example.demo.Entity.Color;
 import com.example.demo.repository.ColorRepo;
 import com.example.demo.repository.ProductDetailRepo;

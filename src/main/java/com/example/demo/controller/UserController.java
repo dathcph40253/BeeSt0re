@@ -1,11 +1,12 @@
 package com.example.demo.controller;
 
-import ch.qos.logback.core.model.Model;
-import com.example.demo.Dto.LoginDto;
+
+import com.example.demo.Entity.Customer;
 import com.example.demo.Entity.User;
-import com.example.demo.repository.CustomerRepo;
+import com.example.demo.dto.LoginDto;
 import com.example.demo.repository.UserRepone;
 import com.example.demo.service.CustomerService;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,10 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-
+    
+    @Autowired
+    private CustomerService customerService;
+    
     @GetMapping("/Home")
     public String home() {
         return "home";
@@ -45,8 +49,7 @@ public class UserController {
     public String DangNhap() {
         return "user";
     }
-
-    @PostMapping("/Login")
+  @PostMapping("/Login")
     public String getLogin(LoginDto loginDto, RedirectAttributes re, HttpSession session, HttpServletRequest request) {
         // Tìm user theo email
         Optional<User> userOpt = userReponse.findByEmail(loginDto.getName());
@@ -57,10 +60,13 @@ public class UserController {
                 // Kiểm tra tài khoản có bị khóa không
                 if (user.getIsNonLocked()) {
                     session.setAttribute("user", user);
+                    Customer customer = user.getCustomer();
+                    if (customer != null) {
+                    session.setAttribute("customer", customer); // ✅ Thêm dòng này
+                    }
                     String roleName = user.getRole().getName(); // VD: ROLE_ADMIN
                     List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(roleName));
                     Authentication authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
-
                     // Lưu authentication vào SecurityContext và session
                     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                     securityContext.setAuthentication(authToken);
@@ -95,7 +101,7 @@ public class UserController {
         // Thêm thông báo đăng xuất thành công
         redirectAttributes.addFlashAttribute("message", "Đăng xuất thành công");
         // Chuyển hướng về trang home thay vì trang đăng nhập
-        return "redirect:/Home";
+        return "redirect:/";
     }
     @GetMapping("/search")
     public String searchName(@RequestParam("keyword") String keyword) {

@@ -8,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.http.HttpStatus;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +37,11 @@ public class CartController {
     @Autowired
     private DiscountRepo discountRepo;
 
+    @Autowired
+    private SePayService sePayService;
+
+    @Autowired
+    private BillRepository billRepository;
     // Hiển thị giỏ hàng
     @GetMapping("")
     public String viewCart(HttpSession session, Model model) {
@@ -127,7 +135,7 @@ public class CartController {
         Double cartTotal = cartService.getCartTotal(user);
         List<PaymentMethod> paymentMethods = paymentMethodRepository.findByStatusTrue();
         List<Discount> availableDiscounts = discountRepo.findByDeleteFalse();
-
+        
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("cartTotal", cartTotal);
         model.addAttribute("paymentMethods", paymentMethods);
@@ -144,7 +152,8 @@ public class CartController {
                            @RequestParam Long paymentMethodId,
                            @RequestParam(required = false) Long discountId,
                            HttpSession session,
-                           RedirectAttributes redirectAttributes) {
+                           RedirectAttributes redirectAttributes,
+                           Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/Login";
@@ -158,7 +167,23 @@ public class CartController {
             }
 
             Bill bill = billService.createBillFromCart(user, billingAddress, invoiceType, paymentMethod, discount);
-            
+           if (paymentMethodId == 3L) {
+    String bankCode = "MB"; // ngân hàng (VD: MB, VCB, TCB...)
+    String accountNumber = "0367387326"; // số tài khoản của shop
+    BigDecimal amount = BigDecimal.valueOf(bill.getFinalAmount());
+
+    String qrUrl = sePayService.generateBankQR(
+        bankCode,
+        accountNumber,
+        amount,
+        bill.getCode()
+    );
+
+        model.addAttribute("qrUrl", qrUrl);
+        model.addAttribute("billId", bill.getId());
+        model.addAttribute("billCode", bill.getCode());
+        return "show-qr"; // Trả về JSP hiển thị mã QR
+        }
             redirectAttributes.addFlashAttribute("success", "Đặt hàng thành công! Mã đơn hàng: " + bill.getCode());
             return "redirect:/orders/" + bill.getId();
         } catch (Exception e) {
@@ -179,51 +204,77 @@ public class CartController {
     }
 
     // API tính toán discount
-    @PostMapping("/api/discount/calculate")
-    @ResponseBody
-    public Map<String, Object> calculateDiscount(@RequestBody Map<String, Object> request) {
-        Map<String, Object> response = new HashMap<>();
-
-        try {
-            Long discountId = Long.valueOf(request.get("discountId").toString());
-            Double totalAmount = Double.valueOf(request.get("totalAmount").toString());
-
-            Optional<Discount> discountOpt = discountRepo.findById(discountId);
-
-            if (discountOpt.isPresent()) {
-                Discount discount = discountOpt.get();
-                double discountAmount = 0;
-
-                if (discount.getPercentage() != null && discount.getPercentage() > 0) {
-                    // Giảm theo phần trăm
-                    discountAmount = totalAmount * discount.getPercentage() / 100;
-                    if (discount.getMaximumAmount() != null && discountAmount > discount.getMaximumAmount()) {
-                        discountAmount = discount.getMaximumAmount();
-                    }
-                } else if (discount.getAmount() != null) {
-                    // Giảm theo số tiền cố định
-                    discountAmount = discount.getAmount();
-                }
-
+   @PostMapping("/api/discount/calculate")
+@ResponseBody
+public Map<String, Object> calculateDiscount(@RequestBody Map<String, Object> request) {
+    Map<String, Object> response = new HashMap<>();
+    
+    try {
+        Long discountId = Long.valueOf(request.get("discountId").toString());
+        Double totalAmount = Double.valueOf(request.get("totalAmount").toString());
+        
+        Optional<Discount> discountOpt = discountRepo.findById(discountId);
+        
+        if (discountOpt.isPresent()) {
+            Discount discount = discountOpt.get();
+            
+            // Chỉ xử lý mã giảm giá theo phần trăm
+            if (discount.getPercentage() != null && discount.getPercentage() > 0) {
                 // Kiểm tra điều kiện tối thiểu
                 if (discount.getMinimumAmountInCart() != null && totalAmount < discount.getMinimumAmountInCart()) {
                     response.put("success", false);
                     response.put("message", "Đơn hàng chưa đạt giá trị tối thiểu để áp dụng mã giảm giá này");
                     return response;
                 }
-
+                
+                // Tính toán giảm giá theo phần trăm
+                double discountAmount = totalAmount * discount.getPercentage() / 100;
+                
+                // Áp dụng giới hạn tối đa nếu có
+                if (discount.getMaximumAmount() != null && discountAmount > discount.getMaximumAmount()) {
+                    discountAmount = discount.getMaximumAmount();
+                }
+                response.put("percentage", discount.getPercentage());
                 response.put("success", true);
                 response.put("discountAmount", discountAmount);
                 response.put("message", "Áp dụng mã giảm giá thành công");
             } else {
+                // Không hỗ trợ mã giảm theo số tiền cố định
                 response.put("success", false);
-                response.put("message", "Mã giảm giá không tồn tại");
+                response.put("message", "Mã giảm giá này không được hỗ trợ");
             }
-        } catch (Exception e) {
+        } else {
             response.put("success", false);
-            response.put("message", "Có lỗi xảy ra khi tính toán giảm giá");
+            response.put("message", "Mã giảm giá không tồn tại");
         }
-
-        return response;
+    } catch (Exception e) {
+        response.put("success", false);
+        response.put("message", "Có lỗi xảy ra khi tính toán giảm giá");
     }
+    
+    return response;
+}
+    @GetMapping("/qr-code/{code}")
+public String showQRCodePage(@PathVariable String code, Model model) {
+    // Tìm hóa đơn theo mã code
+    Bill bill = billRepository.findByCode(code)
+        .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy đơn hàng"));
+
+        String bankCode = "MB";
+        String accountNumber = "0367387326";
+        String qrUrl = sePayService.generateBankQR(
+        bankCode,
+        accountNumber,
+        BigDecimal.valueOf(bill.getFinalAmount()),
+        "Thanh toan don hang: " + bill.getCode() // Đổi domain nếu cần
+    );
+
+    // Truyền dữ liệu sang trang JSP
+    model.addAttribute("billCode", bill.getCode());
+    model.addAttribute("billId", bill.getId());
+    model.addAttribute("qrUrl", qrUrl);
+
+    return "show-qr"; // payment.jsp
+}
+
 }

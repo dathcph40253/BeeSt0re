@@ -3,7 +3,6 @@ package com.example.demo.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.List;
 
 @Builder
 @Getter

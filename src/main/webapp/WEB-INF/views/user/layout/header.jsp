@@ -125,7 +125,7 @@
                     <c:choose>
                         <c:when test="${not empty sessionScope.user}">
                             <div class="dropdown user-dropdown me-3">
-                                <a href="#" class="dropdown-toggle d-flex align-items-center" data-bs-toggle="dropdown">
+                                <a href="#" class="dropdown-toggle d-flex align-items-center" role="button" data-bs-toggle="dropdown">
                                     <i class="fas fa-user me-2"></i>
                                     <span class="d-none d-md-inline">${sessionScope.user.email}</span>
                                 </a>
@@ -187,3 +187,6 @@ function updateCartCount() {
     }
 }
 </script>
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
