@@ -21,7 +21,10 @@
         <div class="col-10">
             <jsp:include page="../layout/header.jsp"/>
             <div class="p-4">
-                <h2 class="mb-4">Quản lý Giảm giá theo Biến thể Sản phẩm</h2>
+                <jsp:include page="../layout/page-title.jsp">
+                    <jsp:param name="title" value="Quản Lý Giảm giá theo Biến thể Sản phẩm"/>
+                    <jsp:param name="icon" value="fa-solid fa-percent"/>
+                </jsp:include>
 
                 <div class="d-flex justify-content-between mb-3">
                     <a class="btn btn-secondary" href="/Home">🏠 Trang chủ</a>

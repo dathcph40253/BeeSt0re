@@ -21,7 +21,10 @@
 
         <!-- User Management Content -->
         <div class="dashboard">
-            <h1>Quản lý Người Dùng</h1>
+            <jsp:include page="admin/layout/page-title.jsp">
+                <jsp:param name="title" value="Quản Lý Người Dùng"/>
+                <jsp:param name="icon" value="fa-solid fa-users"/>
+            </jsp:include>
 
             <div class="d-flex justify-content-between mb-3">
                 <form class="d-flex" method="get" action="/admin/account">

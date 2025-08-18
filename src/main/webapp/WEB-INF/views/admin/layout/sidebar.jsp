@@ -16,7 +16,7 @@
                 <a href="/product"><i class="fas fa-box"></i><span>Sản phẩm</span></a>
             </li>
             <li class="${pageContext.request.requestURI.contains('/admin/sales') ? 'active' : ''}">
-                <a href="/admin/sales"><i class="fas fa-shopping-cart"></i><span>Bán hàng</span></a>
+                <a href="/admin/sales"><i class="fa-solid fa-cash-register"></i><span>Bán hàng</span></a>
             </li>
 </c:if>
             <!-- Chỉ hiện với EMPLOYEE hoặc ADMIN -->
@@ -43,14 +43,8 @@
                 <li class="${pageContext.request.requestURI.contains('/admin/account') ? 'active' : ''}">
                     <a href="/admin/account"><i class="fas fa-users"></i><span>Tài khoản</span></a>
                 </li>
-                <li class="${pageContext.request.requestURI.contains('/admin/ProductDiscount') ? 'active' : ''}">
-                    <a href="/admin/ProductDiscount"><i class="fas fa-users"></i><span>Giảm giá</span></a>
-                </li>
                 <li class="${pageContext.request.requestURI.contains('/admin/Discount') ? 'active' : ''}">
-                    <a href="/admin/Discount"><i class="fas fa-users"></i><span>Mã giảm giá</span></a>
-                </li>
-                <li class="${pageContext.request.requestURI.contains('/admin/report') ? 'active' : ''}">
-                    <a href="/admin/report"><i class="fas fa-chart-bar"></i><span>Báo cáo</span></a>
+                    <a href="/admin/Discount"><i class="fa-solid fa-tags"></i><span>Mã giảm giá</span></a>
                 </li>
             </c:if>
         </ul>

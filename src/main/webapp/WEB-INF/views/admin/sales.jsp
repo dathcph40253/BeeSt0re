@@ -15,6 +15,18 @@
         .card { box-shadow: 0 2px 5px rgba(0,0,0,.1); border-radius: 10px; }
         .badge-qty { background:#6366f1; }
         .product-row:hover { background: #f8f9fa; }
+
+        /* Giảm khoảng cách giữa các cột trong row */
+        .sales-layout .row {
+            margin-left: -2px;
+            margin-right: -2px;
+        }
+
+        .sales-layout .row > [class*="col-"] {
+            padding-left: 2px;
+            padding-right: 2px;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 <body style="min-height: 100vh; display: flex">
@@ -23,7 +35,10 @@
 <jsp:include page="layout/header.jsp"/>
 
 <div class="container-fluid p-4">
-    <h3 class="mb-3"><i class="fas fa-cash-register me-2"></i>Bán hàng tại quầy</h3>
+    <jsp:include page="layout/page-title.jsp">
+        <jsp:param name="title" value="Bán hàng tại quầy"/>
+        <jsp:param name="icon" value="fa-solid fa-cash-register"/>
+    </jsp:include>
 
     <c:if test="${not empty error}">
         <div class="alert alert-danger">${error}</div>
@@ -32,9 +47,9 @@
         <div class="alert alert-success">${success}</div>
     </c:if>
 
-    <div class="row g-3">
-        <!-- Bảng sản phẩm -->
-        <div class="col-lg-6">
+    <div class="row g-2 sales-layout">
+        <!-- Bảng sản phẩm trên cùng chiếm rộng -->
+        <div class="col-lg-8">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Sản phẩm</h5>
@@ -74,8 +89,53 @@
             </div>
         </div>
 
-        <!-- Giỏ hàng -->
-        <div class="col-lg-3">
+        <!-- Thanh toán bên phải (chiều cao bằng 2 khối dưới) -->
+        <div class="col-lg-4">
+            <div class="card h-100">
+                <div class="card-header">
+                    <h5 class="mb-0">Thanh toán</h5>
+                </div>
+                <div class="card-body">
+                    <form action="/admin/sales/place-order" method="post">
+                        <div class="mb-2">
+                            <label class="form-label">Địa chỉ</label>
+                            <input type="text" name="billingAddress" class="form-control" value="" placeholder="Nhập địa chỉ giao hàng" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Loại hóa đơn</label>
+                            <select class="form-select" name="invoiceType">
+                                <option value="RETAIL">Bán lẻ</option>
+                                <option value="INVOICE">Hóa đơn VAT</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Phương thức thanh toán</label>
+                            <select class="form-select" name="paymentMethodId" required>
+                                <c:forEach items="${paymentMethods}" var="pm">
+                                    <option value="${pm.id}">${pm.name}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Mã giảm giá</label>
+                            <select class="form-select" name="discountId">
+                                <option value="">-- Không áp dụng --</option>
+                                <c:forEach items="${discounts}" var="dc">
+                                    <option value="${dc.id}">${dc.code} - ${dc.detail}</option>
+                                </c:forEach>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary w-100" type="submit">
+                            <i class="fas fa-receipt me-2"></i>Tạo hóa đơn & Thanh toán
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hàng dưới: Giỏ hàng bên trái và Đơn hàng gần đây bên phải -->
+        <div class="col-lg-4">
+            <!-- Giỏ hàng -->
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">Giỏ hàng</h5>
@@ -131,52 +191,11 @@
             </div>
         </div>
 
-        <!-- Thanh toán -->
-        <div class="col-lg-3">
+        <!-- Đơn hàng gần đây bên phải -->
+        <div class="col-lg-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">Thanh toán</h5>
-                </div>
-                <div class="card-body">
-                    <form action="/admin/sales/place-order" method="post">
-                        <div class="mb-2">
-                            <label class="form-label">Địa chỉ</label>
-                            <input type="text" name="billingAddress" class="form-control" value="" placeholder="Nhập địa chỉ giao hàng" required>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Loại hóa đơn</label>
-                            <select class="form-select" name="invoiceType">
-                                <option value="RETAIL">Bán lẻ</option>
-                                <option value="INVOICE">Hóa đơn VAT</option>
-                            </select>
-                        </div>
-                        <div class="mb-2">
-                            <label class="form-label">Phương thức thanh toán</label>
-                            <select class="form-select" name="paymentMethodId" required>
-                                <c:forEach items="${paymentMethods}" var="pm">
-                                    <option value="${pm.id}">${pm.name}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Mã giảm giá</label>
-                            <select class="form-select" name="discountId">
-                                <option value="">-- Không áp dụng --</option>
-                                <c:forEach items="${discounts}" var="dc">
-                                    <option value="${dc.id}">${dc.code} - ${dc.detail}</option>
-                                </c:forEach>
-                            </select>
-                        </div>
-                        <button class="btn btn-primary w-100" type="submit">
-                            <i class="fas fa-receipt me-2"></i>Tạo hóa đơn & Thanh toán
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="card mt-3">
-                <div class="card-header">
-                    <h6 class="mb-0">Hóa đơn gần đây</h6>
+                    <h5 class="mb-0">Đơn hàng gần đây</h5>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-fixed">

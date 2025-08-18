@@ -29,7 +29,7 @@ public class DiscountController {
             discounts.setDelete(true);
             discountRepo.save(discounts);
         }
-        return "redirect:/Discount";
+        return "redirect:/admin/Discount";
     }
     @GetMapping("/Discount/search")
     public String search(@RequestParam(name = "id") String id, Model model) {
@@ -51,6 +51,6 @@ public class DiscountController {
             discounts = discountRepo.findByDeleteFalse();
         }
         model.addAttribute("discounts", discounts);
-        return "discount";
+        return "admin/discount/discount";
     }
 }

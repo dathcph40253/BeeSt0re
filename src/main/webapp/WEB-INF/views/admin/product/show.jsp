@@ -128,7 +128,10 @@
 
         <!-- Products Content -->
         <div class="products-header">
-            <h1>Quản lý sản phẩm</h1>
+            <jsp:include page="../layout/page-title.jsp">
+                <jsp:param name="title" value="Quản Lý Sản Phẩm"/>
+                <jsp:param name="icon" value="fa-solid fa-box"/>
+            </jsp:include>
             <a class="btn-add" href="/product/create">
                 <i class="fas fa-plus"></i>
                 Thêm sản phẩm

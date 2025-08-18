@@ -11,7 +11,10 @@
 <jsp:include page="admin/layout/sidebar.jsp"/>
 <div class="main-content">
     <jsp:include page="admin/layout/header.jsp"/>
-    <h2 class="mb-4">Quản Lý Kích Thước</h2>
+    <jsp:include page="admin/layout/page-title.jsp">
+        <jsp:param name="title" value="Quản Lý Kích Thước"/>
+        <jsp:param name="icon" value="fa-solid fa-ruler"/>
+    </jsp:include>
     <div class="d-flex justify-content-between mb-3">
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addSizeModal">
             ➕ Thêm Kích Thước

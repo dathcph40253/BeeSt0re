@@ -232,6 +232,21 @@ body, html {
     background-color: #f8f9fa;
 }
 
+
+/* Unified page title */
+.page-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #2c3e50;
+    margin: 10px 0 20px;
+}
+.page-title i {
+    color: #1abc9c;
+}
+
 .dashboard .btn {
     border-radius: 6px;
     font-weight: 500;

@@ -11,7 +11,10 @@
 <jsp:include page="admin/layout/sidebar.jsp"/>
 <div class="main-content">
     <jsp:include page="admin/layout/header.jsp"/>
-    <h2 class="mb-4">Quản lý Loại Sản Phẩm</h2>
+    <jsp:include page="admin/layout/page-title.jsp">
+        <jsp:param name="title" value="Quản Lý Loại Sản Phẩm"/>
+        <jsp:param name="icon" value="fa-solid fa-tags"/>
+    </jsp:include>
     <div class="d-flex justify-content-between mb-3">
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
             ➕ Thêm Loại SP

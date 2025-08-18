@@ -21,15 +21,13 @@
         <div class="col-10">
             <jsp:include page="../layout/header.jsp"/>
             <div class="p-4">
-                <h2 class="mb-4">Quản Lý Discount</h2>
-
-                <div class="d-flex justify-content-between mb-3">
-                    <a class="btn btn-secondary" href="/Home">🏠 Trang chủ</a>
-                    <button type="button" class="btn btn-success">➕ Thêm</button>
-                </div>
+                <jsp:include page="../layout/page-title.jsp">
+                    <jsp:param name="title" value="Quản Lý Giảm giá"/>
+                    <jsp:param name="icon" value="fa-solid fa-tags"/>
+                </jsp:include>
 
                 <!-- Form tìm kiếm -->
-                <form class="row g-3 mb-4" method="get" action="/Discount/search">
+                <form class="row g-3 mb-4" method="get" action="/admin/Discount/search">
                     <div class="col-auto">
                         <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
                     </div>
@@ -37,7 +35,10 @@
                         <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
                     </div>
                     <div class="col-auto">
-                        <a href="/Discount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+                        <a href="/admin/Discount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+                    </div>
+                    <div class="col-auto">
+                        <button type="button" class="btn btn-success">➕ Thêm</button>
                     </div>
                 </form>
 
@@ -75,13 +76,13 @@
                                 <td>${discount.minimumAmountInCart}</td>
                                 <td>${discount.percentage}</td>
                                 <td>
-                                    <span class="badge ${discount.status == 'ACTIVE' ? 'bg-success' : 'bg-secondary'}">
-                                            ${discount.status}
+                                    <span class="badge ${discount.status == 1 ? 'bg-success' : 'bg-secondary'}">
+                                        ${discount.status == 1 ? 'ACTIVE' : 'INACTIVE'}
                                     </span>
                                 </td>
                                 <td>${discount.type}</td>
                                 <td>
-                                    <a href="/Discount/delete?id=${discount.id}"
+                                    <a href="/admin/Discount/delete?id=${discount.id}"
                                        class="btn btn-sm btn-danger"
                                        onclick="return confirm('Bạn có chắc muốn xóa giảm giá này không?')">
                                         Xóa
