@@ -15,8 +15,8 @@
             <li class="${pageContext.request.requestURI.contains('/product') ? 'active' : ''}">
                 <a href="/product"><i class="fas fa-box"></i><span>Sản phẩm</span></a>
             </li>
-            <li class="${pageContext.request.requestURI.contains('/admin/order') ? 'active' : ''}">
-                <a href="/order"><i class="fas fa-shopping-cart"></i><span>Đơn hàng</span></a>
+            <li class="${pageContext.request.requestURI.contains('/admin/sales') ? 'active' : ''}">
+                <a href="/admin/sales"><i class="fas fa-shopping-cart"></i><span>Bán hàng</span></a>
             </li>
 </c:if>
             <!-- Chỉ hiện với EMPLOYEE hoặc ADMIN -->
