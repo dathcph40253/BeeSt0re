@@ -26,6 +26,9 @@ public class BillService {
     @Autowired
     private ProductDetailService productDetailService;
 
+    @Autowired
+    private DiscountRepo discountRepo;
+
     // ============aas===== Tạo hóa đơn từ giỏ hàng trong DB =================
     public Bill createBillFromCart(User user, String billingAddress, String invoiceType,
                                    PaymentMethod paymentMethod, Discount discount) {
@@ -131,6 +134,9 @@ public class BillService {
             productDetailService.save(pd);
         }
 
+        // ✅ Trừ lượt sử dụng mã giảm giá vì đơn hàng đã SUCCESS
+        deductDiscountUsage(bill);
+
         return bill;
     }
 
@@ -156,6 +162,11 @@ public class BillService {
     private double calculateDiscountAmount(double totalAmount, Discount discount) {
         if( discount.getMinimumAmountInCart() != null && totalAmount < discount.getMinimumAmountInCart()){
             return 0;
+        }
+
+        // Kiểm tra số lượt sử dụng còn lại
+        if (discount.getMaximumUsage() != null && discount.getMaximumUsage() <= 0) {
+            return 0; // Không áp dụng giảm giá nếu hết lượt
         }
         if (discount.getType() != null) {
             if (discount.getType() == 1 && discount.getPercentage() != null && discount.getPercentage() > 0) {
@@ -222,13 +233,15 @@ public class BillService {
         // Trường hợp 1: Từ PENDING -> CONFIRMED (thanh toán thành công)
         if ("PENDING".equals(oldStatus) && "CONFIRMED".equals(newStatus)) {
             deductInventoryForBill(bill);
+            deductDiscountUsage(bill); // ✅ Trừ lượt sử dụng mã giảm giá
         }
 
-        // Trường hợp 2: Hủy đơn hàng -> Hoàn trả số lượng
+        // Trường hợp 2: Hủy đơn hàng -> Hoàn trả số lượng và discount usage
         if ("CANCELLED".equals(newStatus)) {
             // Chỉ hoàn trả nếu đã trừ số lượng trước đó (không phải PENDING)
             if (!"PENDING".equals(oldStatus)) {
                 restoreInventoryForBill(bill);
+                restoreDiscountUsage(bill); // ✅ Hoàn trả lượt sử dụng mã giảm giá
             }
         }
     }
@@ -256,6 +269,32 @@ public class BillService {
             ProductDetail productDetail = detail.getProductDetail();
             productDetail.setQuantity(productDetail.getQuantity() + detail.getQuantity());
             productDetailService.save(productDetail);
+        }
+    }
+
+    // ================= Xử lý discount usage =================
+
+    public void deductDiscountUsage(Bill bill) {
+        if (bill.getDiscountCode() != null) {
+            Discount discount = bill.getDiscountCode();
+            if (discount.getMaximumUsage() != null && discount.getMaximumUsage() > 0) {
+                discount.setMaximumUsage(discount.getMaximumUsage() - 1);
+                discountRepo.save(discount);
+                System.out.println("✅ Đã trừ 1 lượt sử dụng mã giảm giá: " + discount.getCode() +
+                                 " (còn lại: " + discount.getMaximumUsage() + ")");
+            }
+        }
+    }
+
+    public void restoreDiscountUsage(Bill bill) {
+        if (bill.getDiscountCode() != null) {
+            Discount discount = bill.getDiscountCode();
+            if (discount.getMaximumUsage() != null) {
+                discount.setMaximumUsage(discount.getMaximumUsage() + 1);
+                discountRepo.save(discount);
+                System.out.println("✅ Đã hoàn trả 1 lượt sử dụng mã giảm giá: " + discount.getCode() +
+                                 " (hiện có: " + discount.getMaximumUsage() + ")");
+            }
         }
     }
 }

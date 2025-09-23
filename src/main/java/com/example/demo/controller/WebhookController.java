@@ -44,10 +44,11 @@ public ResponseEntity<String> handleWebhook(@RequestBody SePayWebhookRequest req
     bill.setStatus(newStatus);
     billRepository.save(bill);
 
-    // ✅ THÊM: Trừ số lượng khi thanh toán thành công
+    // ✅ THÊM: Trừ số lượng và discount usage khi thanh toán thành công
     if ("PENDING".equals(oldStatus) && "CONFIRMED".equals(newStatus)) {
         try {
             billService.deductInventoryForBill(bill);
+            billService.deductDiscountUsage(bill); // ✅ Trừ lượt sử dụng mã giảm giá
         } catch (RuntimeException e) {
             // Nếu không đủ hàng, đổi status về PENDING và thông báo lỗi
             bill.setStatus("PENDING");

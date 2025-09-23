@@ -251,6 +251,13 @@ public Map<String, Object> calculateDiscount(@RequestBody Map<String, Object> re
                     response.put("message", "Mã giảm giá đã hết hạn");
                     return response;
                 }
+
+                // Kiểm tra số lượt sử dụng còn lại
+                if (discount.getMaximumUsage() != null && discount.getMaximumUsage() <= 0) {
+                    response.put("success", false);
+                    response.put("message", "Mã giảm giá đã hết lượt sử dụng");
+                    return response;
+                }
                 
                 // Tính toán giảm giá theo phần trăm
                 double discountAmount = 0.0;
