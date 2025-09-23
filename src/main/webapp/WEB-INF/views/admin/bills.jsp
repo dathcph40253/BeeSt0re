@@ -131,6 +131,60 @@
             overflow: hidden;
             box-shadow: 0 5px 15px rgba(0,0,0,0.08);
         }
+
+        /* Status Filter Styles */
+        .status-filter {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .status-btn {
+            display: inline-block;
+            padding: 8px 16px;
+            margin: 5px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #6c757d;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .status-btn:hover {
+            color: #495057;
+            background: #e9ecef;
+            text-decoration: none;
+            transform: translateY(-2px);
+        }
+
+        .status-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: #667eea;
+        }
+
+        /* Order Status Badges */
+        .order-status {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-pending { background: #fff3cd; color: #856404; }
+        .status-confirmed { background: #d1ecf1; color: #0c5460; }
+        .status-processing { background: #d4edda; color: #155724; }
+        .status-shipping { background: #e2e3e5; color: #383d41; }
+        .status-delivered { background: #d1e7dd; color: #0f5132; }
+        .status-cancelled { background: #f8d7da; color: #721c24; }
+        .status-expired { background: #fff3cd; color: #856404; }
+        .status-success { background: #d1e7dd; color: #0f5132; }
     </style>
 </head>
 <body>
@@ -148,6 +202,38 @@
             <h3 class="page-title">
                 <i class="fa-solid fa-file-invoice text-primary me-2"></i> Quản lý hóa đơn
             </h3>
+        </div>
+
+        <!-- Status Filter -->
+        <div class="status-filter">
+            <h6 class="mb-3"><i class="fas fa-filter me-2"></i>Lọc theo trạng thái:</h6>
+            <a href="/admin/bills" class="status-btn ${empty selectedStatus ? 'active' : ''}">
+                <i class="fas fa-list me-1"></i>Tất cả
+            </a>
+            <a href="/admin/bills?status=PENDING" class="status-btn ${selectedStatus == 'PENDING' ? 'active' : ''}">
+                <i class="fas fa-clock me-1"></i>Chờ xác nhận
+            </a>
+            <a href="/admin/bills?status=CONFIRMED" class="status-btn ${selectedStatus == 'CONFIRMED' ? 'active' : ''}">
+                <i class="fas fa-check me-1"></i>Đã xác nhận
+            </a>
+            <a href="/admin/bills?status=PROCESSING" class="status-btn ${selectedStatus == 'PROCESSING' ? 'active' : ''}">
+                <i class="fas fa-cog me-1"></i>Đang xử lý
+            </a>
+            <a href="/admin/bills?status=SHIPPING" class="status-btn ${selectedStatus == 'SHIPPING' ? 'active' : ''}">
+                <i class="fas fa-truck me-1"></i>Đang giao
+            </a>
+            <a href="/admin/bills?status=DELIVERED" class="status-btn ${selectedStatus == 'DELIVERED' ? 'active' : ''}">
+                <i class="fas fa-check-circle me-1"></i>Đã giao
+            </a>
+            <a href="/admin/bills?status=SUCCESS" class="status-btn ${selectedStatus == 'SUCCESS' ? 'active' : ''}">
+                <i class="fas fa-trophy me-1"></i>Thành công
+            </a>
+            <a href="/admin/bills?status=CANCELLED" class="status-btn ${selectedStatus == 'CANCELLED' ? 'active' : ''}">
+                <i class="fas fa-times me-1"></i>Đã hủy
+            </a>
+            <a href="/admin/bills?status=EXPIRED" class="status-btn ${selectedStatus == 'EXPIRED' ? 'active' : ''}">
+                <i class="fas fa-clock me-1"></i>Hết hạn
+            </a>
         </div>
 
         <!-- Statistics Cards -->
@@ -169,17 +255,42 @@
         <table class="table main-table">
             <thead>
                 <tr>
+                    <th class="text-center"><i class="fas fa-list-ol me-2"></i>STT</th>
                     <th><i class="fas fa-hashtag me-2"></i>Mã hóa đơn</th>
                     <th><i class="fas fa-user me-2"></i>Khách hàng</th>
                     <th><i class="fas fa-calendar me-2"></i>Ngày tạo</th>
                     <th class="text-end"><i class="fas fa-money-bill me-2"></i>Tổng tiền</th>
+                    <th class="text-center"><i class="fas fa-info-circle me-2"></i>Trạng thái</th>
                     <th class="text-center"><i class="fas fa-cogs me-2"></i>Thao tác</th>
                 </tr>
             </thead>
         <tbody>
-            <c:forEach var="bill" items="${recentBills}">
+            <c:choose>
+                <c:when test="${empty recentBills}">
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5 class="text-muted">Không có hóa đơn nào</h5>
+                            <p class="text-muted">
+                                <c:choose>
+                                    <c:when test="${not empty selectedStatus}">
+                                        Không có hóa đơn với trạng thái "${selectedStatus}"
+                                    </c:when>
+                                    <c:otherwise>
+                                        Chưa có hóa đơn nào trong hệ thống
+                                    </c:otherwise>
+                                </c:choose>
+                            </p>
+                        </td>
+                    </tr>
+                </c:when>
+                <c:otherwise>
+            <c:forEach var="bill" items="${recentBills}" varStatus="status">
                 <!-- Hóa đơn -->
                 <tr data-bs-toggle="collapse" data-bs-target="#bill-${bill.id}">
+                    <td class="text-center">
+                        <span class="fw-bold text-muted">${status.index + 1}</span>
+                    </td>
                     <td>
                         <span class="bill-code">
                             <i class="fa-solid fa-receipt me-2 text-primary"></i>${bill.code}
@@ -199,6 +310,37 @@
                         </span>
                     </td>
                     <td class="text-center">
+                        <c:choose>
+                            <c:when test="${bill.status == 'PENDING'}">
+                                <span class="order-status status-pending">Chờ xác nhận</span>
+                            </c:when>
+                            <c:when test="${bill.status == 'CONFIRMED'}">
+                                <span class="order-status status-confirmed">Đã xác nhận</span>
+                            </c:when>
+                            <c:when test="${bill.status == 'PROCESSING'}">
+                                <span class="order-status status-processing">Đang xử lý</span>
+                            </c:when>
+                            <c:when test="${bill.status == 'SHIPPING'}">
+                                <span class="order-status status-shipping">Đang giao</span>
+                            </c:when>
+                            <c:when test="${bill.status == 'DELIVERED'}">
+                                <span class="order-status status-delivered">Đã giao</span>
+                            </c:when>
+                            <c:when test="${bill.status == 'SUCCESS'}">
+                                <span class="order-status status-success">Thành công</span>
+                            </c:when>
+                            <c:when test="${bill.status == 'CANCELLED'}">
+                                <span class="order-status status-cancelled">Đã hủy</span>
+                            </c:when>
+                            <c:when test="${bill.status == 'EXPIRED'}">
+                                <span class="order-status status-expired">Hết hạn</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="order-status">${bill.status}</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
+                    <td class="text-center">
                         <a href="/admin/sales/print/${bill.id}" target="_blank"
                            class="btn btn-sm btn-outline-primary btn-print" title="In hóa đơn">
                             <i class="fas fa-print"></i>
@@ -208,7 +350,7 @@
 
                 <!-- Chi tiết hóa đơn (ẩn/hiện khi click) -->
                 <tr class="collapse detail-row" id="bill-${bill.id}">
-                    <td colspan="5">
+                    <td colspan="7">
                         <table class="table table-sm table-bordered detail-table mb-0">
                             <thead>
                                 <tr>
@@ -240,6 +382,8 @@
                     </td>
                 </tr>
             </c:forEach>
+                </c:otherwise>
+            </c:choose>
         </tbody>
         </table>
     </div>

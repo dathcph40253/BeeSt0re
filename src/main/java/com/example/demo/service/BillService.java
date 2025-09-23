@@ -236,7 +236,16 @@ public class BillService {
             deductDiscountUsage(bill); // ✅ Trừ lượt sử dụng mã giảm giá
         }
 
-        // Trường hợp 2: Hủy đơn hàng -> Hoàn trả số lượng và discount usage
+        // Trường hợp 2: Trừ số lượng khi chuyển sang DELIVERED (đã giao hàng)
+        if ("DELIVERED".equals(newStatus)) {
+            // Chỉ trừ nếu chưa trừ trước đó (oldStatus = PENDING)
+            if ("PENDING".equals(oldStatus)) {
+                deductInventoryForBill(bill);
+                deductDiscountUsage(bill); // ✅ Trừ lượt sử dụng mã giảm giá
+            }
+        }
+
+        // Trường hợp 3: Hủy đơn hàng -> Hoàn trả số lượng và discount usage
         if ("CANCELLED".equals(newStatus)) {
             // Chỉ hoàn trả nếu đã trừ số lượng trước đó (không phải PENDING)
             if (!"PENDING".equals(oldStatus)) {
