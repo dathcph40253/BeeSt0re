@@ -13,9 +13,22 @@
     </form>
 
     <div class="user-info">
-        <div class="notifications">
+        <div class="notifications" id="notificationBell">
             <i class="fas fa-bell"></i>
-            <span class="badge">3</span>
+            <span class="badge" id="notificationCount" style="display: none;">0</span>
+
+            <!-- Dropdown thông báo -->
+            <div class="notification-dropdown" id="notificationDropdown">
+                <div class="notification-header">
+                    <h6>Đơn hàng mới</h6>
+                </div>
+                <div class="notification-list" id="notificationList">
+                    <div class="notification-loading">Đang tải...</div>
+                </div>
+                <div class="notification-footer">
+                    <a href="/admin/bills">Xem tất cả</a>
+                </div>
+            </div>
         </div>
         <!-- Nếu chưa đăng nhập -->
         <c:if test="${empty sessionScope.user}">
@@ -43,3 +56,128 @@
         </c:if>
     </div>
 </div>
+
+<script>
+// Cập nhật thông báo mỗi 30 giây
+setInterval(updateNotifications, 30000);
+
+// Cập nhật ngay khi tải trang
+document.addEventListener('DOMContentLoaded', function() {
+    updateNotifications();
+
+    // Xử lý click vào chuông
+    const notificationBell = document.getElementById('notificationBell');
+    if (notificationBell) {
+        notificationBell.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleNotificationDropdown();
+        });
+    }
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener('click', function() {
+        const dropdown = document.getElementById('notificationDropdown');
+        if (dropdown) {
+            dropdown.style.display = 'none';
+        }
+    });
+});
+
+function updateNotifications() {
+    // Lấy số lượng thông báo
+    fetch('/api/notifications/count')
+        .then(response => response.json())
+        .then(count => {
+            const badge = document.getElementById('notificationCount');
+            const bell = document.getElementById('notificationBell');
+
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'block' : 'none';
+            }
+
+            // Thêm animation khi có thông báo mới
+            if (bell) {
+                if (count > 0) {
+                    bell.classList.add('has-notification');
+                } else {
+                    bell.classList.remove('has-notification');
+                }
+            }
+        })
+        .catch(error => console.error('Error updating notification count:', error));
+}
+
+function toggleNotificationDropdown() {
+    const dropdown = document.getElementById('notificationDropdown');
+    if (!dropdown) return;
+
+    const isVisible = dropdown.style.display === 'block';
+
+    if (!isVisible) {
+        // Load danh sách thông báo
+        loadNotificationList();
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+
+function loadNotificationList() {
+    const listContainer = document.getElementById('notificationList');
+    if (!listContainer) return;
+
+    listContainer.innerHTML = '<div class="notification-loading">Đang tải...</div>';
+
+    fetch('/api/notifications/new-orders')
+        .then(response => response.json())
+        .then(orders => {
+            if (orders.length === 0) {
+                listContainer.innerHTML = '<div class="notification-empty">Không có đơn hàng mới</div>';
+                return;
+            }
+
+            listContainer.innerHTML = orders.map(order => `
+                <div class="notification-item" onclick="viewOrder('\${order.id}')">
+                    <div class="d-flex justify-content-between">
+                        <strong>Đơn hàng \${order.code}</strong>
+                        <small class="notification-time">\${formatTime(order.createDate)}</small>
+                    </div>
+                    <div class="notification-customer">
+                        Khách hàng: \${order.customer ? order.customer.name : 'Khách lẻ'}
+                    </div>
+                    <div class="notification-amount">
+                        \${formatCurrency(order.finalAmount)}
+                    </div>
+                </div>
+            `).join('');
+        })
+        .catch(error => {
+            console.error('Error loading notifications:', error);
+            listContainer.innerHTML = '<div class="notification-empty">Lỗi khi tải thông báo</div>';
+        });
+}
+
+function viewOrder(orderId) {
+    window.location.href = `/admin/orders/${orderId}`;
+}
+
+function formatTime(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diff = now - date;
+    const minutes = Math.floor(diff / 60000);
+
+    if (minutes < 1) return 'Vừa xong';
+    if (minutes < 60) return `${minutes} phút trước`;
+    if (minutes < 1440) return `${Math.floor(minutes / 60)} giờ trước`;
+    return date.toLocaleDateString('vi-VN');
+}
+
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    }).format(amount);
+}
+</script>

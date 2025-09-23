@@ -4,8 +4,10 @@ import com.example.demo.Entity.Bill;
 import com.example.demo.repository.BillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 
@@ -19,6 +21,32 @@ public class TestController {
     @ResponseBody
     public String test() {
         return "Application is running successfully!";
+    }
+
+    @GetMapping("/test-orders-jsp")
+    public String testOrdersJsp(Model model) {
+        // Test JSP path without security
+        List<Bill> bills = billRepository.findAll();
+        model.addAttribute("bills", bills);
+        model.addAttribute("selectedStatus", "");
+        return "admin/orders/list";
+    }
+
+    @GetMapping("/debug/session")
+    @ResponseBody
+    public String debugSession(HttpSession session) {
+        StringBuilder result = new StringBuilder();
+        result.append("Session ID: ").append(session.getId()).append("<br>");
+        result.append("Session Attributes:<br>");
+
+        java.util.Enumeration<String> attributeNames = session.getAttributeNames();
+        while (attributeNames.hasMoreElements()) {
+            String name = attributeNames.nextElement();
+            Object value = session.getAttribute(name);
+            result.append("- ").append(name).append(": ").append(value).append("<br>");
+        }
+
+        return result.toString();
     }
 
     @GetMapping("/debug/revenue")

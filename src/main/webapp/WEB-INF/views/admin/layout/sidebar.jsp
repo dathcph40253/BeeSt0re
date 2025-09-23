@@ -20,7 +20,9 @@
             </li>
             <li class="${pageContext.request.requestURI.contains('/admin/bills') ? 'active' : ''}">
                 <a href="/admin/bills"><i class="fas fa-receipt"></i><span>Hóa đơn</span></a>
-
+            </li>
+            <li class="${pageContext.request.requestURI.contains('/admin/orders') ? 'active' : ''}">
+                <a href="/admin/orders"><i class="fa-solid fa-clipboard-list"></i><span>Quản lý đơn hàng</span></a>
             </li>
 </c:if>
             <c:if test="${user.role.name == 'ROLE_EMPLOYEE' || user.role.name == 'ROLE_ADMIN'}">

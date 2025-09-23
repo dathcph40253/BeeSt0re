@@ -117,21 +117,7 @@ public class OrderController {
         return "admin/orders/list";
     }
 
-    // Admin - Chi tiết đơn hàng
-    @GetMapping("/admin/orders/{id}")
-    public String adminViewOrderDetail(@PathVariable Long id, Model model) {
-        Bill bill = billService.getBillById(id);
-        if (bill == null) {
-            return "redirect:/admin/orders";
-        }
 
-        List<BillDetail> billDetails = billDetailRepository.findByBill(bill);
-
-        model.addAttribute("bill", bill);
-        model.addAttribute("billDetails", billDetails);
-
-        return "admin/orders/detail";
-    }
 
     // Admin - Cập nhật trạng thái đơn hàng
     @PostMapping("/admin/orders/{id}/update-status")
@@ -146,11 +132,11 @@ public class OrderController {
 
         try {
             billService.updateBillStatus(id, status, user.getEmail());
-            redirectAttributes.addFlashAttribute("success", "Cập nhật trạng thái thành công");
+            redirectAttributes.addFlashAttribute("success", "Cập nhật trạng thái thành công cho đơn hàng #" + id);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Cập nhật thất bại: " + e.getMessage());
         }
 
-        return "redirect:/admin/orders/" + id;
+        return "redirect:/admin/orders";
     }
 }
