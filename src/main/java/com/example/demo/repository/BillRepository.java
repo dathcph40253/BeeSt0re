@@ -56,4 +56,7 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     // Lấy mã hóa đơn lớn nhất để tạo mã mới
     @Query("SELECT b.code FROM Bill b WHERE b.code LIKE 'HD%' ORDER BY b.code DESC")
     List<String> findLatestBillCode();
+
+    // Tìm đơn hàng hết hạn (cho QR timeout)
+    List<Bill> findByStatusAndCreateDateBefore(String status, LocalDateTime createDate);
 }

@@ -71,9 +71,8 @@ public class BillService {
                     .build();
             billDetailRepository.save(billDetail);
 
-            ProductDetail productDetail = cartItem.getProductDetail();
-            productDetail.setQuantity(productDetail.getQuantity() - cartItem.getQuantity());
-            productDetailService.save(productDetail);
+            // ✅ KHÔNG trừ số lượng khi tạo đơn PENDING
+            // Chỉ trừ khi thanh toán thành công (webhook hoặc admin confirm)
         }
 
         cartRepository.deleteByAccount(user);
@@ -141,8 +140,15 @@ public class BillService {
         Optional<Bill> billOpt = billRepository.findById(billId);
         if (billOpt.isPresent()) {
             Bill bill = billOpt.get();
+            String oldStatus = bill.getStatus();
+
             bill.setStatus(newStatus);
-            return billRepository.save(bill);
+            Bill savedBill = billRepository.save(bill);
+
+            // ✅ THÊM: Logic xử lý inventory theo status
+            handleInventoryOnStatusChange(bill, oldStatus, newStatus);
+
+            return savedBill;
         }
         throw new RuntimeException("Không tìm thấy hóa đơn");
     }
@@ -208,5 +214,48 @@ public class BillService {
 
     public Double getRevenueByDateRange(LocalDateTime startDate, LocalDateTime endDate) {
         return billRepository.getTotalRevenueByDateRange(startDate, endDate);
+    }
+
+    // ================= Xử lý inventory khi thay đổi trạng thái =================
+
+    private void handleInventoryOnStatusChange(Bill bill, String oldStatus, String newStatus) {
+        // Trường hợp 1: Từ PENDING -> CONFIRMED (thanh toán thành công)
+        if ("PENDING".equals(oldStatus) && "CONFIRMED".equals(newStatus)) {
+            deductInventoryForBill(bill);
+        }
+
+        // Trường hợp 2: Hủy đơn hàng -> Hoàn trả số lượng
+        if ("CANCELLED".equals(newStatus)) {
+            // Chỉ hoàn trả nếu đã trừ số lượng trước đó (không phải PENDING)
+            if (!"PENDING".equals(oldStatus)) {
+                restoreInventoryForBill(bill);
+            }
+        }
+    }
+
+    public void deductInventoryForBill(Bill bill) {
+        List<BillDetail> billDetails = billDetailRepository.findByBill(bill);
+
+        for (BillDetail detail : billDetails) {
+            ProductDetail productDetail = detail.getProductDetail();
+            int newQuantity = productDetail.getQuantity() - detail.getQuantity();
+
+            if (newQuantity < 0) {
+                throw new RuntimeException("Không đủ số lượng sản phẩm: " + productDetail.getProduct().getName());
+            }
+
+            productDetail.setQuantity(newQuantity);
+            productDetailService.save(productDetail);
+        }
+    }
+
+    public void restoreInventoryForBill(Bill bill) {
+        List<BillDetail> billDetails = billDetailRepository.findByBill(bill);
+
+        for (BillDetail detail : billDetails) {
+            ProductDetail productDetail = detail.getProductDetail();
+            productDetail.setQuantity(productDetail.getQuantity() + detail.getQuantity());
+            productDetailService.save(productDetail);
+        }
     }
 }

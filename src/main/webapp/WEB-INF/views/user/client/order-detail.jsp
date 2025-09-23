@@ -63,6 +63,9 @@
                                     <c:when test="${bill.status == 'CANCELLED'}">
                                         <span class="badge bg-danger">Đã hủy</span>
                                     </c:when>
+                                    <c:when test="${bill.status == 'EXPIRED'}">
+                                        <span class="badge bg-warning">Hết hạn</span>
+                                    </c:when>
                                     <c:otherwise>
                                         <span class="badge bg-secondary">${bill.status}</span>
                                     </c:otherwise>

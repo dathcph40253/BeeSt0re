@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.Entity.Bill;
 import com.example.demo.dto.SePayWebhookRequest;
 import com.example.demo.repository.BillRepository;
+import com.example.demo.service.BillService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import java.util.Optional;
 public class WebhookController {
 
     private final BillRepository billRepository;
+    private final BillService billService;
 
 @PostMapping("/sepay-payment")
 public ResponseEntity<String> handleWebhook(@RequestBody SePayWebhookRequest request) {
@@ -36,10 +38,25 @@ public ResponseEntity<String> handleWebhook(@RequestBody SePayWebhookRequest req
     }
 
     Bill bill = optionalBill.get();
-    bill.setStatus(request.getStatus().toUpperCase()); // hoặc đổi sang "PAID" nếu bạn dùng enum
+    String oldStatus = bill.getStatus();
+    String newStatus = request.getStatus().toUpperCase();
+
+    bill.setStatus(newStatus);
     billRepository.save(bill);
 
-    return ResponseEntity.ok("✅ Đã cập nhật hóa đơn " + billCode + " thành " + request.getStatus());
+    // ✅ THÊM: Trừ số lượng khi thanh toán thành công
+    if ("PENDING".equals(oldStatus) && "CONFIRMED".equals(newStatus)) {
+        try {
+            billService.deductInventoryForBill(bill);
+        } catch (RuntimeException e) {
+            // Nếu không đủ hàng, đổi status về PENDING và thông báo lỗi
+            bill.setStatus("PENDING");
+            billRepository.save(bill);
+            return ResponseEntity.badRequest().body("❌ " + e.getMessage());
+        }
+    }
+
+    return ResponseEntity.ok("✅ Đã cập nhật hóa đơn " + billCode + " thành " + newStatus);
 }
 
 private String extractBillCode(String description) {

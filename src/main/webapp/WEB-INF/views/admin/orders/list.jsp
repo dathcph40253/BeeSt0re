@@ -64,6 +64,7 @@
         .status-shipping { background: #e2e3e5; color: #383d41; }
         .status-delivered { background: #d1e7dd; color: #0f5132; }
         .status-cancelled { background: #f8d7da; color: #721c24; }
+        .status-expired { background: #fff3cd; color: #856404; }
         
         .main-table {
             background: white;
@@ -223,6 +224,9 @@
                                             </c:when>
                                             <c:when test="${bill.status == 'CANCELLED'}">
                                                 <span class="order-status status-cancelled">Đã hủy</span>
+                                            </c:when>
+                                            <c:when test="${bill.status == 'EXPIRED'}">
+                                                <span class="order-status status-expired">Hết hạn</span>
                                             </c:when>
                                             <c:otherwise>
                                                 <span class="order-status">${bill.status}</span>
