@@ -1,24 +1,76 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<html>
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <title>POS - Bán Hàng Tại Quầy</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bán hàng - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"/>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        body { background: #f8f9fa; }
-        .tab { display:inline-block; padding:8px 15px; background:#e9ecef; border-radius:5px 5px 0 0; margin-right:5px; cursor:pointer; transition:0.2s; }
+        .tab {
+            display:inline-block;
+            padding:8px 15px;
+            background:#e9ecef;
+            border-radius:5px 5px 0 0;
+            margin-right:5px;
+            cursor:pointer;
+            transition:0.2s;
+        }
         .tab:hover { background:#dee2e6; }
-        .tab.active { background:#fff; font-weight:bold; border:2px solid #0d6efd; border-bottom:none; }
-        .remove-tab-btn { margin-left:6px; color:#dc3545; cursor:pointer; }
-        .card { border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.05); }
-        .cart-total { font-size:1.2rem; font-weight:bold; color:#d63384; }
+        .tab.active {
+            background:#fff;
+            font-weight:bold;
+            border:2px solid #0d6efd;
+            border-bottom:none;
+        }
+        .remove-tab-btn {
+            margin-left:6px;
+            color:#dc3545;
+            cursor:pointer;
+        }
+        .card {
+            border-radius:12px;
+            box-shadow:0 2px 8px rgba(0,0,0,0.05);
+        }
+        .cart-total {
+            font-size:1.2rem;
+            font-weight:bold;
+            color:#d63384;
+        }
+        .sales-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .page-title {
+            color: #2c3e50;
+            font-weight: 600;
+            margin-bottom: 0;
+        }
     </style>
 </head>
-<body class="container-fluid py-4">
+<body>
+<div class="container">
+    <!-- Sidebar -->
+    <jsp:include page="layout/sidebar.jsp"/>
 
-<h2 class="mb-4 text-primary">💻 Quản lý Bán Hàng</h2>
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Top Bar -->
+        <jsp:include page="layout/header.jsp"/>
+
+        <!-- Sales Content -->
+        <div class="sales-header">
+            <h3 class="page-title">
+                <i class="fa-solid fa-cash-register text-primary me-2"></i> Quản lý Bán Hàng
+            </h3>
+        </div>
 
 <!-- Tabs -->
 <div id="cartTabs" class="mb-3 d-flex align-items-center">
@@ -281,6 +333,8 @@
         }
     });
 </script>
+    </div>
+</div>
 
 </body>
 </html>

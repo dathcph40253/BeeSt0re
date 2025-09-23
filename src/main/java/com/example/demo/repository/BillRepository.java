@@ -42,12 +42,12 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     // Đếm số hóa đơn của customer
     long countByCustomer(Customer customer);
     
-    // Tính tổng doanh thu theo trạng thái đã giao
-    @Query("SELECT SUM(b.amount - COALESCE(b.promotionPrice, 0)) FROM Bill b WHERE b.status = 'DELIVERED'")
+    // Tính tổng doanh thu theo trạng thái thành công
+    @Query("SELECT SUM(b.amount) FROM Bill b WHERE b.status = 'SUCCESS'")
     Double getTotalRevenue();
     
     // Tính tổng doanh thu trong khoảng thời gian
-    @Query("SELECT SUM(b.amount - COALESCE(b.promotionPrice, 0)) FROM Bill b WHERE b.status = 'DELIVERED' AND b.createDate BETWEEN :startDate AND :endDate")
+    @Query("SELECT SUM(b.amount - COALESCE(b.promotionPrice, 0)) FROM Bill b WHERE b.status = 'SUCCESS' AND b.createDate BETWEEN :startDate AND :endDate")
     Double getTotalRevenueByDateRange(@Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
     
     // Tìm hóa đơn theo địa chỉ giao hàng

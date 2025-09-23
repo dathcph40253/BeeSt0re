@@ -35,15 +35,7 @@ public class UserController {
     @Autowired
     private CustomerService customerService;
     
-    @GetMapping("/Home")
-    public String home() {
-        return "home";
-    }
 
-    @GetMapping("/admin/Home")
-    public String adminHome() {
-        return "home";
-    }
 
     @GetMapping("/Login")
     public String DangNhap() {

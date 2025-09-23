@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -211,6 +212,114 @@
         .chat-container.active {
             display: flex;
         }
+
+        /* Additional Statistics Styles */
+        .stats-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 100%;
+            margin-bottom: 30px;
+        }
+
+        .stats-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .status-stats {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            margin-bottom: 8px;
+        }
+
+        .status-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .status-count {
+            font-weight: bold;
+            color: #3498db;
+            background: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .low-stock-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .low-stock-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: #fff5f5;
+            border-radius: 8px;
+            border-left: 4px solid #e74c3c;
+            margin-bottom: 8px;
+        }
+
+        .product-name {
+            font-weight: 500;
+            color: #2c3e50;
+            flex: 1;
+        }
+
+        .stock-count {
+            font-weight: bold;
+            color: #e74c3c;
+            background: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+        }
+
+        .text-success {
+            color: #27ae60 !important;
+            font-weight: 500;
+        }
+
+        /* Status colors */
+        .status.pending { background: #f39c12; }
+        .status.processing { background: #3498db; }
+        .status.shipping { background: #9b59b6; }
+        .status.completed { background: #27ae60; }
+        .status.cancelled { background: #e74c3c; }
+
+        /* Row spacing */
+        .row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .col-md-6 {
+            flex: 1;
+        }
+
+        /* Section spacing */
+        .dashboard > div {
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
@@ -229,15 +338,18 @@
 
             <!-- Stats Cards: Chỉ hiện với ROLE_ADMIN hoặc ROLE_EMPLOYEE -->
             <c:if test="${sessionScope.user.role.name == 'ROLE_ADMIN' || sessionScope.user.role.name == 'ROLE_EMPLOYEE'}">
-                <div class="stats-cards">
+                <div class="stats-cards" style="margin-bottom: 40px;">
                     <div class="card">
                         <div class="card-icon" style="background: #e3f2fd;">
                             <i class="fas fa-shopping-cart" style="color: #1976d2;"></i>
                         </div>
                         <div class="card-info">
                             <h3>Tổng đơn hàng</h3>
-                            <p>1,234</p>
-                            <span class="trend up">+15% <i class="fas fa-arrow-up"></i></span>
+                            <p>${totalOrders}</p>
+                            <span class="trend ${orderGrowth >= 0 ? 'up' : 'down'}">
+                                ${orderGrowth >= 0 ? '+' : ''}${orderGrowth}%
+                                <i class="fas fa-arrow-${orderGrowth >= 0 ? 'up' : 'down'}"></i>
+                            </span>
                         </div>
                     </div>
                     <div class="card">
@@ -246,8 +358,12 @@
                         </div>
                         <div class="card-info">
                             <h3>Doanh thu</h3>
-                            <p>45.6M VNĐ</p>
-                            <span class="trend up">+8% <i class="fas fa-arrow-up"></i></span>
+                            <p><fmt:formatNumber value="${totalRevenue}" type="number" maxFractionDigits="0"/> VNĐ</p>
+                            <!-- Debug: Raw value = ${totalRevenue} -->
+                            <span class="trend ${revenueGrowth >= 0 ? 'up' : 'down'}">
+                                ${revenueGrowth >= 0 ? '+' : ''}${revenueGrowth}%
+                                <i class="fas fa-arrow-${revenueGrowth >= 0 ? 'up' : 'down'}"></i>
+                            </span>
                         </div>
                     </div>
                     <div class="card">
@@ -256,7 +372,7 @@
                         </div>
                         <div class="card-info">
                             <h3>Khách hàng</h3>
-                            <p>856</p>
+                            <p>${totalCustomers}</p>
                             <span class="trend up">+12% <i class="fas fa-arrow-up"></i></span>
                         </div>
                     </div>
@@ -266,18 +382,18 @@
                         </div>
                         <div class="card-info">
                             <h3>Sản phẩm</h3>
-                            <p>432</p>
-                            <span class="trend down">-3% <i class="fas fa-arrow-down"></i></span>
+                            <p>${totalProducts}</p>
+                            <span class="trend up">+5% <i class="fas fa-arrow-up"></i></span>
                         </div>
                     </div>
                 </div>
             </c:if>
 
             <!-- Đơn hàng gần đây: Luôn hiện với mọi role -->
-            <div class="recent-orders">
+            <div class="recent-orders" style="margin-bottom: 40px;">
                 <div class="section-header">
                     <h2>Đơn hàng gần đây</h2>
-                    <a href="/admin/order" class="view-all">Xem tất cả</a>
+                    <a href="/admin/bills" class="view-all">Xem tất cả</a>
                 </div>
                 <div class="table-container">
                     <table>
@@ -288,38 +404,102 @@
                             <th>Sản phẩm</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
-                            <th>Thao tác</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>#ORD001</td>
-                            <td>Nguyễn Văn A</td>
-                            <td>3 sản phẩm</td>
-                            <td>1,500,000 VNĐ</td>
-                            <td><span class="status pending">Đang xử lý</span></td>
-                            <td><button class="btn-view">Xem</button></td>
-                        </tr>
-                        <tr>
-                            <td>#ORD002</td>
-                            <td>Trần Thị B</td>
-                            <td>2 sản phẩm</td>
-                            <td>2,300,000 VNĐ</td>
-                            <td><span class="status completed">Hoàn thành</span></td>
-                            <td><button class="btn-view">Xem</button></td>
-                        </tr>
-                        <tr>
-                            <td>#ORD003</td>
-                            <td>Lê Văn C</td>
-                            <td>1 sản phẩm</td>
-                            <td>850,000 VNĐ</td>
-                            <td><span class="status shipping">Đang giao</span></td>
-                            <td><button class="btn-view">Xem</button></td>
-                        </tr>
+                        <c:forEach items="${recentOrders}" var="order" varStatus="status">
+                            <tr>
+                                <td>${order.code}</td>
+                                <td>${order.customer.name}</td>
+                                <td>${order.billDetails.size()} sản phẩm</td>
+                                <td><fmt:formatNumber value="${order.finalAmount}" type="number" maxFractionDigits="0"/> VNĐ</td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${order.status == 'PENDING'}">
+                                            <span class="status pending">Chờ xử lý</span>
+                                        </c:when>
+                                        <c:when test="${order.status == 'PROCESSING'}">
+                                            <span class="status processing">Đang xử lý</span>
+                                        </c:when>
+                                        <c:when test="${order.status == 'SHIPPING'}">
+                                            <span class="status shipping">Đang giao</span>
+                                        </c:when>
+                                        <c:when test="${order.status == 'DELIVERED'}">
+                                            <span class="status completed">Hoàn thành</span>
+                                        </c:when>
+                                        <c:when test="${order.status == 'CANCELLED'}">
+                                            <span class="status cancelled">Đã hủy</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="status">${order.status}</span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        <c:if test="${empty recentOrders}">
+                            <tr>
+                                <td colspan="6" class="text-center">Chưa có đơn hàng nào</td>
+                            </tr>
+                        </c:if>
                         </tbody>
                     </table>
                 </div>
             </div>
+
+            <!-- Additional Statistics Section -->
+            <c:if test="${sessionScope.user.role.name == 'ROLE_ADMIN' || sessionScope.user.role.name == 'ROLE_EMPLOYEE'}">
+                <div class="row" style="margin-top: 40px;">
+                    <!-- Order Status Statistics -->
+                    <div class="col-md-6" style="padding-right: 20px;">
+                        <div class="stats-section">
+                            <h3>Thống kê trạng thái đơn hàng</h3>
+                            <div class="status-stats">
+                                <div class="status-item">
+                                    <span class="status-label">Chờ xử lý:</span>
+                                    <span class="status-count">${pendingOrders}</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-label">Đang xử lý:</span>
+                                    <span class="status-count">${processingOrders}</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-label">Đang giao:</span>
+                                    <span class="status-count">${shippingOrders}</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-label">Hoàn thành:</span>
+                                    <span class="status-count">${deliveredOrders}</span>
+                                </div>
+                                <div class="status-item">
+                                    <span class="status-label">Đã hủy:</span>
+                                    <span class="status-count">${cancelledOrders}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Low Stock Products -->
+                    <div class="col-md-6" style="padding-left: 20px;">
+                        <div class="stats-section">
+                            <h3>Sản phẩm sắp hết hàng</h3>
+                            <div class="low-stock-list">
+                                <c:forEach items="${lowStockProducts}" var="product" varStatus="status">
+                                    <div class="low-stock-item">
+                                        <span class="product-name">${product.name}</span>
+                                        <span class="stock-count">${product.totalQuantity} còn lại</span>
+                                    </div>
+                                </c:forEach>
+                                <c:if test="${empty lowStockProducts}">
+                                    <div class="low-stock-item">
+                                        <span class="text-success">✅ Tất cả sản phẩm đều có đủ hàng</span>
+                                    </div>
+                                </c:if>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </c:if>
 
         </div>
     </div>
