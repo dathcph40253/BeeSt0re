@@ -253,12 +253,28 @@ public Map<String, Object> calculateDiscount(@RequestBody Map<String, Object> re
                 }
                 
                 // Tính toán giảm giá theo phần trăm
-                double discountAmount = totalAmount * discount.getPercentage() / 100;
+                double discountAmount = 0.0;
+                if(discount.getPercentage() != null && discount.getPercentage() > 0) {
+                    discountAmount = totalAmount * (discount.getPercentage() / 100.0);
+                }else if(discount.getAmount() != null && discount.getAmount() > 0 ) {
+                    discountAmount = discount.getAmount();
+                } else {
+                    response.put("success", false);
+                    response.put("message", "Mã giảm giá không hợp lệ");
+                    return response;
+                }
                 
                 // Áp dụng giới hạn tối đa nếu có
                 if (discount.getMaximumAmount() != null && discountAmount > discount.getMaximumAmount()) {
                     discountAmount = discount.getMaximumAmount();
                 }
+                if( discount.getMinimumAmountInCart() != null && totalAmount < discount.getMinimumAmountInCart()){
+                    response.put("success", false);
+                    response.put("message", "Mã giảm giá chưa có hiệu lực");
+                    return response;
+                }
+                System.out.println("Giảm sau khi check max: " + discountAmount);
+
                 response.put("percentage", discount.getPercentage());
                 response.put("success", true);
                 response.put("discountAmount", String.format("%,.0f", discountAmount));

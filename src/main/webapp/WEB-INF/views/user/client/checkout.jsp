@@ -203,7 +203,7 @@
                             <c:forEach items="${discounts}" var="discount">
                                 <!-- Chỉ hiển thị mã giảm giá theo phần trăm -->
                                 <c:if test="${discount.percentage != null}">
-                                    <option value="${discount.id}" data-percentage="${discount.percentage}">
+                                    <option value="${discount.id}" data-percentage="${discount.percentage}" data-amount="${discount.amount}" data-max-amount="${discount.maximumAmount}" data-min-amount="${discount.minimumAmountInCart}">
                                         ${discount.code} - Giảm ${discount.percentage}%
                                     </option>
                                 </c:if>
@@ -291,7 +291,9 @@
 // Biến toàn cục
 let subtotal = 0;
 let currentDiscountPercentage = 0;
-
+let maximumDiscountAmount = 0;
+let currentDiscountAmount = 0;
+let minimumAmountInCart = 0;
 // Tính toán subtotal từ các sản phẩm
 function calculateSubtotal() {
     const cartItems = document.querySelectorAll('.cart-item');
@@ -328,10 +330,24 @@ function formatCurrency(amount) {
 function calculateDiscountAmount(percentage) {
     return subtotal * (percentage / 100);
 }
-
 function updateTotal() {
-    const discountAmount = calculateDiscountAmount(currentDiscountPercentage);
-    const finalTotal = subtotal - discountAmount;
+    let discountAmount = 0;
+    if (currentDiscountPercentage > 0) {
+        discountAmount = calculateDiscountAmount(currentDiscountPercentage);
+    } else if (currentDiscountPercentage === -1 && currentDiscountAmount > 0)
+    {
+        discountAmount = currentDiscountAmount;
+    }
+     if( discountAmount > maximumDiscountAmount && maximumDiscountAmount > 0){
+        discountAmount = maximumDiscountAmount;
+    }
+    if( minimumAmountInCart != null && subtotal < minimumAmountInCart){
+        discountAmount = 0;
+    }
+    if( discountAmount > subtotal){
+        discountAmount = subtotal;
+    }
+    const finalTotal = subtotal - discountAmount >= 0 ? subtotal - discountAmount : 0;
 
     const totalElement = document.getElementById('finalTotal');
     if (totalElement) {
@@ -341,11 +357,30 @@ function updateTotal() {
     const discountRow = document.getElementById('discountRow');
     const discountAmountElement = document.getElementById('discountAmount');
 
-    if (currentDiscountPercentage > 0) {
-        if (discountRow) discountRow.style.display = 'flex';
-        if (discountAmountElement) discountAmountElement.textContent = currentDiscountPercentage + '%';
+    if( subtotal < minimumAmountInCart && (currentDiscountPercentage > 0 || currentDiscountPercentage === -1)){
+        discountRow.style.display = 'flex';
+        discountAmountElement.textContent = '0đ';
+    } else if( currentDiscountPercentage >0 ){
+        if(discountRow) discountRow.style.display = 'flex';
+        if(discountAmountElement) {
+            if( discountAmount === maximumDiscountAmount && maximumDiscountAmount > 0){
+                discountAmountElement.textContent = 'Tối đa ' + formatCurrency(maximumDiscountAmount);
+            } else {
+                discountAmountElement.textContent = formatCurrency(discountAmount) + ' (' + currentDiscountPercentage + '%)';
+            }
+        }
+    } else if( currentDiscountPercentage === -1 && currentDiscountAmount > 0){
+        if(discountRow) discountRow.style.display = 'flex';
+        if(discountAmountElement) {
+            if( discountAmount === maximumDiscountAmount && maximumDiscountAmount > 0){
+                discountAmountElement.textContent = formatCurrency(maximumDiscountAmount);
+            } else {
+                discountAmountElement.textContent = formatCurrency(discountAmount);
+            }
+        }
     } else {
-        if (discountRow) discountRow.style.display = 'none';
+        if(discountRow) discountRow.style.display = 'none';
+        if(discountAmountElement) discountAmountElement.textContent = '0đ';
     }
 }
 
@@ -358,7 +393,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const discountSelect = document.querySelector('select[name="discountId"]');
     const discountRow = document.getElementById('discountRow');
     const discountAmountElement = document.getElementById('discountAmount');
-
     if (discountSelect) {
         discountSelect.addEventListener('change', function() {
             const selectedOption = this.options[this.selectedIndex];
@@ -366,17 +400,30 @@ document.addEventListener('DOMContentLoaded', function() {
             if (selectedOption.value) {
                 // Lấy phần trăm từ data attribute
                 const percentage = parseFloat(selectedOption.getAttribute('data-percentage'));
-                
-                if (!isNaN(percentage)) {
+                const amount = parseFloat(selectedOption.getAttribute('data-amount'));
+                const maximumAmount = parseFloat(selectedOption.getAttribute('data-max-amount'));
+                const minAmount = parseFloat(selectedOption.getAttribute('data-min-amount'));
+
+                maximumDiscountAmount = !isNaN(maximumAmount) && maximumAmount > 0 ? maximumAmount : 0;
+                minimumAmountInCart = !isNaN(minAmount) && minAmount > 0 ? minAmount : 0;
+
+                if (!isNaN(percentage) && percentage > 0) {
                     currentDiscountPercentage = percentage;
-                    
                     // Hiển thị phần trăm giảm giá
                     discountAmountElement.textContent = `${percentage}%`;
                     discountRow.style.display = 'flex';
                     
                     // Cập nhật tổng tiền
                     updateTotal();
-                } else {
+                
+                }else if(!isNaN(amount) && amount > 0 && percentage === 0) {
+                    currentDiscountPercentage = -1; // Đánh dấu là giảm theo số tiền
+                    currentDiscountAmount = amount;
+                    discountAmountElement.textContent = `${amount}đ`;
+                    discountRow.style.display = 'flex';
+                    updateTotal();
+                } 
+                else {
                     // Nếu không có phần trăm hợp lệ, reset về 0
                     currentDiscountPercentage = 0;
                     discountAmountElement.textContent = '0%';

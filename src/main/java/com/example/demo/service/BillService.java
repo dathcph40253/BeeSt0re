@@ -113,6 +113,8 @@ public class BillService {
         bill.setAmount(totalAmount);
         bill.setPromotionPrice(discountAmount);
 
+
+
         bill = billRepository.save(bill);
 
         for (Cart c : cartItems) {
@@ -146,6 +148,9 @@ public class BillService {
     }
 
     private double calculateDiscountAmount(double totalAmount, Discount discount) {
+        if( discount.getMinimumAmountInCart() != null && totalAmount < discount.getMinimumAmountInCart()){
+            return 0;
+        }
         if (discount.getType() != null) {
             if (discount.getType() == 1 && discount.getPercentage() != null && discount.getPercentage() > 0) {
                 double discountAmount = totalAmount * discount.getPercentage() / 100;
@@ -155,8 +160,14 @@ public class BillService {
                 return discountAmount;
             } else if (discount.getType() == 2 && discount.getAmount() != null && discount.getAmount() > 0) {
                 return discount.getAmount();
-            }
+            }else  if (discount.getType() == 3 && discount.getPercentage() != null && discount.getPercentage() > 0) {
+                double discountAmount = totalAmount * discount.getPercentage() / 100;
+                if (discount.getMaximumAmount() != null) {
+                    return Math.min(discountAmount, discount.getMaximumAmount());
+                }
+                return discountAmount;
         }
+    }   
         return 0;
     }
 

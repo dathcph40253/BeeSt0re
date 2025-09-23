@@ -138,7 +138,11 @@
                 <h5 class="modal-title" id="addMaterialModalLabel">Thêm Chất Liệu Mới</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+<<<<<<< HEAD
             <form method="post" action="/Material/add">
+=======
+            <form method="post" action=/Material/add">
+>>>>>>> 52eb13758566b3e64d266ea048205685877d8929
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="materialCode" class="form-label">Mã Chất Liệu <span class="text-danger">*</span></label>

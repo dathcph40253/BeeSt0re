@@ -62,6 +62,8 @@ public class InvoicePdfService {
                 (bill.getCreateDate() != null ? bill.getCreateDate().format(fmt) : ""), fontNormal));
         document.add(new Paragraph("Loại hóa đơn: " +
                 (bill.getInvoiceType() != null ? bill.getInvoiceType() : ""), fontNormal));
+        document.add(new Paragraph("Phương thức thanh toán: " +
+                (bill.getPaymentMethod() != null ? bill.getPaymentMethod().getName() : ""), fontNormal));
         document.add(new Paragraph("-------------------------------------------------------------", fontNormal));
 
         // ====== BẢNG SẢN PHẨM ======
