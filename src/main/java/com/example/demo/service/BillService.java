@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -305,5 +306,17 @@ public class BillService {
                                  " (hiện có: " + discount.getMaximumUsage() + ")");
             }
         }
+    }
+
+    public List<Discount> filterValidDiscounts(double cartTotal) {
+        List<Discount> all = discountRepo.findByDeleteFalse();
+        List<Discount> valid = new ArrayList<>();
+        for (Discount d : all) {
+            try {
+                calculateDiscountAmount(cartTotal, d);
+                valid.add(d);
+            } catch (Exception ignored) {}
+        }
+        return valid;
     }
 }

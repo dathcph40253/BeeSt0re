@@ -23,28 +23,15 @@ import java.util.*;
 @RequestMapping("/admin/sales")
 public class AdminSalesController {
 
-    @Autowired
-    private ProductDetailService productDetailService;
+    @Autowired private ProductDetailService productDetailService;
+    @Autowired private BillService billService;
+    @Autowired private PaymentMethodRepository paymentMethodRepository;
+    @Autowired private DiscountRepo discountRepo;
+    @Autowired private BillRepository billRepository;
+    @Autowired private UserRepone userrepo;
+    @Autowired private InvoicePdfService invoicePdfService;
 
-    @Autowired
-    private BillService billService;
-
-    @Autowired
-    private PaymentMethodRepository paymentMethodRepository;
-
-    @Autowired
-    private DiscountRepo discountRepo;
-
-    @Autowired
-    private BillRepository billRepository;
-
-    @Autowired
-    private UserRepone userrepo;
-
-    @Autowired
-    private InvoicePdfService invoicePdfService; // ✅ inject service in PDF
-
-    // Helper: lấy map giỏ hàng từ session
+    // ================== Helper ==================
     @SuppressWarnings("unchecked")
     private Map<Integer, List<Cart>> getAllCarts(HttpSession session) {
         Map<Integer, List<Cart>> carts = (Map<Integer, List<Cart>>) session.getAttribute("carts");
@@ -55,7 +42,7 @@ public class AdminSalesController {
         return carts;
     }
 
-    // Trang bán hàng (multi-cart)
+    // ================== Trang bán hàng ==================
     @GetMapping
     public String salesPage(HttpSession session, Model model,
                             @RequestParam(value = "keyword", required = false) String keyword,
@@ -65,16 +52,24 @@ public class AdminSalesController {
 
         User sessionUser = (User) session.getAttribute("user");
         if (sessionUser == null) return "redirect:/Login";
-
         User user = userrepo.findById(sessionUser.getId()).orElse(null);
         if (user == null) return "redirect:/Login";
 
         Customer customer = user.getCustomer();
         Map<Integer, List<Cart>> carts = getAllCarts(session);
 
-        // Xóa tab
+        // Xóa tab (hoàn kho)
         if (removeTab != null) {
-            carts.remove(removeTab);
+            List<Cart> removedCart = carts.remove(removeTab);
+            if (removedCart != null) {
+                for (Cart c : removedCart) {
+                    ProductDetail pd = productDetailService.getProductDetailById(c.getProductDetail().getId());
+                    if (pd != null) {
+                        pd.setQuantity(pd.getQuantity() + c.getQuantity());
+                        productDetailService.save(pd);
+                    }
+                }
+            }
             if (carts.isEmpty()) {
                 carts.put(1, new ArrayList<>());
                 tabId = 1;
@@ -91,13 +86,12 @@ public class AdminSalesController {
             return "redirect:/admin/sales?tab=" + nextTab;
         }
 
-        // Nếu chưa chọn tab hoặc tab không tồn tại → lấy tab nhỏ nhất
+        // Tab mặc định
         if (tabId == null || !carts.containsKey(tabId)) {
             tabId = carts.isEmpty() ? 1 : Collections.min(carts.keySet());
             carts.putIfAbsent(tabId, new ArrayList<>());
         }
 
-        // Load sản phẩm
         List<ProductDetail> productDetails = (keyword != null && !keyword.trim().isEmpty())
                 ? productDetailService.findByProductNameContainingIgnoreCase(keyword)
                 : productDetailService.getAll();
@@ -105,11 +99,14 @@ public class AdminSalesController {
         List<Cart> cartItems = carts.get(tabId);
         double cartTotal = cartItems.stream().mapToDouble(Cart::getTotalPrice).sum();
 
+        // chỉ load mã hợp lệ
+        List<Discount> validDiscounts = billService.filterValidDiscounts(cartTotal);
+
         model.addAttribute("productDetails", productDetails);
         model.addAttribute("cartItems", cartItems);
         model.addAttribute("cartTotal", cartTotal);
         model.addAttribute("paymentMethods", paymentMethodRepository.findByStatusTrue());
-        model.addAttribute("discounts", discountRepo.findByDeleteFalse());
+        model.addAttribute("discounts", validDiscounts);
         model.addAttribute("recentBills", billRepository.findTop10ByOrderByCreateDateDesc());
         model.addAttribute("customer", customer);
         model.addAttribute("currentTab", tabId);
@@ -118,7 +115,17 @@ public class AdminSalesController {
         return "admin/sales";
     }
 
-    // Thêm sản phẩm vào giỏ (trừ tồn kho tạm thời)
+    // ================== API: lấy discount hợp lệ ==================
+    @GetMapping("/valid-discounts")
+    @ResponseBody
+    public List<Discount> getValidDiscounts(@RequestParam("tabId") Integer tabId, HttpSession session) {
+        Map<Integer, List<Cart>> carts = getAllCarts(session);
+        List<Cart> cartItems = carts.getOrDefault(tabId, new ArrayList<>());
+        double cartTotal = cartItems.stream().mapToDouble(Cart::getTotalPrice).sum();
+        return billService.filterValidDiscounts(cartTotal);
+    }
+
+    // ================== Quản lý giỏ ==================
     @PostMapping("/cart/add")
     public String addToCart(@RequestParam("productDetailId") Long productDetailId,
                             @RequestParam(value = "quantity", defaultValue = "1") Integer quantity,
@@ -134,7 +141,6 @@ public class AdminSalesController {
             return "redirect:/admin/sales?tab=" + tabId;
         }
 
-        // trừ kho ngay khi thêm
         productDetail.setQuantity(productDetail.getQuantity() - quantity);
         productDetailService.save(productDetail);
 
@@ -158,7 +164,6 @@ public class AdminSalesController {
         return "redirect:/admin/sales?tab=" + tabId;
     }
 
-    // Xóa sản phẩm (hoàn lại tồn kho)
     @PostMapping("/cart/remove")
     public String removeCartItem(@RequestParam("cartIndex") Integer cartIndex,
                                  @RequestParam("tabId") Integer tabId,
@@ -169,8 +174,8 @@ public class AdminSalesController {
 
         if (cartIndex >= 0 && cartIndex < cartItems.size()) {
             Cart removed = cartItems.remove((int) cartIndex);
-            ProductDetail pd = removed.getProductDetail();
-            pd.setQuantity(pd.getQuantity() + removed.getQuantity()); // hoàn lại
+            ProductDetail pd = productDetailService.getProductDetailById(removed.getProductDetail().getId());
+            pd.setQuantity(pd.getQuantity() + removed.getQuantity());
             productDetailService.save(pd);
             redirectAttributes.addFlashAttribute("success", "Đã xóa sản phẩm");
         } else {
@@ -182,11 +187,50 @@ public class AdminSalesController {
         return "redirect:/admin/sales?tab=" + tabId;
     }
 
-    // Thanh toán 1 tab
+    @PostMapping("/cart/update")
+    public String updateCartItem(@RequestParam("tabId") Integer tabId,
+                                 @RequestParam("cartIndex") Integer cartIndex,
+                                 @RequestParam("quantity") Integer newQuantity,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+        Map<Integer, List<Cart>> carts = getAllCarts(session);
+        List<Cart> cartItems = carts.getOrDefault(tabId, new ArrayList<>());
+
+        if (cartIndex >= 0 && cartIndex < cartItems.size()) {
+            Cart cartItem = cartItems.get(cartIndex);
+            ProductDetail pd = productDetailService.getProductDetailById(cartItem.getProductDetail().getId());
+
+            int oldQuantity = cartItem.getQuantity();
+            if (newQuantity > oldQuantity) {
+                int diff = newQuantity - oldQuantity;
+                if (pd.getQuantity() < diff) {
+                    redirectAttributes.addFlashAttribute("error", "Sản phẩm không đủ tồn kho");
+                    return "redirect:/admin/sales?tab=" + tabId;
+                }
+                pd.setQuantity(pd.getQuantity() - diff);
+                productDetailService.save(pd);
+            } else if (newQuantity < oldQuantity) {
+                int diff = oldQuantity - newQuantity;
+                pd.setQuantity(pd.getQuantity() + diff);
+                productDetailService.save(pd);
+            }
+
+            if (newQuantity <= 0) {
+                cartItems.remove(cartIndex);
+            } else {
+                cartItem.setQuantity(newQuantity);
+            }
+        }
+
+        carts.put(tabId, cartItems);
+        session.setAttribute("carts", carts);
+
+        return "redirect:/admin/sales?tab=" + tabId;
+    }
+
+    // ================== Thanh toán ==================
     @PostMapping("/place-order")
-    public String placeOrder(@RequestParam("billingAddress") String billingAddress,
-                             @RequestParam("invoiceType") String invoiceType,
-                             @RequestParam("paymentMethodId") Long paymentMethodId,
+    public String placeOrder(@RequestParam("paymentMethodId") Long paymentMethodId,
                              @RequestParam(value = "discountId", required = false) Long discountId,
                              @RequestParam("tabId") Integer tabId,
                              HttpSession session,
@@ -202,17 +246,15 @@ public class AdminSalesController {
         try {
             PaymentMethod paymentMethod = paymentMethodRepository.findById(paymentMethodId).orElse(null);
             Discount discount = (discountId != null) ? discountRepo.findById(discountId).orElse(null) : null;
-
             User sessionUser = (User) session.getAttribute("user");
-            Bill bill = billService.createBillFromTempCart(sessionUser, billingAddress, invoiceType, paymentMethod, discount, cartItems);
 
-            // Xóa giỏ của tab đã thanh toán
+            Bill bill = billService.createBillFromTempCart(
+                    sessionUser, "Tại quầy", "RETAIL", paymentMethod, discount, cartItems);
+
             carts.remove(tabId);
             session.setAttribute("carts", carts);
 
-            // ✅ Thêm lastBillId để JSP hiện nút in PDF
             redirectAttributes.addFlashAttribute("lastBillId", bill.getId());
-
             redirectAttributes.addFlashAttribute("success", "Đã tạo hóa đơn thành công: " + bill.getCode());
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Thanh toán thất bại: " + e.getMessage());
@@ -221,10 +263,9 @@ public class AdminSalesController {
         return "redirect:/admin/sales";
     }
 
-    // In PDF
+    // ================== In PDF ==================
     @GetMapping("/print/{billId}")
-    public void printInvoice(@PathVariable("billId") Long billId,
-                             HttpServletResponse response) {
+    public void printInvoice(@PathVariable("billId") Long billId, HttpServletResponse response) {
         try {
             Bill bill = billRepository.findById(billId).orElse(null);
             if (bill != null) {
@@ -233,12 +274,9 @@ public class AdminSalesController {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND, "Không tìm thấy hóa đơn");
             }
         } catch (Exception e) {
-            e.printStackTrace();
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi khi in hóa đơn");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
+            } catch (IOException ignored) {}
         }
     }
 }

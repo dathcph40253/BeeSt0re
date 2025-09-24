@@ -37,9 +37,9 @@
                                 </button>
                             </div>
                         </form>
-                    <button type="button" class="btn btn-success">
-                        ➕ Thêm
-                    </button>
+                    <a href="/admin/ProductDiscount/create" class="btn btn-success">
+                        <i class="fas fa-plus me-2"></i>Thêm giảm giá
+                    </a>
                     <div class="col-auto">
                         <a href="/admin/ProductDiscount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
                     </div>
@@ -81,7 +81,7 @@
                                 <td>${detail.color.name}</td>
                                 <td>${detail.size.name}</td>
                                 <td>${detail.price}</td>
-                                <form method="post" action="/BeeStore/Discount/update">
+                                <form method="post" action="/admin/update">
                                     <input type="hidden" name="productDetailId" value="${detail.id}" />
                                     <td>
                                         <input type="number" step="1000" class="form-control" name="discountedAmount"

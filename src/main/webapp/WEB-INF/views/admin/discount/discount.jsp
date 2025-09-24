@@ -38,7 +38,9 @@
                         <a href="/admin/Discount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
                     </div>
                     <div class="col-auto">
-                        <button type="button" class="btn btn-success">➕ Thêm</button>
+                        <a href="/admin/Discount/create" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Thêm mã giảm giá
+                        </a>
                     </div>
                 </form>
 
