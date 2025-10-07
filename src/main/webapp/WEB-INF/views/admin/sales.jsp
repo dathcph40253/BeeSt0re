@@ -232,7 +232,10 @@
                                 <select name="discountId" class="form-select" id="discountSelect">
                                     <option value="">Không áp dụng</option>
                                     <c:forEach var="d" items="${discounts}">
-                                        <option value="${d.id}" data-amount="${d.amount}">${d.code}</option>
+                                        <option value="${d.id}" data-amount="${d.amount}"
+                                        data-percentage="${d.percentage}"
+                                        data-max-amount="${d.maximumAmount}"
+                                        data-min-amount="${d.minimumAmountInCart}">${d.code}</option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -384,7 +387,29 @@
             discountSelect.addEventListener("change", function() {
                 const selectedOption = discountSelect.options[discountSelect.selectedIndex];
                 const discountAttr = selectedOption.getAttribute("data-amount");
-                discountValue = discountAttr ? parseFloat(discountAttr) : 0;
+                const percentageAttr = selectedOption.getAttribute("data-percentage");
+                if(percentageAttr && percentageAttr !== "0") {
+                    const percentage = parseFloat(selectedOption.getAttribute("data-percentage"));
+                    const maxAmount = parseFloat(selectedOption.getAttribute("data-max-amount"));
+                    const minAmount = parseFloat(selectedOption.getAttribute("data-min-amount"));
+                    if(percentage === "0") {
+                        discountValue = discountAttr ? parseFloat(discountAttr) : 0;
+                    }
+                    if(cartTotal >= minAmount) {
+                        discountValue = Math.floor(cartTotal * (percentage / 100));
+                        if(discountValue > maxAmount)   {
+                            discountValue = maxAmount;
+                        }
+                    } else {
+                        discountValue = 0;
+                        alert("Giá trị đơn hàng chưa đạt mức tối thiểu để áp dụng mã giảm giá này.");
+                        discountSelect.value = "";
+                    }
+                } else if(discountAttr) {
+                    discountValue = parseFloat(discountAttr);
+                } else {
+                    discountValue = 0;
+                }
                 updateFinalAmount();
             });
 

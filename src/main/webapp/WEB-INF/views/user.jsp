@@ -55,6 +55,7 @@
         </div>
         <button type="submit" class="btn btn-primary w-100">Đăng nhập</button>
         <div class="mt-3">
+            <a href="/forgot-password">Quên mật khẩu?</a>
             Nếu bạn chưa có tài khoản,
             <a href="/DangKy">đăng ký tại đây</a>
         </div>

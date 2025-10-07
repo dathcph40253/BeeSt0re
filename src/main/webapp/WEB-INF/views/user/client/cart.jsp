@@ -60,20 +60,44 @@
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <button class="btn btn-outline-secondary btn-sm" type="button"
-                                                    onclick="updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
+                                                    onclick="updateQuantity(${item.id}, ${item.quantity - 1}, ${item.productDetail.quantity})" >-</button>
                                             <input type="number" class="form-control text-center"
                                                    value="${item.quantity}" min="1"
-                                                   onchange="updateQuantity(${item.id}, this.value)">
+                                                   onchange="updateQuantity(${item.id}, ${item.productDetail.quantity}, this.value)">
                                             <button class="btn btn-outline-secondary btn-sm" type="button"
-                                                    onclick="updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                                                    onclick="updateQuantity(${item.id}, ${item.quantity + 1}), ${item.productDetail.quantity}">+</button>
                                         </div>
                                         <small class="text-muted">Còn ${item.productDetail.quantity} sản phẩm</small>
                                     </div>
-                                    <div class="col-md-2">
-                                        <p class="fw-bold text-primary">
-                                            <fmt:formatNumber value="${item.totalPrice}" type="currency" currencySymbol="₫"/>
-                                        </p>
-                                    </div>
+                                    <div class="col-md-2 text-end">
+    <%-- 1. Xác định giá đơn vị cuối cùng (giá đã giảm nếu có) --%>
+    <c:set var="finalUnitPrice" 
+           value="${item.productDetail.discountedPrice lt item.productDetail.price ? item.productDetail.discountedPrice : item.productDetail.price}"/>
+           
+    <c:set var="itemSubtotal" value="${finalUnitPrice * item.quantity}"/>
+
+    <c:choose>
+        <c:when test="${item.productDetail.discountedPrice lt item.productDetail.price}">
+            <p class="infProducts_home text-danger fw-bold mb-0">
+                <fmt:formatNumber value="${itemSubtotal}" type="number" pattern="#,##0" />₫
+            </p>
+            
+            <c:set var="originalSubtotal" value="${item.productDetail.price * item.quantity}"/>
+            <p class="infProducts_home text-muted text-decoration-line-through small">
+                <fmt:formatNumber value="${originalSubtotal}" type="number" pattern="#,##0" />₫
+            </p>
+            
+            <p class="small text-muted mb-0">
+                (<fmt:formatNumber value="${item.productDetail.price}" type="number" pattern="#,##0" />₫/sp)
+            </p>
+        </c:when>
+        <c:otherwise>
+            <p class="infProducts_home fw-bold">
+                <fmt:formatNumber value="${itemSubtotal}" type="number" pattern="#,##0" />₫
+            </p>
+        </c:otherwise>
+    </c:choose>
+</div>
                                     <div class="col-md-1">
                                         <button class="btn btn-outline-danger btn-sm"
                                                 onclick="removeFromCart(${item.id})">
@@ -107,7 +131,8 @@
                                     <fmt:formatNumber value="${cartTotal}" type="currency" currencySymbol="₫"/>
                                 </strong>
                             </div>
-                            <a href="/cart/checkout" class="btn btn-primary w-100 mb-2">
+                            <a href="/cart/checkout" class="btn btn-primary w-100 mb-2"
+                            onclick="checkOut(event)">
                                 Tiến hành thanh toán
                             </a>
                             <a href="/" class="btn btn-outline-secondary w-100">
@@ -124,12 +149,22 @@
 <jsp:include page="../layout/footer.jsp"/>
 
 <script>
-function updateQuantity(cartId, quantity) {
+function updateQuantity(cartId, quantity, maxQuantity, newValue) {
     if (quantity < 1) {
         removeFromCart(cartId);
         return;
     }
-
+    if( newValue !== undefined && newValue > maxQuantity){
+        alert("Số lượng sản phẩm quá tồn kho" + maxQuantity);
+        document.querySelector("#quantity-" + cartId).value = maxQuantity;
+        return;
+    } else {
+        if( quantity > maxQuantity){
+            alert("Số lượng sản phẩm quá tồn kho" + maxQuantity);
+            document.querySelector("#quantity-" + cartId).value = maxQuantity;
+            return;
+        }
+    }
     fetch('/cart/update', {
         method: 'POST',
         headers: {
@@ -145,6 +180,13 @@ function updateQuantity(cartId, quantity) {
             alert(data.replace('error:', ''));
         }
     });
+}
+
+function checkOut(event) {
+    event.preventDefault();
+    if (confirm('Bạn có chắc muốn thêm sản phẩm này?')) {
+        window.location.href = '/cart/checkout';
+    } 
 }
 
 function removeFromCart(cartId) {
@@ -165,6 +207,15 @@ function removeFromCart(cartId) {
             }
         });
     }
+}
+function checkQuantity(items){
+    for ( let item of items){
+        if (item.quantity > item.productDetail.quantity){
+            alert("Sản phẩm " + item.productName + " chỉ còn " + item.productDetail.quantity + " sản phẩm");
+            return false;
+        }
+    }
+
 }
 </script>
 </body>

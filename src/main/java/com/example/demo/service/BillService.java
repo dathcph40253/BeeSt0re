@@ -61,6 +61,7 @@ public class BillService {
 
         // đảm bảo set tiền
         bill.setAmount(totalAmount);
+        bill.setSalesChannel("offline");
         bill.setPromotionPrice(discountAmount);
 
         bill = billRepository.save(bill);
@@ -114,6 +115,7 @@ public class BillService {
 
         // đảm bảo set tiền
         bill.setAmount(totalAmount);
+        bill.setSalesChannel("offline");
         bill.setPromotionPrice(discountAmount);
 
 
@@ -318,5 +320,8 @@ public class BillService {
             } catch (Exception ignored) {}
         }
         return valid;
+    }
+    public List<Bill> searchBills(String query) {
+        return billRepository.searchBills(query);
     }
 }

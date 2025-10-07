@@ -203,7 +203,10 @@
                 <i class="fa-solid fa-file-invoice text-primary me-2"></i> Quản lý hóa đơn
             </h3>
         </div>
-
+        <form class="d-flex mb-4" method="get" action="/admin/bills/search">
+            <input class="form-control me-2" type="search" name="query" placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, địa chỉ..." aria-label="Search" value="${param.query}">
+            <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+        </form>
         <!-- Status Filter -->
         <div class="status-filter">
             <h6 class="mb-3"><i class="fas fa-filter me-2"></i>Lọc theo trạng thái:</h6>
@@ -258,6 +261,7 @@
                     <th class="text-center"><i class="fas fa-list-ol me-2"></i>STT</th>
                     <th><i class="fas fa-hashtag me-2"></i>Mã hóa đơn</th>
                     <th><i class="fas fa-user me-2"></i>Khách hàng</th>
+                    <th><i class="fas fa-user me-2"></i>Địa chỉ</th>
                     <th><i class="fas fa-calendar me-2"></i>Ngày tạo</th>
                     <th class="text-end"><i class="fas fa-money-bill me-2"></i>Tổng tiền</th>
                     <th class="text-center"><i class="fas fa-info-circle me-2"></i>Trạng thái</th>
@@ -299,6 +303,10 @@
                     <td>
                         <i class="fas fa-user-circle me-2 text-muted"></i>
                         <c:out value="${bill.customer != null ? bill.customer.name : 'Khách lẻ'}"/>
+                    </td>
+                    <td>
+                        <i class="fas fa-map-marker-alt me-2 text-muted"></i>
+                        <c:out value="${bill.billingAddress}"/>
                     </td>
                     <td>
                         <i class="fas fa-clock me-2 text-muted"></i>

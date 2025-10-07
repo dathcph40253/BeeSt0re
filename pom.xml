@@ -153,6 +153,12 @@
             <version>5.5.13.2</version>
         </dependency>
 
+        <!-- Gui email xac nhan-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
     </dependencies>
 
 

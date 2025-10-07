@@ -25,20 +25,34 @@
     <h1 class="title_home_product">NEW ARRIVAL</h1>
 
 
-    <div class="products_home">
-        <c:forEach items="${products}" var="product">
-            <div class="item_products_home">
-                <div class="image_home_item">
-                    <a href="/product/${product.id}">
-                        <img src="/images/product/${product.productDetailList[0].imageList[0].link}"
-                             alt="image product" class="image_products_home">
-                    </a>
-                </div>
-                <h4 class="infProducts_home">${product.name}</h4>
-                <p class="infProducts_home">${product.productDetailList[0].price}</p>
+    <<div class="products_home">
+    <c:forEach items="${products}" var="product">
+        <div class="item_products_home">
+            <div class="image_home_item">
+                <a href="/product/${product.id}">
+                    <img src="/images/product/${product.productDetailList[0].imageList[0].link}"
+                         alt="image product" class="image_products_home">
+                </a>
             </div>
+            <h4 class="infProducts_home">${product.name}</h4>
 
-        </c:forEach>
+            <c:choose>
+                <c:when test="${product.productDetailList[0].discountedPrice lt product.productDetailList[0].price}">
+                    <p class="infProducts_home text-danger fw-bold">
+                        ${product.productDetailList[0].discountedPrice}₫
+                    </p>
+                    <p class="infProducts_home text-muted text-decoration-line-through">
+                        ${product.productDetailList[0].price}₫
+                    </p>
+                </c:when>
+                <c:otherwise>
+                    <p class="infProducts_home">${product.productDetailList[0].price}₫</p>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </c:forEach>
+</div>
+>
     </div>
 </div>
 <jsp:include page="../layout/footer.jsp"/>

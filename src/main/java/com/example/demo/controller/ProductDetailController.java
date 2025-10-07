@@ -149,7 +149,6 @@ public class ProductDetailController {
 
     @GetMapping("/product-detail/delete/{id}")
     public String deleteProductDetail(@PathVariable("id") long id){
-        ProductDetail productDetail = productDetailService.getOneProductDetail(id);
         // Soft delete - có thể thêm trường deleteFlag vào ProductDetail entity
         // Hoặc hard delete như dưới đây:
         productDetailService.deleteProductDetail(id);

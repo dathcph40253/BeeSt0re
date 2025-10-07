@@ -59,4 +59,10 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
 
     // Tìm đơn hàng hết hạn (cho QR timeout)
     List<Bill> findByStatusAndCreateDateBefore(String status, LocalDateTime createDate);
+
+    @Query("SELECT b FROM Bill b WHERE " +
+           "LOWER(b.code) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(b.customer.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+           "LOWER(b.billingAddress) LIKE LOWER(CONCAT('%', :query, '%'))")
+    List<Bill> searchBills(@Param("query") String query);
 }

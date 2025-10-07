@@ -99,9 +99,9 @@ public class UserController {
     public String searchName(@RequestParam("keyword") String keyword) {
         String newKeyword = keyword.toLowerCase();
         switch (newKeyword) {
-            case "home":
+            case "trang chủ":
                 return "redirect:/Home";
-            case "product":
+            case "sản phẩm":
                 return "redirect:/product";
             case "order":
                 return "redirect:/admin/order";

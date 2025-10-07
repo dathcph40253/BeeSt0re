@@ -31,7 +31,19 @@
         </div>
         <div class="inf_product">
             <h2 class="title_inf_products">${details[0].product.name}</h2>
-            <p class="price_inf_products">${details[0].price}VND</p>
+            <c:choose>
+                <c:when test="${details[0].discountedPrice lt details[0].price}">
+                    <p class="price_inf_products text-danger fw-bold">
+                        ${details[0].discountedPrice}VND
+                    </p>
+                    <p class="price_inf_products text-muted text-decoration-line-through">
+                        ${details[0].price}VND
+                    </p>
+                </c:when>
+                <c:otherwise>
+                    <p class="price_inf_products">${details[0].price}VND</p>
+                </c:otherwise>
+            </c:choose>
             <p class="status_inf_products">Tình trạng: <span class="status_color_inf">còn hàng</span></p>
             <form id="addToCartForm">
                 <div class="product-options">
@@ -242,6 +254,7 @@ productDetails.push({
     sizeId: ${detail.size.id},
     sizeName: '${detail.size.name}',
     price: ${detail.price},
+    discountedPrice : ${detail.discountedPrice},
     quantity: ${detail.quantity}
 });
 </c:if>
@@ -655,13 +668,17 @@ function updateProductInfo() {
         document.getElementById('selectedDetailId').value = selectedDetailId;
 
         // Cập nhật giá
-        document.querySelector('.price_inf_products').textContent =
-            new Intl.NumberFormat('vi-VN').format(selectedDetail.price) + ' VND';
+const displayPrice = selectedDetail.discountedPrice < selectedDetail.price
+    ? selectedDetail.discountedPrice
+    : selectedDetail.price;
+
+document.querySelector('.price_inf_products').textContent =
+    new Intl.NumberFormat('vi-VN').format(displayPrice) + ' VND';
 
         // Cập nhật trạng thái tồn kho
         const statusElement = document.querySelector('.status_color_inf');
         if (selectedDetail.quantity > 0) {
-            statusElement.textContent = `còn hàng (${selectedDetail.quantity})`;
+            statusElement.textContent = `còn ` + selectedDetail.quantity + ' sản phẩm';
             statusElement.style.color = 'green';
 
             // Cập nhật max quantity cho input
@@ -692,7 +709,7 @@ function addToCart() {
     }
 
     if (parseInt(quantity) > selectedDetail.quantity) {
-        alert(`Số lượng vượt quá tồn kho (${selectedDetail.quantity})`);
+        alert(`Số lượng vượt quá tồn kho `+ selectedDetail.quantity);
         return;
     }
 

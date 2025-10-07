@@ -129,50 +129,64 @@ function loadNotificationList() {
 
     listContainer.innerHTML = '<div class="notification-loading">Đang tải...</div>';
 
-    fetch('/api/notifications/new-orders')
-        .then(response => response.json())
-        .then(orders => {
-            if (orders.length === 0) {
-                listContainer.innerHTML = '<div class="notification-empty">Không có đơn hàng mới</div>';
-                return;
-            }
-
-            listContainer.innerHTML = orders.map(order => `
-                <div class="notification-item" onclick="viewOrder('\${order.id}')">
-                    <div class="d-flex justify-content-between">
-                        <strong>Đơn hàng \${order.code}</strong>
-                        <small class="notification-time">\${formatTime(order.createDate)}</small>
-                    </div>
-                    <div class="notification-customer">
-                        Khách hàng: \${order.customer ? order.customer.name : 'Khách lẻ'}
-                    </div>
-                    <div class="notification-amount">
-                        \${formatCurrency(order.finalAmount)}
-                    </div>
-                </div>
-            `).join('');
-        })
+   fetch('/api/notifications/new-orders')
+    .then(res => res.json())
+    .then(orders => {
+        const html = orders.map(order => `
+            <div class="notification-item" data-order-id="\${order.id}">
+                <div><strong>Đơn hàng \${order.code}</strong></div>
+                <div>Khách hàng: \${order.customer ? order.customer.name : 'Khách lẻ'}</div>
+                <div>Số tiền: \${formatCurrency(order.amount)}</div>
+                <div>Thời gian: \${formatTime(order.createDate)}</div>
+            </div>
+        `).join('');
+        listContainer.innerHTML = html;
+    })
         .catch(error => {
             console.error('Error loading notifications:', error);
             listContainer.innerHTML = '<div class="notification-empty">Lỗi khi tải thông báo</div>';
         });
 }
 
-function viewOrder(orderId) {
-    window.location.href = `/admin/orders/${orderId}`;
-}
+var userRole = '${sessionScope.user != null ? sessionScope.user.role.name : ""}';
+
+var contextPath = '${pageContext.request.contextPath}';
+
+document.getElementById('notificationList').addEventListener('click', function(e) {
+    const item = e.target.closest('.notification-item');
+    if (item) {
+        const orderId = item.getAttribute('data-order-id');
+        if (userRole === 'ROLE_ADMIN' || userRole === 'ROLE_EMPLOYEE') {
+            window.location.href = contextPath + '/admin/orders/' + orderId;
+        } else {
+            window.location.href = contextPath + '/orders/' + orderId;
+        }
+    }
+});
+
 
 function formatTime(dateString) {
     const date = new Date(dateString);
+    if (isNaN(date)) return '';
+
     const now = new Date();
-    const diff = now - date;
+    const diff = now - date; // mili giây
     const minutes = Math.floor(diff / 60000);
 
-    if (minutes < 1) return 'Vừa xong';
-    if (minutes < 60) return `${minutes} phút trước`;
-    if (minutes < 1440) return `${Math.floor(minutes / 60)} giờ trước`;
-    return date.toLocaleDateString('vi-VN');
+    console.log("Date:", dateString, "Minutes ago:", minutes);
+
+    if (minutes < 1) {
+        return 'Vừa xong';
+    } else if (minutes < 60) {
+        return minutes + ' phút trước';
+    } else if (minutes < 1440) {
+        // Dùng Math.floor thay vì toFixed
+        return Math.floor(minutes / 60) + ' giờ trước';
+    } else {
+        return date.toLocaleDateString('vi-VN');
+    }
 }
+
 
 function formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN', {

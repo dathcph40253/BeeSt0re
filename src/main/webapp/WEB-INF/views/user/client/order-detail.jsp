@@ -216,7 +216,7 @@
             <!-- Hành động -->
             <div class="card">
                 <div class="card-body">
-                    <c:if test="${bill.status == 'PENDING' || bill.status == 'CONFIRMED'}">
+                    <c:if test="${bill.status != 'CANCELLED'}">
                         <button class="btn btn-danger w-100 mb-2" onclick="cancelOrder(${bill.id})">
                             <i class="fas fa-times me-2"></i>Hủy đơn hàng
                         </button>
@@ -239,7 +239,7 @@
 
 <jsp:include page="../layout/footer.jsp"/>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <style>
 .timeline {
     position: relative;

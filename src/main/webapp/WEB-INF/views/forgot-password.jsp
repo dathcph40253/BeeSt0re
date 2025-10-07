@@ -55,7 +55,6 @@
             e.preventDefault();
             var email = $('#email').val();
 
-            // Hiển thị trạng thái đang xử lý
             $('#message').html('<div class="alert alert-info">Đang gửi yêu cầu...</div>');
 
             $.ajax({
@@ -64,9 +63,9 @@
                 data: { email: email },
                 success: function(response) {
                     $('#message').html('<div class="alert alert-success">' + response + '</div>');
-                    // Tùy chọn: Chuyển hướng người dùng đến trang đặt lại mật khẩu sau 3 giây
                      setTimeout(function() {
-                         window.location.href = 'reset-password.jsp';
+
+                         window.location.href = 'reset-password';
                     }, 3000);
                 },
                 error: function(xhr) {

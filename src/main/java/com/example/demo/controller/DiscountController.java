@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.Entity.Discount;
 import com.example.demo.repository.DiscountRepo;
+import com.example.demo.service.DiscountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,9 @@ public class DiscountController {
     @Autowired
     private DiscountRepo discountRepo;
 
+    @Autowired
+    private DiscountService discountService;
+
     @GetMapping("/Discount")
     public String discount(Model model) {
         List<Discount> discounts = discountRepo.findByDeleteFalse();
@@ -33,6 +37,18 @@ public class DiscountController {
             discounts.setDelete(true);
             discountRepo.save(discounts);
         }
+        return "redirect:/admin/Discount";
+    }
+    @GetMapping("/Discount/update/{id}")
+    public String showUpdateForm(@PathVariable Long id, Model model) {
+        model.addAttribute("discount", discountService.findById(id));
+        return "admin/discount/update";
+    }
+
+    // Xử lý cập nhật
+    @PostMapping("/Discount/update")
+    public String update(@ModelAttribute("discount") Discount discount) {
+        discountService.save(discount); // JPA sẽ update nếu có id
         return "redirect:/admin/Discount";
     }
 
@@ -58,14 +74,12 @@ public class DiscountController {
         return "admin/discount/discount";
     }
 
-    // GET: Hiển thị form tạo mới discount
     @GetMapping("/Discount/create")
     public String createDiscountForm(Model model) {
         model.addAttribute("discount", new Discount());
         return "admin/discount/create";
     }
 
-    // POST: Xử lý tạo mới discount
     @PostMapping("/Discount/add")
     public String addDiscount(
             @RequestParam("code") String code,
@@ -82,14 +96,13 @@ public class DiscountController {
             RedirectAttributes redirectAttributes
     ) {
         try {
-            // Validation
+
             if (code == null || code.trim().isEmpty()) {
                 redirectAttributes.addFlashAttribute("message", "Mã giảm giá không được để trống!");
                 redirectAttributes.addFlashAttribute("messageType", "danger");
                 return "redirect:/admin/Discount/create";
             }
 
-            // Kiểm tra mã đã tồn tại
             List<Discount> existingDiscounts = discountRepo.findByDeleteFalse();
             boolean codeExists = existingDiscounts.stream()
                     .anyMatch(d -> code.equals(d.getCode()));
@@ -100,7 +113,6 @@ public class DiscountController {
                 return "redirect:/admin/Discount/create";
             }
 
-            // Tạo discount mới
             Discount discount = Discount.builder()
                     .code(code)
                     .detail(detail)

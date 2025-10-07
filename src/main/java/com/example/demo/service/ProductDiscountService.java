@@ -27,7 +27,7 @@ public class ProductDiscountService {
 
     // Cập nhật hoặc thêm mới giảm giá cho từng biến thể
     public void saveOrUpdateDiscount(Long productDetailId,
-                                     Float discountedAmount,
+                                     Double discountedAmount,
                                      LocalDateTime startDate,
                                      LocalDateTime endDate,
                                      Boolean closed) {

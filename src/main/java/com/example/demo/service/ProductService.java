@@ -4,7 +4,7 @@ import com.example.demo.Entity.Product;
 import com.example.demo.repository.ProductDetailRepo;
 import com.example.demo.repository.ProductRepo;
 import org.springframework.stereotype.Service;
-
+import com.example.demo.dto.ProductDetailDto;
 import java.util.List;
 
 @Service
@@ -44,6 +44,16 @@ public class ProductService {
             }
             productRepo.save(product);
         }
+    }
+
+    public List<ProductDetailDto> getAllProductForUser(){
+        return productDetailRepo.findAll().stream()
+        .map(detail -> new ProductDetailDto(
+                detail.getId(),
+                detail.getProduct().getName(),
+                detail.getPrice(),
+                detail.getDiscountedPrice()
+        )).toList();
     }
 
 }

@@ -21,7 +21,6 @@ public class Discount {
     @Column(name = "code")
     private String code;
 
-    // Dùng boolean để không bị null, mặc định = false
     @Column(name = "delete_flag", nullable = false)
     private boolean delete;
 

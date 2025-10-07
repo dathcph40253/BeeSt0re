@@ -74,7 +74,7 @@ public class CartService {
     public Double getCartTotal(User user) {
         List<Cart> cartItems = getCartByUser(user);
         return cartItems.stream()
-                .mapToDouble(Cart::getTotalPrice)
+                .mapToDouble(item -> item.getProductDetail().getDiscountedPrice() * item.getQuantity())
                 .sum();
     }
 

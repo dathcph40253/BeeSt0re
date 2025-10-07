@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/css/style.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
     <style>
         .orders-header {
             display: flex;
@@ -86,12 +87,30 @@
             border-top: 1px solid #dee2e6;
             vertical-align: middle;
         }
+        /* Thêm CSS cho phần tử cha của dropdown */
+        .main-table .dropdown {
+            /* Quan trọng: Thay đổi cách hiển thị mặc định của Bootstrap dropdown */
+            position: static; 
+        }
+
+        /* Thêm CSS cho ô chứa dropdown để đảm bảo không bị cắt */
+        .main-table td {
+            /* ... các thuộc tính khác của td ... */
+            overflow: visible; /* Quan trọng: Đảm bảo nội dung tràn ra ngoài vẫn hiển thị */
+        }
+
+        /* Điều chỉnh vị trí của dropdown menu để nó không bị ẩn do bảng */
+        .main-table .dropdown-menu {
+            /* Tùy chọn: Đặt vị trí tuyệt đối so với body hoặc container chính */
+            /* position: absolute; */ 
+            /* z-index cao để hiển thị trên các phần tử khác */
+            z-index: 1050; 
+        }
         
         .order-code {
             font-weight: 600;
             color: #007bff;
         }
-        
         .amount-text {
             font-weight: 600;
             font-size: 16px;
@@ -114,7 +133,10 @@
                 <i class="fa-solid fa-clipboard-list text-primary me-2"></i> Quản lý đơn hàng
             </h3>
         </div>
-
+        <form class="d-flex mb-4" method="get" action="/admin/search-orders">
+            <input class="form-control me-2" type="search" name="query" placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, địa chỉ..." aria-label="Search" value="${param.query}">
+            <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+        </form>
         <!-- Success/Error Messages -->
         <c:if test="${not empty success}">
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -160,6 +182,7 @@
                         <th><i class="fas fa-user me-2"></i>Khách hàng</th>
                         <th><i class="fas fa-calendar me-2"></i>Ngày đặt</th>
                         <th class="text-end"><i class="fas fa-money-bill me-2"></i>Tổng tiền</th>
+                        <th class="fas fa-shopping-cart me-2">kqq</th> 
                         <th class="text-center"><i class="fas fa-info-circle me-2"></i>Trạng thái</th>
                         <th class="text-center"><i class="fas fa-edit me-2"></i>Cập nhật trạng thái</th>
                     </tr>
@@ -205,6 +228,23 @@
                                             <fmt:formatNumber value="${bill.finalAmount}" type="number"/> đ
                                         </span>
                                     </td>
+<td>
+    <c:choose>
+        <c:when test="${bill.salesChannel == 'online'}">
+            <span class="badge bg-primary">Online</span>
+        </c:when>
+        <c:when test="${bill.salesChannel == 'offline'}">
+            <span class="badge bg-secondary">Offline</span>
+        </c:when>
+        <c:when test="${bill.salesChannel == 'both'}">
+            <span class="badge bg-success">Cả 2</span>
+        </c:when>
+        <c:otherwise>
+            <span class="badge bg-light text-dark">Không xác định</span>
+        </c:otherwise>
+    </c:choose>
+</td>
+
                                     <td class="text-center">
                                         <c:choose>
                                             <c:when test="${bill.status == 'PENDING'}">
@@ -234,29 +274,30 @@
                                         </c:choose>
                                     </td>
                                     <td class="text-center">
-                                        <div class="dropdown">
+                                        <div class="dropdown ">
                                             <button class="btn btn-sm btn-outline-warning dropdown-toggle" type="button"
-                                                    data-bs-toggle="dropdown" aria-expanded="false" title="Cập nhật trạng thái">
+                                                    data-bs-toggle="dropdown" aria-expanded="false"
+                                                    title="Cập nhật trạng thái">
                                                 <i class="fas fa-edit"></i> Cập nhật
                                             </button>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'PENDING')">
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'PENDING', '${bill.status}')">
                                                     <i class="fas fa-clock text-warning"></i> Chờ xác nhận
                                                 </a></li>
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'CONFIRMED')">
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'CONFIRMED', '${bill.status}')">
                                                     <i class="fas fa-check text-info"></i> Đã xác nhận
                                                 </a></li>
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'PROCESSING')">
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'PROCESSING', '${bill.status}')">
                                                     <i class="fas fa-cog text-primary"></i> Đang xử lý
                                                 </a></li>
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'SHIPPING')">
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'SHIPPING', '${bill.status}')">
                                                     <i class="fas fa-truck text-purple"></i> Đang giao hàng
                                                 </a></li>
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'DELIVERED')">
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'DELIVERED', '${bill.status}')">
                                                     <i class="fas fa-check-circle text-success"></i> Đã giao hàng
                                                 </a></li>
                                                 <li><hr class="dropdown-divider"></li>
-                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'CANCELLED')">
+                                                <li><a class="dropdown-item" href="#" onclick="updateStatus(${bill.id}, 'CANCELLED', '${bill.status}')">
                                                     <i class="fas fa-times text-danger"></i> Hủy đơn hàng
                                                 </a></li>
                                             </ul>
@@ -281,7 +322,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
-        function updateStatus(billId, newStatus) {
+        function updateStatus(billId, newStatus, currentStatus) {
             if (confirm('Bạn có chắc chắn muốn cập nhật trạng thái đơn hàng này?')) {
                 // Tạo form để submit
                 const form = document.createElement('form');
@@ -293,7 +334,32 @@
                 statusInput.type = 'hidden';
                 statusInput.name = 'status';
                 statusInput.value = newStatus;
+                if (currentStatus === 'CANCELLED' && newStatus !== 'CANCELLED') {
+                    alert("Bạn đã hủy đơn hàng này!");
+                    return
+                }
+                if( currentStatus === 'CONFIRMED' && (newStatus === 'PENDING'  || newStatus === 'SHIPPING' || newStatus === 'DELIVERED')){
+                    alert("Không thể chuyển trạng thái từ Đã xác nhận về Chờ xác nhận hoặc các trạng thái khác!");
+                    return
+                } else if( currentStatus === 'PROCESSING' && (newStatus === 'PENDING' || newStatus === 'CONFIRMED' || newStatus === 'DELIVERED')){
+                    alert("Không thể chuyển trạng thái từ Đang xử lý về Chờ xác nhận hoặc Đã xác nhận!");
+                    return
+                } else if( currentStatus === 'SHIPPING' && (newStatus === 'PENDING' || newStatus === 'CONFIRMED' || newStatus === 'PROCESSING')){
+                    alert("Không thể chuyển trạng thái từ Đang giao về Chờ xác nhận, Đã xác nhận hoặc Đang xử lý!");
+                    return
+                } else if( currentStatus === 'DELIVERED' && (newStatus === 'PENDING' || newStatus === 'CONFIRMED' || newStatus === 'PROCESSING' || newStatus === 'SHIPPING')){
+                    alert("Không thể chuyển trạng thái từ Đã giao về Chờ xác nhận, Đã xác nhận, Đang xử lý hoặc Đang giao!");
+                    return
+                }
                 form.appendChild(statusInput);
+
+                <c:if test="${not empty param.query}">
+                    const queryInput = document.createElement('input');
+                    queryInput.type = 'hidden';
+                    queryInput.name = 'query';
+                    queryInput.value = '${param.query}';
+                    form.appendChild(queryInput);
+                </c:if>
 
                 // Submit form
                 document.body.appendChild(form);

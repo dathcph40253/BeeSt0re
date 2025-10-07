@@ -109,7 +109,7 @@
                     <li class="nav-item">
                         <a class="nav-link nav-link-custom" href="/product?categoryId=1">TOP</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item">   
                         <a class="nav-link nav-link-custom" href="/product?categoryId=2">BOTTOM</a>
                     </li>
                     <li class="nav-item">

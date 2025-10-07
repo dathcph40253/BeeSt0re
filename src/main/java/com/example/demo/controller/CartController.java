@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.Entity.*;
+import com.example.demo.dto.ProductDetailDto;
 import com.example.demo.service.*;
 import com.example.demo.repository.*;
 import jakarta.servlet.http.HttpSession;
@@ -164,7 +165,6 @@ public class CartController {
 
         return "user/client/checkout";
     }
-
     // Xử lý đặt hàng
     @PostMapping("/place-order")
     public String placeOrder(@RequestParam String billingAddress,
@@ -187,6 +187,8 @@ public class CartController {
             }
 
             Bill bill = billService.createBillFromCart(user, billingAddress, invoiceType, paymentMethod, discount);
+            bill.setSalesChannel("online");
+            billRepository.save(bill);
         if (paymentMethodId == 3L) {
         String bankCode = "MB"; // ngân hàng (VD: MB, VCB, TCB...)
         String accountNumber = "0367387326"; // số tài khoản của shop

@@ -47,6 +47,9 @@ public class Bill {
     @Column(name = "update_date")
     private LocalDateTime updateDate;
 
+    @Column(name = "sales_channel")
+    private String salesChannel;
+
     @ManyToOne
     @JoinColumn(name = "customer_id")
     private Customer customer;

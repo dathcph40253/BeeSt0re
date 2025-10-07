@@ -45,12 +45,14 @@ public class Cart {
     }
 
     // Helper methods
-    public Double getTotalPrice() {
-        if (productDetail != null && productDetail.getPrice() != null && quantity != null) {
-            return productDetail.getPrice() * quantity;
-        }
-        return 0.0;
+public Double getTotalPrice() {
+    if (productDetail != null && quantity != null) {
+        Double discountedPrice = (double) productDetail.getDiscountedPrice();
+        return discountedPrice * quantity;
     }
+    return 0.0;
+}
+
 
     public String getProductName() {
         return productDetail != null && productDetail.getProduct() != null 

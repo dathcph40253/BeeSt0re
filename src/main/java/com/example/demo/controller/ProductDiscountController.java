@@ -40,7 +40,7 @@ public class ProductDiscountController {
     @PostMapping("/update")
     public String updateDiscount(
             @RequestParam("productDetailId") Long productDetailId,
-            @RequestParam("discountedAmount") Float discountedAmount,
+            @RequestParam("discountedAmount") Double discountedAmount,
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime endDate,
             @RequestParam("closed") Boolean closed,
@@ -54,7 +54,7 @@ public class ProductDiscountController {
             redirectAttributes.addFlashAttribute("message", "Lỗi khi cập nhật giảm giá!");
             redirectAttributes.addFlashAttribute("messageType", "danger");
         }
-        return "redirect:/ProductDiscount";
+        return "redirect:/admin/ProductDiscount";
     }
 
     // (Tùy chọn) POST: Xóa giảm giá
@@ -85,7 +85,7 @@ public class ProductDiscountController {
     @PostMapping("/ProductDiscount/add")
     public String addProductDiscount(
             @RequestParam("productDetailId") Long productDetailId,
-            @RequestParam("discountedAmount") Float discountedAmount,
+            @RequestParam("discountedAmount") Double discountedAmount,
             @RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startDate,
             @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime endDate,
             @RequestParam("closed") Boolean closed,

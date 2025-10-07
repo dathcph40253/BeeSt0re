@@ -89,6 +89,8 @@
                                        onclick="return confirm('Bạn có chắc muốn xóa giảm giá này không?')">
                                         Xóa
                                     </a>
+                                    <a href="/admin/Discount/update/${discount.id}" class="btn btn-sm">Sửa</a>
+
                                 </td>
                             </tr>
                         </c:forEach>

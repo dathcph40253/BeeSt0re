@@ -117,6 +117,26 @@ public class OrderController {
         return "admin/orders/list";
     }
 
+@GetMapping("/admin/orders/{id}")
+public String adminViewOrderDetail(@PathVariable Long id, HttpSession session, Model model) {
+    User user = (User) session.getAttribute("user");
+    if (user == null || 
+        (!"ROLE_ADMIN".equals(user.getRole().getName()) && !"ROLE_EMPLOYEE".equals(user.getRole().getName()))) {
+        return "redirect:/Login";
+    }
+
+    Bill bill = billService.getBillById(id);
+    if (bill == null) {
+        return "redirect:/admin/orders";
+    }
+
+    List<BillDetail> billDetails = billDetailRepository.findByBill(bill);
+    model.addAttribute("bill", bill);
+    model.addAttribute("billDetails", billDetails);
+
+    return "admin/orders/detail";
+}
+
 
 
     // Admin - Cập nhật trạng thái đơn hàng
@@ -138,5 +158,12 @@ public class OrderController {
         }
 
         return "redirect:/admin/orders";
+    }
+        @GetMapping("/admin/search-orders")
+    public String searchOrders(@RequestParam("query") String query, Model model) {
+        List<Bill> bills = billService.searchBills(query);
+        model.addAttribute("bills", bills);
+        model.addAttribute("searchQuery", query);
+        return "admin/orders/list";
     }
 }

@@ -250,10 +250,8 @@ public class AdminSalesController {
 
             Bill bill = billService.createBillFromTempCart(
                     sessionUser, "Tại quầy", "RETAIL", paymentMethod, discount, cartItems);
-
             carts.remove(tabId);
             session.setAttribute("carts", carts);
-
             redirectAttributes.addFlashAttribute("lastBillId", bill.getId());
             redirectAttributes.addFlashAttribute("success", "Đã tạo hóa đơn thành công: " + bill.getCode());
         } catch (Exception e) {

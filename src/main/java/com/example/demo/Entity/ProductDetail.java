@@ -10,8 +10,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
+import java.time.LocalDateTime;
 import java.util.List;
+
+import org.springframework.cglib.core.Local;
 
 @Builder
 @Getter
@@ -46,7 +48,21 @@ public class ProductDetail {
     private Product product;
     @OneToMany(mappedBy = "productDetail")
     private List<Image> imageList;
-    @OneToOne(mappedBy = "productDetail", cascade = CascadeType.ALL, orphanRemoval = true)
-    private ProductDiscount productDiscount;
+@OneToMany(mappedBy = "productDetail", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ProductDiscount> productDiscount;
+
+
+    public float getDiscountedPrice() {
+        if(productDiscount != null && !productDiscount.isEmpty()) {
+            LocalDateTime now = LocalDateTime.now();
+            for (ProductDiscount discount : productDiscount) {
+                if (!discount.getClosed() && now.isAfter(discount.getStartDate()) && now.isBefore(discount.getEndDate())) {
+                    return (float) (price - discount.getDiscountedAmount());
+                }
+            }
+        }
+        return price.floatValue();
+
+    }
 }
 

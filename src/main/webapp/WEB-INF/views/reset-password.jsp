@@ -71,7 +71,6 @@
 
             var code = $('#verificationCode').val();
 
-            // Hiển thị trạng thái đang xử lý
             $('#message').html('<div class="alert alert-info">Đang xử lý...</div>');
 
             $.ajax({
@@ -80,10 +79,6 @@
                 data: { code: code, newPassword: newPassword },
                 success: function(response) {
                     $('#message').html('<div class="alert alert-success">' + response + '</div>');
-                    // Tùy chọn: Chuyển hướng người dùng đến trang đăng nhập sau 3 giây
-                    // setTimeout(function() {
-                    //     window.location.href = 'login.jsp';
-                    // }, 3000);
                 },
                 error: function(xhr) {
                     $('#message').html('<div class="alert alert-danger">' + xhr.responseText + '</div>');

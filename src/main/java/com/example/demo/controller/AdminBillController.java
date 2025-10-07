@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.Entity.Bill;
 import com.example.demo.repository.BillRepository;
+import com.example.demo.service.BillService;
+
 import org.springframework.web.bind.annotation.GetMapping;
 
 
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AdminBillController {
     @Autowired
     private BillRepository billRepository;
+    
+    @Autowired
+    private BillService billService;
 
     @GetMapping
     public String getAllBills(@RequestParam(required = false) String status, Model model){
@@ -30,6 +35,14 @@ public class AdminBillController {
 
         model.addAttribute("recentBills", bills);
         model.addAttribute("selectedStatus", status);
+        return "admin/bills";
+    }
+    
+    @GetMapping("/search")
+    public String searchBills(@RequestParam("query") String query, Model model) {
+        List<Bill> bills = billService.searchBills(query);
+        model.addAttribute("recentBills", bills);
+        model.addAttribute("query", query);
         return "admin/bills";
     }
 }

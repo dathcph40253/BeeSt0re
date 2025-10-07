@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import com.example.demo.Entity.ProductDetail;
+
 
 @Builder
 @Getter
@@ -23,7 +26,7 @@ public class ProductDiscount {
     private Boolean closed;
 
     @Column(name = "discounted_amount")
-    private Float discountedAmount;
+    private Double discountedAmount;
 
     @Column(name = "end_date")
     private LocalDateTime endDate;
