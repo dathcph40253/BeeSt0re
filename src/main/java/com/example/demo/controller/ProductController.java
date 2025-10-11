@@ -67,12 +67,19 @@ public class ProductController {
         }
         return map;
     }
+    @GetMapping("/admin/products")
+    public String getAdminProductPage(Model model) {
+        List<Product> products = productService.getAll();
+        model.addAttribute("products", products);
+        return "admin/product/show";
+    }
 
     @GetMapping("/product")
     public String getProduct(Model model,
                            @RequestParam(value = "categoryId", required = false) Long categoryId,
                            @RequestParam(value = "status", required = false) String status,
-                           @RequestParam(value = "sortBy", required = false) String sortBy){
+                           @RequestParam(value = "sortBy", required = false) String sortBy,
+                           @RequestParam(value = "keyword", required = false) String keyword) {
 
         List<Product> products = productService.getAll();
 
@@ -80,7 +87,13 @@ public class ProductController {
         if (sortBy == null || sortBy.isEmpty()) {
             sortBy = "newest";
         }
-
+        // Filter by search keyword
+        if (keyword != null && !keyword.isEmpty()) {
+            String lowerCaseSearch = keyword.toLowerCase();
+            products = products.stream()
+                    .filter(p -> p.getName().toLowerCase().contains(lowerCaseSearch))
+                    .collect(java.util.stream.Collectors.toList());
+        }
         // Filter by category
         if (categoryId != null && categoryId > 0) {
             products = products.stream()
@@ -98,6 +111,12 @@ public class ProductController {
                 products = products.stream()
                         .filter(p -> p.getTotalQuantity() == 0)
                         .collect(java.util.stream.Collectors.toList());
+            } else if("sale".equals(status)) { // Giảm giá
+                products = products.stream()
+                        .filter(p -> !p.getProductDetailList().isEmpty() &&
+                        p.getProductDetailList().get(0).getDiscountedPrice()
+                                < p.getProductDetailList().get(0).getPrice())
+                        .collect(java.util.stream.Collectors.toList());    
             }
         }
 
@@ -127,13 +146,13 @@ public class ProductController {
                     break;
             }
         }
-
+        model.addAttribute("keyword", keyword);
         model.addAttribute("products", products);
         model.addAttribute("selectedCategoryId", categoryId);
         model.addAttribute("selectedStatus", status);
         model.addAttribute("selectedSortBy", sortBy);
 
-        return "admin/product/show";
+        return "user/client/product";
     }
 
     @GetMapping("/product/create")

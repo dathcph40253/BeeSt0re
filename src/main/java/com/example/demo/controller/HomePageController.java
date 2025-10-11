@@ -31,7 +31,7 @@ public class HomePageController {
     public String getProductDetail(@PathVariable("id") Long id, Model model){
         Product product = productService.getProductById(id);
         List<ProductDetail> productDetails = productDetailService.getProductByProductId(id);
-
+        
         // Debug logging
         System.out.println("Product ID: " + id);
         System.out.println("Product Details found: " + productDetails.size());
@@ -42,8 +42,9 @@ public class HomePageController {
                              ", Price: " + detail.getPrice() +
                              ", Quantity: " + detail.getQuantity());
         }
-
+        List<Product> relatedProducts = productService.getRelatedProducts(id);
         model.addAttribute("product", product);
+        model.addAttribute("relatedProducts", relatedProducts);
         model.addAttribute("details", productDetails);
 
         // Nếu không có product details, hiển thị trang với nút thêm

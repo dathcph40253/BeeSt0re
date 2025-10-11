@@ -96,4 +96,65 @@
 }
 .btn_continue:hover .text_btn_continue{
     color: #fff;
+}/* ====== Thông báo đơn giản (thay cho alert) ====== */
+/* ====== Notification đẹp và mượt ====== */
+.nofication-cart {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 280px;
+    max-width: 360px;
+    padding: 16px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #333;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    display: none;
 }
+
+/* Hiển thị notification */
+.nofication-cart.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+    animation: popIn 0.4s ease forwards;
+}
+
+/* Các loại thông báo */
+.nofication-cart.success {
+    background-color: #28a745; /* Xanh lá */
+}
+
+.nofication-cart.error {
+    background-color: #dc3545; /* Đỏ */
+}
+
+.nofication-cart.info {
+    background-color: #17a2b8; /* Xanh dương nhạt */
+}
+
+.nofication-cart.warning {
+    background-color: #ffc107; /* Vàng cam */
+    color: #333;
+}
+
+/* Hiệu ứng “bật” nhẹ khi xuất hiện */
+@keyframes popIn {
+    0% {
+        transform: scale(0.95) translateY(-15px);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+

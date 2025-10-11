@@ -13,24 +13,6 @@
     </form>
 
     <div class="user-info">
-        <div class="notifications" id="notificationBell">
-            <i class="fas fa-bell"></i>
-            <span class="badge" id="notificationCount" style="display: none;">0</span>
-
-            <!-- Dropdown thông báo -->
-            <div class="notification-dropdown" id="notificationDropdown">
-                <div class="notification-header">
-                    <h6>Đơn hàng mới</h6>
-                </div>
-                <div class="notification-list" id="notificationList">
-                    <div class="notification-loading">Đang tải...</div>
-                </div>
-                <div class="notification-footer">
-                    <a href="/admin/bills">Xem tất cả</a>
-                </div>
-            </div>
-        </div>
-        <!-- Nếu chưa đăng nhập -->
         <c:if test="${empty sessionScope.user}">
             <div class="auth-buttons">
                 <a href="${pageContext.request.contextPath}/Login" class="btn-login">Đăng nhập</a>
@@ -38,13 +20,33 @@
             </div>
         </c:if>
 
-        <!-- Nếu đã đăng nhập -->
         <c:if test="${not empty sessionScope.user}">
             <div class="user">
+                <!-- 🔔 CHUÔNG THÔNG BÁO BÊN TRÁI -->
+                <div class="notifications" id="notificationBell">
+                    <i class="fas fa-bell"></i>
+                    <span class="badge" id="notificationCount" style="display: none;">0</span>
+
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h6>Đơn hàng mới</h6>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <div class="notification-loading">Đang tải...</div>
+                        </div>
+                        <div class="notification-footer">
+                            <a href="/admin/bills">Xem tất cả</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 👤 ICON + EMAIL NGƯỜI DÙNG -->
                 <div class="icon" onclick="toggleMenu()">
                     <img src="/images/icons/user.png" alt="Menu Icon">
                     <span>${sessionScope.user.email}</span>
                 </div>
+
+                <!-- MENU NGƯỜI DÙNG -->
                 <div id="menu" class="menu hidden">
                     <ul>
                         <li><a href="${pageContext.request.contextPath}/profile">Thông tin người dùng</a></li>
@@ -55,6 +57,7 @@
             </div>
         </c:if>
     </div>
+
 </div>
 
 <script>

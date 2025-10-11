@@ -99,26 +99,32 @@ public class UserController {
     public String searchName(@RequestParam("keyword") String keyword) {
         String newKeyword = keyword.toLowerCase();
         switch (newKeyword) {
-            case "trang chủ":
+            case "Trang chủ":
                 return "redirect:/Home";
-            case "sản phẩm":
+            case "Sản phẩm":
                 return "redirect:/product";
-            case "order":
-                return "redirect:/admin/order";
-            case "category":
+            case "Bán hàng":
+                return "redirect:/admin/sales";
+            case "Hóa đơn":
+                return "redirect:/admin/bills";
+            case "Quản lý đơn hàng":
+                return "redirect:/admin/orders";
+            case "Quản lý Danh mục":
                 return "redirect:/Category";
-            case "color":
+            case "Quản lý màu sắc":
                 return "redirect:/Color";
-            case "size":
+            case "Quản lý kích thước":
                 return "redirect:/Size";
-            case "brand":
+            case "Quản lý thương hiệu":
                 return "redirect:/Brand";
-            case "material":
+            case "Quản lý chất liệu":
                 return "redirect:/Material";
-            case "account":
+            case "Tài khoản":
                 return "redirect:/admin/account";
-            case "report":
-                return "redirect:/admin/report";
+            case "mã giảm giá":
+                return "redirect:/admin/Discount";
+            case "giảm giá":
+                return "redirect:/admin/ProductDiscount";
             default:
                 return "home";
         }

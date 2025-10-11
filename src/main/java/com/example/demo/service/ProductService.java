@@ -28,6 +28,14 @@ public class ProductService {
         return product;
     }
 
+    public List<Product> getRelatedProducts(Long productId) {
+        Product product = getProductById(productId);
+        if (product == null || product.getCategory() == null) return List.of();
+
+        // Lấy 4 sản phẩm cùng category, khác sản phẩm hiện tại
+        return productRepo.findTop5ByCategoryAndIdNot(product.getCategory(), product.getId());
+    }
+
     public Product getProductByName(String name){
         return this.productRepo.findByName(name);
     }

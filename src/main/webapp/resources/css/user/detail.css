@@ -378,3 +378,46 @@
         padding: 8px 12px;
     }
 }
+/* ====== Thông báo đơn giản (thay cho alert) ====== */
+.nofication {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    z-index: 9999;
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #333;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    display: none;
+}
+
+/* Khi hiển thị */
+.nofication.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Các loại thông báo */
+.nofication.success {
+    background-color: #28a745; /* Xanh lá */
+}
+
+.nofication.error {
+    background-color: #dc3545; /* Đỏ */
+}
+
+.nofication.info {
+    background-color: #17a2b8; /* Xanh dương nhạt */
+}
+
+.nofication.warning {
+    background-color: #ffc107; /* Vàng cam */
+    color: #333;
+}

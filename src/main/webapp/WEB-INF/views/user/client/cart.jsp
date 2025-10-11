@@ -15,15 +15,8 @@
 <jsp:include page="../layout/header.jsp"/>
 
 <div class="container mt-4">
+    <div class="nofication-cart" id="nofication-cart"></div>
     <h1 class="mb-4">Giỏ hàng của bạn</h1>
-
-    <c:if test="${not empty error}">
-        <div class="alert alert-danger">${error}</div>
-    </c:if>
-
-    <c:if test="${not empty success}">
-        <div class="alert alert-success">${success}</div>
-    </c:if>
 
     <c:choose>
         <c:when test="${empty cartItems}">
@@ -60,13 +53,16 @@
                                     <div class="col-md-3">
                                         <div class="input-group">
                                             <button class="btn btn-outline-secondary btn-sm" type="button"
-                                                    onclick="updateQuantity(${item.id}, ${item.quantity - 1}, ${item.productDetail.quantity})" >-</button>
+                                                    onclick="changeQuantity(${item.id}, -1, ${item.productDetail.quantity})">-</button>
+
                                             <input type="number" class="form-control text-center"
-                                                   value="${item.quantity}" min="1"
-                                                   onchange="updateQuantity(${item.id}, ${item.productDetail.quantity}, this.value)">
+                                                value="${item.quantity}" min="1" id="quantity-${item.id}"
+                                                onchange="updateQuantity(${item.id}, this.value, ${item.productDetail.quantity})">
+
                                             <button class="btn btn-outline-secondary btn-sm" type="button"
-                                                    onclick="updateQuantity(${item.id}, ${item.quantity + 1}), ${item.productDetail.quantity}">+</button>
+                                                    onclick="changeQuantity(${item.id}, 1, ${item.productDetail.quantity})">+</button>
                                         </div>
+
                                         <small class="text-muted">Còn ${item.productDetail.quantity} sản phẩm</small>
                                     </div>
                                     <div class="col-md-2 text-end">
@@ -149,44 +145,87 @@
 <jsp:include page="../layout/footer.jsp"/>
 
 <script>
+
+const cartItemsJS = [
+    <c:forEach items="${cartItems}" var="item" varStatus="loop">
+        {
+            id: ${item.id},
+            productName: "${item.productName}",
+            productDetail: {
+                quantity: ${item.productDetail.quantity}
+            }
+        }<c:if test="${!loop.last}">,</c:if>
+    </c:forEach>
+] || [];
+
+function changeQuantity(cartId, delta, maxQuantity) {
+    const input = document.getElementById("quantity-" + cartId);
+    if (!input) return;
+
+    let current = parseInt(input.value);
+    let newQuantity = current + delta;
+
+    // Nếu người dùng giảm về 0 -> xác nhận xóa
+    if (newQuantity < 1) {
+        if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?')) {
+            removeFromCart(cartId);
+        }
+        return;
+    }
+
+    // Nếu vượt quá số lượng tồn kho -> thông báo và giữ nguyên giá trị cũ
+    if (newQuantity > maxQuantity) {
+        showNotification('Chỉ còn ' + maxQuantity + ' sản phẩm trong kho.', 'error');
+        return;
+    }
+
+    // Cập nhật trên giao diện
+    input.value = newQuantity;
+
+    // Cập nhật về server (AJAX)
+    updateQuantity(cartId, newQuantity);
+}
+
+
+
 function updateQuantity(cartId, quantity, maxQuantity, newValue) {
-    if (quantity < 1) {
+    const finalQuantity = newValue !== undefined ? parseInt(newValue) : quantity;
+    if (finalQuantity < 1) {
         removeFromCart(cartId);
         return;
     }
-    if( newValue !== undefined && newValue > maxQuantity){
-        alert("Số lượng sản phẩm quá tồn kho" + maxQuantity);
-        document.querySelector("#quantity-" + cartId).value = maxQuantity;
-        return;
-    } else {
-        if( quantity > maxQuantity){
-            alert("Số lượng sản phẩm quá tồn kho" + maxQuantity);
+        if( finalQuantity > maxQuantity){
+            showNotification('Số lượng vượt quá tồn kho ' + maxQuantity, 'error');
             document.querySelector("#quantity-" + cartId).value = maxQuantity;
             return;
         }
-    }
+
     fetch('/cart/update', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: 'cartId=' + cartId + '&quantity=' + quantity
+        body: 'cartId=' + cartId + '&quantity=' + finalQuantity
     })
     .then(response => response.text())
     .then(data => {
         if (data.startsWith('success:')) {
             location.reload();
         } else {
-            alert(data.replace('error:', ''));
+            showNotification(data.replace('error:', ''), 'error');
         }
     });
 }
 
 function checkOut(event) {
     event.preventDefault();
-    if (confirm('Bạn có chắc muốn thêm sản phẩm này?')) {
+    if(!checkQuantity(cartItemsJS)){
+        return;
+    }
+    showNotification('Đang chuyển đến trang thanh toán...', 'info');
+    setTimeout(() => {
         window.location.href = '/cart/checkout';
-    } 
+    }, 1500);
 }
 
 function removeFromCart(cartId) {
@@ -203,20 +242,45 @@ function removeFromCart(cartId) {
             if (data.startsWith('success:')) {
                 location.reload();
             } else {
-                alert(data.replace('error:', ''));
+                showNotification(data.replace('error:', ''), 'error');
             }
         });
     }
 }
 function checkQuantity(items){
     for ( let item of items){
-        if (item.quantity > item.productDetail.quantity){
-            alert("Sản phẩm " + item.productName + " chỉ còn " + item.productDetail.quantity + " sản phẩm");
+        const inputField = document.getElementById("quantity-" + item.id);
+        if (!inputField) continue; // Nếu không tìm thấy trường input, bỏ qua
+        const quantityInput = parseInt(inputField.value);
+        if (quantityInput > item.productDetail.quantity){
+            showNotification("Số lượng sản phẩm " + item.productName + " vượt quá tồn kho " + item.productDetail.quantity, 'error');
+            return false;
+        } else if (quantityInput < 1){
+            showNotification("Số lượng sản phẩm " + item.productName + " phải lớn hơn 0", 'error');
             return false;
         }
     }
+    return true;
 
 }
+    function showNotification(message, type = 'info') {
+        const notification = document.getElementById('nofication-cart');
+        notification.textContent = message;
+        notification.className = `nofication-cart ${type}`;
+        
+        // Thêm class show để kích hoạt hiệu ứng
+        notification.style.display = 'block';
+        setTimeout(() => notification.classList.add('show'), 10);
+
+        // Ẩn sau 3 giây
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 400); // chờ hiệu ứng fade-out
+        }, 3000);
+    }
+
 </script>
 </body>
 </html>

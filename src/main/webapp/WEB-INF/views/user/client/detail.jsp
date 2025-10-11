@@ -20,6 +20,7 @@
 <body>
 <jsp:include page="../layout/header.jsp"/>
 <div class="content">
+    <div class="nofication" id="nofication"></div>
     <div class="content_detailProduct">
         <div class="img_product">
             <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt">
@@ -31,6 +32,9 @@
         </div>
         <div class="inf_product">
             <h2 class="title_inf_products">${details[0].product.name}</h2>
+            <p class="brand_inf_products">
+                Thương hiệu: <span class="text-primary fw-semibold">${details[0].product.brand.name}</span>
+            </p>
             <c:choose>
                 <c:when test="${details[0].discountedPrice lt details[0].price}">
                     <p class="price_inf_products text-danger fw-bold">
@@ -101,42 +105,43 @@
             </div>
         </div>
     </div>
+</div>
+<!-- Sản phẩm liên quan -->
+<div class="Related_products">
+    <h2 class="title_related_products">SẢN PHẨM LIÊN QUAN</h2>
+    <div class="product_related">
+        <c:forEach items="${relatedProducts}" var="product">
+            <div class="item_product_related">
+                <div class="image_home_item">
+                    <a href="/product/${product.id}">
+                        <img src="/images/product/${product.productDetailList[0].imageList[0].link}" 
+                             alt="${product.name}" class="image_products_related">
+                    </a>
+                </div>
+                <div class="boxname_product_related">
+                    <p class="name_product_reletd">${product.name}</p>
+                </div>
 
-    <!-- Sản phẩm liên quan -->
-    <div class="Related_products">
-        <h2 class="title_related_products">SẢN PHẨM LIÊN QUAN</h2>
-        <div class="product_related">
-            <div class="item_product_related">
-                <img src="../img/Detail_product/product1.png" alt="" class="image_products_related">
-                <div class="boxname_product_related">
-                    <p class="name_product_reletd"> LOGOS T-SHIRT -WHITE</p>
-                </div>
-                <p class="name_product_reletd"><strong>275.000VND</strong></p>
+                <c:choose>
+                    <c:when test="${product.productDetailList[0].discountedPrice lt product.productDetailList[0].price}">
+                        <p class="name_product_reletd text-danger fw-bold">
+                            ${product.productDetailList[0].discountedPrice}₫
+                        </p>
+                        <p class="name_product_reletd text-muted text-decoration-line-through">
+                            ${product.productDetailList[0].price}₫
+                        </p>
+                    </c:when>
+                    <c:otherwise>
+                        <p class="name_product_reletd">
+                            ${product.productDetailList[0].price}₫
+                        </p>
+                    </c:otherwise>
+                </c:choose>
             </div>
-            <div class="item_product_related">
-                <img src="../img/Detail_product/product2.png" alt="" class="image_products_related">
-                <div class="boxname_product_related">
-                    <p class="name_product_reletd"> LOGOS T-SHIRT -WHITE</p>
-                </div>
-                <p class="name_product_reletd"><strong>275.000VND</strong></p>
-            </div>
-            <div class="item_product_related">
-                <img src="../img/Detail_product/product3.png" alt="" class="image_products_related">
-                <div class="boxname_product_related">
-                    <p class="name_product_reletd"> LOGOS T-SHIRT -WHITE</p>
-                </div>
-                <p class="name_product_reletd"><strong>275.000VND</strong></p>
-            </div>
-            <div class="item_product_related">
-                <img src="../img/Detail_product/product4.png" alt="" class="image_products_related">
-                <div class="boxname_product_related">
-                    <p class="name_product_reletd"> LOGOS T-SHIRT -WHITE</p>
-                </div>
-                <p class="name_product_reletd"><strong>275.000VND</strong></p>
-            </div>
-        </div>
+        </c:forEach>
     </div>
 </div>
+
 <jsp:include page="../layout/footer.jsp"/>
 
 <style>
@@ -224,10 +229,26 @@
 </style>
 
 <script>
+    function showNotification(message, type = 'info') {
+        const notification = document.getElementById('nofication');
+        notification.textContent = message;
+        notification.className = `nofication ${type}`;
+        
+        // Thêm class show để kích hoạt hiệu ứng
+        notification.style.display = 'block';
+        setTimeout(() => notification.classList.add('show'), 10);
+
+        // Ẩn sau 3 giây
+        setTimeout(() => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 400); // chờ hiệu ứng fade-out
+        }, 3000);
+    }
 function increaseQuantity() {
     const quantityInput = document.getElementById('quantity');
-    if (!selectedDetailId) return;
-
+    if (!selectedDetailId) return;  
     const selectedDetail = productDetails.find(detail => detail.id === selectedDetailId);
     const maxQuantity = selectedDetail ? selectedDetail.quantity : 10;
 
@@ -696,7 +717,7 @@ document.querySelector('.price_inf_products').textContent =
 
 function addToCart() {
     if (!selectedDetailId) {
-        alert('Vui lòng chọn màu sắc và kích thước');
+        showNotification('Vui lòng chọn màu sắc và kích thước', 'error');
         return;
     }
 
@@ -704,19 +725,20 @@ function addToCart() {
     const selectedDetail = productDetails.find(detail => detail.id === selectedDetailId);
 
     if (!selectedDetail) {
-        alert('Không tìm thấy sản phẩm');
+        showNotification('Chi tiết sản phẩm không hợp lệ', 'error');
         return;
     }
 
     if (parseInt(quantity) > selectedDetail.quantity) {
-        alert(`Số lượng vượt quá tồn kho `+ selectedDetail.quantity);
+        showNotification('Số lượng vượt quá tồn kho' + selectedDetail.quantity, 'error');
         return;
     }
 
-    if (selectedDetail.quantity === 0) {
-        alert('Sản phẩm đã hết hàng');
+    if (selectedDetail.quantity === 0 || parseInt(quantity) <= 0) {
+        showNotification('Sản phẩm đã hết hàng', 'error');
         return;
     }
+
 
     fetch('/cart/add', {
         method: 'POST',
@@ -728,20 +750,20 @@ function addToCart() {
     .then(response => response.text())
     .then(data => {
         if (data.startsWith('success:')) {
-            alert('Đã thêm vào giỏ hàng thành công!');
+            showNotification(data.replace('success:', ''), 'success');
             updateCartCount();
         } else if (data.startsWith('error:')) {
             if (data.includes('đăng nhập')) {
-                if (confirm('Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng. Đăng nhập ngay?')) {
+                if (showNotification('Vui lòng đăng nhập để thêm vào giỏ hàng', 'error')) {
                     window.location.href = '/Login';
                 }
             } else {
-                alert(data.replace('error:', ''));
+                showNotification(data.replace('error:', ''), 'error');
             }
         }
     })
     .catch(error => {
-        alert('Có lỗi xảy ra: ' + error.message);
+        showNotification('Lỗi khi thêm vào giỏ hàng', 'error');
     });
 }
 

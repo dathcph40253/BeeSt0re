@@ -14,20 +14,13 @@
 <jsp:include page="../layout/header.jsp"/>
 
 <div class="container mt-4">
+    <div id="nofication-cart" class="nofication-cart"></div>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1>Chi tiết đơn hàng #${bill.code}</h1>
         <a href="/orders" class="btn btn-outline-secondary">
             <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
         </a>
     </div>
-    
-    <c:if test="${not empty error}">
-        <div class="alert alert-danger">${error}</div>
-    </c:if>
-    
-    <c:if test="${not empty success}">
-        <div class="alert alert-success">${success}</div>
-    </c:if>
     
     <div class="row">
         <div class="col-lg-8">
@@ -241,6 +234,65 @@
 
 
 <style>
+    .nofication-cart {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    min-width: 280px;
+    max-width: 360px;
+    padding: 16px 22px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #fff;
+    background-color: #333;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(-20px);
+    pointer-events: none;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    display: none;
+}
+
+/* Hiển thị notification */
+.nofication-cart.show {
+    display: block;
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: all;
+    animation: popIn 0.4s ease forwards;
+}
+
+/* Các loại thông báo */
+.nofication-cart.success {
+    background-color: #28a745; /* Xanh lá */
+}
+
+.nofication-cart.error {
+    background-color: #dc3545; /* Đỏ */
+}
+
+.nofication-cart.info {
+    background-color: #17a2b8; /* Xanh dương nhạt */
+}
+
+.nofication-cart.warning {
+    background-color: #ffc107; /* Vàng cam */
+    color: #333;
+}
+
+/* Hiệu ứng “bật” nhẹ khi xuất hiện */
+@keyframes popIn {
+    0% {
+        transform: scale(0.95) translateY(-15px);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
 .timeline {
     position: relative;
     padding-left: 30px;
@@ -294,6 +346,19 @@
 </style>
 
 <script>
+function showNotification(message, type) {
+    const notification = document.getElementById('nofication-cart');
+    notification.textContent = message;
+    notification.className = 'nofication-cart show ' + type;
+
+    // Ẩn thông báo sau 3 giây
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.style.display = 'none';
+        }, 400); // Thời gian khớp với CSS transition
+    }, 3000);
+}
 function cancelOrder(orderId) {
     if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
         fetch('/orders/' + orderId + '/cancel', {
@@ -306,11 +371,11 @@ function cancelOrder(orderId) {
             if (response.ok) {
                 location.reload();
             } else {
-                alert('Có lỗi xảy ra khi hủy đơn hàng');
+                showNotification('Hủy đơn hàng thất bại!', 'error');
             }
         })
         .catch(error => {
-            alert('Có lỗi xảy ra: ' + error.message);
+            showNotification('Đã xảy ra lỗi!', 'error');
         });
     }
 }
