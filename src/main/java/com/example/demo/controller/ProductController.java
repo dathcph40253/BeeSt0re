@@ -4,6 +4,8 @@ import com.example.demo.Entity.Brand;
 import com.example.demo.Entity.Category;
 import com.example.demo.Entity.Material;
 import com.example.demo.Entity.Product;
+import com.example.demo.Entity.ProductDetail;
+import com.example.demo.Entity.ProductDiscount;
 import com.example.demo.service.BrandService;
 import com.example.demo.service.CategoryService;
 import com.example.demo.service.MaterialService;
@@ -16,9 +18,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class ProductController {
@@ -82,7 +87,7 @@ public class ProductController {
                            @RequestParam(value = "keyword", required = false) String keyword) {
 
         List<Product> products = productService.getAll();
-
+        List<Category> categories = categoryService.getAllCategory();
         // Set default sort if not specified
         if (sortBy == null || sortBy.isEmpty()) {
             sortBy = "newest";
@@ -117,35 +122,41 @@ public class ProductController {
                         p.getProductDetailList().get(0).getDiscountedPrice()
                                 < p.getProductDetailList().get(0).getPrice())
                         .collect(java.util.stream.Collectors.toList());    
+            } else if("best".equals(status)){
+                List<Long> bestSellerIds = productService.getBestSellerByProduct()
+                .stream().map(dto -> dto.getProductId()).collect(Collectors.toList());
+                products = products.stream().filter(p -> bestSellerIds.contains(p.getId()))
+                .collect(Collectors.toList());
             }
         }
 
-        // Sort products
-        if (sortBy != null && !sortBy.isEmpty()) {
-            switch (sortBy) {
-                case "newest":
-                    products.sort((p1, p2) -> p2.getCreate_date().compareTo(p1.getCreate_date()));
-                    break;
-                case "price_asc":
-                    products.sort((p1, p2) -> {
-                        double price1 = p1.getProductDetailList().isEmpty() ? 0 :
-                                p1.getProductDetailList().get(0).getPrice();
-                        double price2 = p2.getProductDetailList().isEmpty() ? 0 :
-                                p2.getProductDetailList().get(0).getPrice();
-                        return Double.compare(price1, price2);
-                    });
-                    break;
-                case "price_desc":
-                    products.sort((p1, p2) -> {
-                        double price1 = p1.getProductDetailList().isEmpty() ? 0 :
-                                p1.getProductDetailList().get(0).getPrice();
-                        double price2 = p2.getProductDetailList().isEmpty() ? 0 :
-                                p2.getProductDetailList().get(0).getPrice();
-                        return Double.compare(price2, price1);
-                    });
-                    break;
-            }
-        }
+        if (sortBy == null || sortBy.isEmpty()) {
+        sortBy = "newest";
+    }
+
+    // Hàm lấy giá thực tế
+    Comparator<Product> actualPriceComparator = Comparator.comparingDouble(p -> {
+        if (p.getProductDetailList().isEmpty()) return 0;
+        ProductDetail pd = p.getProductDetailList().get(0);
+        return (pd.getDiscountedPrice() > 0 
+                && pd.getDiscountedPrice() < pd.getPrice()) 
+                ? pd.getDiscountedPrice() 
+                : pd.getPrice();
+    });
+
+    // Sort sản phẩm
+    switch (sortBy) {
+        case "newest":
+            products.sort((p1, p2) -> p2.getCreate_date().compareTo(p1.getCreate_date()));
+            break;
+        case "price_asc":
+            products.sort(actualPriceComparator);
+            break;
+        case "price_desc":
+            products.sort(actualPriceComparator.reversed());
+            break;
+    }
+        model.addAttribute("categories", categories);
         model.addAttribute("keyword", keyword);
         model.addAttribute("products", products);
         model.addAttribute("selectedCategoryId", categoryId);

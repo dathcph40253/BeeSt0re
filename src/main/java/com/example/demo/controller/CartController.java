@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Controller
 @RequestMapping("/cart")
@@ -45,22 +47,46 @@ public class CartController {
     @Autowired
     private BillRepository billRepository;
     // Hiển thị giỏ hàng
-    @GetMapping("")
-    public String viewCart(HttpSession session, Model model) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            return "redirect:/Login";
-        }
-
-        List<Cart> cartItems = cartService.getCartByUser(user);
-        Double cartTotal = cartService.getCartTotal(user);
-
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("cartTotal", cartTotal);
-        model.addAttribute("cartItemCount", cartItems.size());
-
-        return "user/client/cart";
+@GetMapping("")
+public String viewCart(HttpSession session, Model model) {
+    User user = (User) session.getAttribute("user");
+    if (user == null) {
+        return "redirect:/Login";
     }
+
+    List<Cart> cartItems = cartService.getCartByUser(user);
+
+    for (Cart cart : cartItems) {
+        var discounts = cart.getProductDetail().getProductDiscount();
+
+        if (discounts != null && !discounts.isEmpty()) {
+            var discount = discounts.get(0);
+
+            // ⚙️ Gán Date từ LocalDateTime
+            discount.setEndDateAsDate(Date.from(discount.getEndDate()
+                    .atZone(ZoneId.systemDefault()).toInstant()));
+
+            discount.setStartDateAsDate(Date.from(discount.getStartDate()
+                    .atZone(ZoneId.systemDefault()).toInstant()));
+
+            if (discount.getEndDateAsDate() != null) {
+                cart.setDiscountEndTime(discount.getEndDateAsDate().getTime());
+            } else {
+                cart.setDiscountEndTime(null);
+            }
+        } else {
+            cart.setDiscountEndTime(null);
+        }
+    }
+
+    Double cartTotal = cartService.getCartTotal(user);
+
+    model.addAttribute("cartItems", cartItems);
+    model.addAttribute("cartTotal", cartTotal);
+    model.addAttribute("cartItemCount", cartItems.size());
+
+    return "user/client/cart";
+}
 
     // Thêm sản phẩm vào giỏ hàng
     @PostMapping(value = "/add", produces = "text/plain; charset=UTF-8")

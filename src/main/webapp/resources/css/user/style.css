@@ -115,3 +115,14 @@ header {
 
 
 
+/* ================= SẢN PHẨM BÁN CHẠY ================= */
+.best-products {
+    display: flex;
+    gap: 20px;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    padding: 10px 0;
+}
+.best-products::-webkit-scrollbar { display: none; }
+
+

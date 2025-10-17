@@ -2,50 +2,128 @@
     display: flex;
     margin: 0 auto;
     width: 80%;
-    margin-top: 60px;
+    padding: 20px;
+    background-color: white;
+    /* margin-top: 60px; */
 }
 
 .inf_product,
 .img_product {
     width: 50%;
 }
-
+.img_product {
+    display: flex;
+    flex-direction: row; /* đổi từ column sang row để ảnh chi tiết bên trái */
+    align-items: flex-start; /* căn top cho ảnh chính và ảnh chi tiết */
+    gap: 20px; /* khoảng cách giữa ảnh chi tiết và ảnh chính */
+}
 .image_shirt {
-    width: 80%;
+    width: 300px;
+    height: 300px;
 }
 
-.image_shirt_detail {
-    width: 25%;
+.image_detail_product{
+    display: flex;
+    flex-direction: column;             /* xếp ảnh theo hàng ngang */
+    gap: 10px;                 /* khoảng cách giữa ảnh */
+    overflow-y: scroll;          /* bật scroll ngang */
+    overflow-x: hidden;          /* ẩn scroll dọc */
+    padding: 10px 0; 
+    max-height: 400px;          /* chiều cao tối đa của khung ảnh chi tiết */
+    flex-shrink: 0;
+    width: 120px;
 }
-
 .image_shirt_detail {
+    width: 100px;
+    height: 100px;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-
+    
+}
+.image_detail_product::-webkit-scrollbar {
+    width:  0; /* Chiều cao của thanh cuộn ngang */
+}
+.image_detail_product::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2); /* Màu của thanh cuộn */
+    border-radius: 4px; /* Bo góc cho thanh cuộn */
 }
 
 .image_shirt_detail:hover {
     cursor: pointer;
     transform: scale(1.1);
     border: 1px solid #000;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 .title_inf_products {
     margin-bottom: 20px;
 }
-
+.price-box{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+}
 .price_inf_products {
-    font-weight: 500;
-
+    font-weight: bold;
     font-size: 18px;
+    margin: 0;
+}
+.discount-badge-detail {
+    background-color: #E46356;
+    color: #fff;
+    font-weight: bold;
+    font-size: 13px;
+    width: 64px;
+    height: 20px; /* Làm tròn từ 19.9127 */
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    opacity: 1;
+    transform: rotate(0deg);
 }
 
-.status_inf_products {
+.product_rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px; /* khoảng cách giữa sao và số lượng */
+    margin-top: 5px;
+    font-size: 14px;
+}
+.product_overview {
+    display: flex;
+    align-items: center;     /* căn giữa theo trục dọc */
+    gap: 20px;               /* khoảng cách giữa đánh giá và đã bán */
+    margin: 8px 0 12px;
+    font-size: 14px;
+}
+
+.product_rating .stars {
+    color: #FFD700; /* màu vàng cho sao */
+    font-size: 16px;
+    letter-spacing: 1px; /* giãn nhẹ giữa các sao */
+}
+
+.status_inf_products,
+.total_inf_products {
     font-size: 15px;
+    margin: 0;
+    white-space: nowrap;
 }
 
 .status_color_inf {
     color: #F05023
+}
+.total_color_inf{
+    color: #03A9F4;
+
 }
 
 .color_inf_products {
@@ -95,9 +173,9 @@
 
 .quantity_box {
     display: flex;
-    justify-content: start;
+    flex-direction: column;
     gap: 30px;
-    align-items: center;
+    align-items: flex-start;
     margin-top: 10px;
 }
 
@@ -107,8 +185,10 @@
 
 .detail_quatity {
     display: flex;
+    align-items: center;
     width: 20%;
     height: 40px;
+    gap: 20px;
 }
 
 .number_quantity {
@@ -175,7 +255,7 @@
 .product_related {
     display: flex;
     padding: 0 20px;
-    justify-content: space-between;
+    justify-content: flex-start;
     text-align: center;
     margin-top: 20px;
 }
@@ -420,4 +500,61 @@
 .nofication.warning {
     background-color: #ffc107; /* Vàng cam */
     color: #333;
+}
+/* ===== GIÁ TỐT HÔM NAY ===== */
+.deal-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(90deg, #e63946 0%, #f46b45 100%);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: 600;
+    width: 560px; /* có thể auto hoặc 100% nếu responsive */
+    margin: 10px 0 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.deal-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 16px;
+}
+
+.deal-icon {
+    font-size: 18px;
+}
+
+.deal-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.deal-end-text {
+    font-size: 13px;
+    letter-spacing: 0.5px;
+}
+
+.deal-timer {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.deal-timer .time-box {
+    background: #222B45;
+    color: #fff;
+    font-weight: bold;
+    padding: 4px 6px;
+    border-radius: 4px;
+    min-width: 22px;
+    text-align: center;
+}
+
+.deal-timer .colon {
+    font-weight: bold;
+    font-size: 14px;
 }

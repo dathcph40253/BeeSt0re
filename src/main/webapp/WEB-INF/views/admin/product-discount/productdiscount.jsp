@@ -72,49 +72,51 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <c:forEach var="detail" items="${productDetails}" varStatus="i">
-                            <form method="post" action="/admin/update">
-    <tr>
-        <td>${i.index + 1}</td>
-        <td>${detail.product.name}</td>
-        <td>${detail.product.brand.name}</td>
-        <td>${detail.product.material.name}</td>
-        <td>${detail.color.name}</td>
-        <td>${detail.size.name}</td>
-        <td>${detail.price}</td>
+                            <c:forEach var="detail" items="${productDetails}" varStatus="i">
+                                <form method="post" action="/admin/update">
+                                    <tr>
+                                        <td>${i.index + 1}</td>
+                                        <td>${detail.product.name}</td>
+                                        <td>${detail.product.brand.name}</td>
+                                        <td>${detail.product.material.name}</td>
+                                        <td>${detail.color.name}</td>
+                                        <td>${detail.size.name}</td>
+                                        <td>${detail.price}</td>
 
-        <input type="hidden" name="productDetailId" value="${detail.id}" />
-        <td>
-            <input type="number" step="1000" class="form-control" name="discountedAmount"
-                   value="${detail.productDiscount != null ? detail.productDiscount[0].discountedAmount : 0.0}"/>
-        </td>
-        <td>
-            <input type="datetime-local" class="form-control" name="startDate"
-                   value="${detail.productDiscount != null ? detail.productDiscount[0].startDate : ''}"/>
-        </td>
-        <td>
-            <input type="datetime-local" class="form-control" name="endDate"
-                   value="${detail.productDiscount != null ? detail.productDiscount[0].endDate : ''}"/>
-        </td>
-        <td>
-            <select name="closed" class="form-select">
-                <option value="false"
-                        <c:if test="${detail.productDiscount != null && !detail.productDiscount[0].closed}">selected</c:if>>
-                    Đang bật
-                </option>
-                <option value="true"
-                        <c:if test="${detail.productDiscount != null && detail.productDiscount[0].closed}">selected</c:if>>
-                    Đã tắt
-                </option>
-            </select>
-        </td>
-        <td>
-            <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
-        </td>
-    </tr>
-</form>
-
-                        </c:forEach>
+                                        <input type="hidden" name="productDetailId" value="${detail.id}" />
+                                        <td>
+                                            <input type="number" step="1000" class="form-control" name="discountedAmount"
+                                            value="${detail.productDiscount != null ? detail.productDiscount[0].discountedAmount : 0.0
+                                            }"
+                                            min="0" 
+                                            max="${detail.price}"/>
+                                        </td>
+                                        <td>
+                                            <input type="datetime-local" class="form-control" name="startDate"
+                                                value="${detail.productDiscount != null ? detail.productDiscount[0].startDate : ''}"/>
+                                        </td>
+                                        <td>
+                                            <input type="datetime-local" class="form-control" name="endDate"
+                                                value="${detail.productDiscount != null ? detail.productDiscount[0].endDate : ''}"/>
+                                        </td>
+                                        <td>
+                                            <select name="closed" class="form-select">
+                                                <option value="false"
+                                                        <c:if test="${detail.productDiscount != null && !detail.productDiscount[0].closed}">selected</c:if>>
+                                                    Đang bật
+                                                </option>
+                                                <option value="true"
+                                                        <c:if test="${detail.productDiscount != null && detail.productDiscount[0].closed}">selected</c:if>>
+                                                    Đã tắt
+                                                </option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <button type="submit" class="btn btn-primary btn-sm">Lưu</button>
+                                        </td>
+                                    </tr>
+                                </form>
+                            </c:forEach>
                         </tbody>
                     </table>
                 </div>

@@ -7,11 +7,21 @@
 <head>
     <title>Đăng kí tài khoản</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body {
             background-color: #f8f9fa;
-            padding: 40px 0;
+            padding: 0;
+            margin: 0;
         }
+.custom-header {
+    margin-top: 0 !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
         .register-form {
             max-width: 600px;
             margin: auto;
@@ -36,9 +46,14 @@
             font-weight: bold;
             z-index: 9999;
         }
+        .container {
+            max-width: 600px;
+            margin: auto;
+        }
     </style>
 </head>
 <body>
+<jsp:include page="user/layout/header.jsp"/>
 <c:if test="${not empty message}">
     <div id="message" class="message-top-right">${message}</div>
     <script>
@@ -79,5 +94,6 @@
         </form:form>
     </div>
 </div>
+<jsp:include page="user/layout/footer.jsp"/>
 </body>
 </html>

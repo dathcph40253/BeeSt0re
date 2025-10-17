@@ -157,4 +157,59 @@
         opacity: 1;
     }
 }
+.deal-banner {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+    background: #fff7e6;
+    border: 1px solid #ffb84d;
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin-top: 10px;
+    width: 100%;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.deal-left {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #ff6600;
+    font-weight: 600;
+}
+
+.deal-left i {
+    color: #ff4500;
+    font-size: 18px;
+}
+
+.deal-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+    color: #444;
+}
+
+.deal-end-text {
+    color: #e63946;
+    font-weight: 600;
+}
+
+.deal-timer {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.time-box {
+    background: #222;
+    color: #fff;
+    padding: 3px 6px;
+    border-radius: 3px;
+    min-width: 28px;
+    text-align: center;
+}
 

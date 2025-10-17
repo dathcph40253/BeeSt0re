@@ -324,4 +324,8 @@ public class BillService {
     public List<Bill> searchBills(String query) {
         return billRepository.searchBills(query);
     }
+
+    public List<Bill> getBillsByCustomerAndStatus(Customer customer, String status) {
+        return billRepository.findByCustomerAndStatusOrderByCreateDateDesc(customer, status);
+    }
 }

@@ -50,6 +50,8 @@ public class ProductDetail {
     private List<Image> imageList;
 @OneToMany(mappedBy = "productDetail", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<ProductDiscount> productDiscount;
+    @OneToMany(mappedBy = "productDetail", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<BillDetail> billDetailList;
 
 
     public float getDiscountedPrice() {

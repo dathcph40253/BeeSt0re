@@ -75,4 +75,6 @@ public Double getTotalPrice() {
         }
         return "";
     }
+    @Transient
+    private Long discountEndTime;
 }

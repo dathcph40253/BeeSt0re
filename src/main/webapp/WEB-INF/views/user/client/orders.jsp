@@ -48,6 +48,16 @@
         <div class="account-content">
             <h1 class="mb-4">Đơn hàng của tôi</h1>
             
+                <div class="mb-4 d-flex flex-wrap gap-2">
+                    <a href="/orders" class="btn btn-outline-secondary btn-sm ${param.status == null ? 'active' : ''}">Tất cả</a>
+                    <a href="/orders?status=PENDING" class="btn btn-outline-warning btn-sm ${param.status == 'PENDING' ? 'active' : ''}">Chờ xác nhận</a>
+                    <a href="/orders?status=CONFIRMED" class="btn btn-outline-info btn-sm ${param.status == 'CONFIRMED' ? 'active' : ''}">Đã xác nhận</a>
+                    <a href="/orders?status=PROCESSING" class="btn btn-outline-primary btn-sm ${param.status == 'PROCESSING' ? 'active' : ''}">Đang xử lý</a>
+                    <a href="/orders?status=SHIPPING" class="btn btn-outline-secondary btn-sm ${param.status == 'SHIPPING' ? 'active' : ''}">Đang giao</a>
+                    <a href="/orders?status=DELIVERED" class="btn btn-outline-success btn-sm ${param.status == 'DELIVERED' ? 'active' : ''}">Đã giao</a>
+                    <a href="/orders?status=CANCELLED" class="btn btn-outline-danger btn-sm ${param.status == 'CANCELLED' ? 'active' : ''}">Đã hủy</a>
+                </div>
+
             <c:if test="${not empty error}">
                 <div class="alert alert-danger">${error}</div>
             </c:if>

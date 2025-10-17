@@ -51,14 +51,22 @@ public class OrderController {
 
     // Danh sách đơn hàng của user
     @GetMapping("/orders")
-    public String viewOrders(HttpSession session, Model model) {
+    public String viewOrders(
+        @RequestParam(value = "status", required = false) String status,
+        HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/Login";
         }
 
-        List<Bill> bills = billService.getBillsByCustomer(user.getCustomer());
+        List<Bill> bills;
+        if (status != null && !status.isEmpty()) {
+            bills = billService.getBillsByCustomerAndStatus(user.getCustomer(), status);
+        } else {
+            bills = billService.getBillsByCustomer(user.getCustomer());
+        }
         model.addAttribute("bills", bills);
+        model.addAttribute("status", status);
 
         return "user/client/orders";
     }

@@ -16,4 +16,5 @@ public class ProductDetailDto {
     private String productName;
     private Double price;
     private Float discountedPrice;
+    private String imageUrl;
 }

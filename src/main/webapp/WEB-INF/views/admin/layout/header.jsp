@@ -15,8 +15,8 @@
     <div class="user-info">
         <c:if test="${empty sessionScope.user}">
             <div class="auth-buttons">
-                <a href="${pageContext.request.contextPath}/Login" class="btn-login">Đăng nhập</a>
-                <a href="${pageContext.request.contextPath}/DangKy" class="btn-register">Đăng ký</a>
+                <a href="${pageContext.request.contextPath}/admin/login" class="btn-login">Đăng nhập</a>
+                <a href="${pageContext.request.contextPath}/admin/register-admin" class="btn-register">Đăng ký</a>
             </div>
         </c:if>
 

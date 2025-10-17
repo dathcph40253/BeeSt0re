@@ -40,6 +40,7 @@
                         <th scope="col">STT</th>
                         <th scope="col">ID</th>
                         <th scope="col">Mã tài khoản</th>
+                        <th scope="col">Tên người dùng</th>
                         <th scope="col">Email</th>
                         <th scope="col">Trạng thái</th>
                         <th scope="col">Vai trò</th>
@@ -52,6 +53,7 @@
 <%--                            <td>${status.index + 1}</td>--%>
 <%--                            <td>${acc.id}</td>--%>
 <%--                            <td>${acc.code}</td>--%>
+<%--                            <td>${acc.customer.name}</td>--%>
 <%--                            <td>${acc.email}</td>--%>
 <%--                            <td>--%>
 <%--                                <span class="badge ${acc.isNonLocked ? 'bg-success' : 'bg-danger'}">--%>
@@ -69,6 +71,7 @@
                                     <td>${status.index + 1}</td>
                                     <td>${acc.id}</td>
                                     <td>${acc.code}</td>
+                                    <td>${acc.customer.name}</td>
                                     <td>${acc.email}</td>
                                     <td>
                                         <span class="badge ${acc.isNonLocked ? 'bg-success' : 'bg-danger'}">

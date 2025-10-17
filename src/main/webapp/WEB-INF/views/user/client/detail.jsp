@@ -23,23 +23,56 @@
     <div class="nofication" id="nofication"></div>
     <div class="content_detailProduct">
         <div class="img_product">
-            <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt">
             <div class="image_detail_product">
-                <img src="" alt="" class="image_shirt_detail">
-                <img src="" alt="" class="image_shirt_detail">
-                <img src="" alt="" class="image_shirt_detail">
+                <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt_detail">
+                <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt_detail">
+                <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt_detail">
+                <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt_detail">
+                <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt_detail">
+                <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt_detail">
             </div>
+            <img src="/images/product/${details[0].imageList[0].link}" alt="" class="image_shirt">
         </div>
         <div class="inf_product">
             <h2 class="title_inf_products">${details[0].product.name}</h2>
             <p class="brand_inf_products">
                 Thương hiệu: <span class="text-primary fw-semibold">${details[0].product.brand.name}</span>
             </p>
+            <div class="product_overview">
+                <div class="product_rating">
+                    <span>5.0</span>
+                    <span class="stars">★★★★★</span> 
+                </div>
+                <p class="total_inf_products">
+                    Đã bán: <span class="total_color_inf">${totalSold}</span>
+                </p>
+            </div>
+            <c:if test="${not empty details[0].product.productDetailList[0].productDiscount}">
+                <div class="deal-banner">
+                    <div class="deal-left">
+                        <span class="deal-icon">⚡</span>
+                        <span class="deal-text">Giá tốt hôm nay</span>
+                    </div>
+                    <div class="deal-right">
+                        <span class="deal-end-text">KẾT THÚC TRONG</span>
+                        <div class="deal-timer" id="timer-${details[0].product.id}" 
+                            data-end="${details[0].product.productDetailList[0].productDiscount[0].endDateAsDate.time}">
+                            Loading...
+                        </div>
+                    </div>
+                </div>
+            </c:if>
             <c:choose>
                 <c:when test="${details[0].discountedPrice lt details[0].price}">
+                <div class="price-box">
                     <p class="price_inf_products text-danger fw-bold">
                         ${details[0].discountedPrice}VND
-                    </p>
+                    </p>                            
+                    <c:set var="percentOff" value="${(details[0].price - details[0].discountedPrice) * 100 / details[0].price}" />
+                    <c:if test="${percentOff > 0}">
+                        <span class="discount-badge-detail">-${percentOff.intValue()}%</span>
+                    </c:if>
+                </div>
                     <p class="price_inf_products text-muted text-decoration-line-through">
                         ${details[0].price}VND
                     </p>
@@ -48,7 +81,6 @@
                     <p class="price_inf_products">${details[0].price}VND</p>
                 </c:otherwise>
             </c:choose>
-            <p class="status_inf_products">Tình trạng: <span class="status_color_inf">còn hàng</span></p>
             <form id="addToCartForm">
                 <div class="product-options">
                     <div class="color-section">
@@ -78,6 +110,9 @@
                             <button type="button" class="totalProducts" onclick="increaseQuantity()">+</button>
                             <button type="button" class="totalProducts" onclick="decreaseQuantity()">-</button>
                         </div>
+                        <p class="status_inf_products">
+                            Tình trạng: <span class="status_color_inf">Còn hàng</span>
+                        </p>
                     </div>
                     <button type="button" class="btn_quantity_box" onclick="addToCart()">
                         Thêm vào giỏ hàng
@@ -735,7 +770,7 @@ function addToCart() {
     }
 
     if (selectedDetail.quantity === 0 || parseInt(quantity) <= 0) {
-        showNotification('Sản phẩm đã hết hàng', 'error');
+        showNotification('Số lượng sản phẩm mua hàng phải lớn hơn 0 ', 'error');
         return;
     }
 
@@ -809,6 +844,75 @@ document.querySelectorAll('input[name="selectedDetail"]').forEach(radio => {
         // Reset quantity về 1
         document.getElementById('quantity').value = 1;
         document.getElementById('quantity').max = quantity;
+    });
+});
+document.addEventListener("DOMContentLoaded", function() {
+    // Tìm tất cả các timer
+    var timers = document.querySelectorAll("[data-end]");
+    
+    console.log("Found timers:", timers.length);
+    
+    timers.forEach(function(timer) {
+        var endTime = parseInt(timer.getAttribute("data-end"));
+        var dealBanner = timer.closest(".deal-banner");
+        console.log("Timer element:", timer);
+        console.log("End timestamp:", endTime);
+        console.log("End date:", new Date(endTime).toLocaleString());
+        
+        function updateCountdown() {
+            var now = Date.now();
+            var remaining = endTime - now;
+            
+            if (remaining <= 0) {
+                if(dealBanner) {
+                    dealBanner.style.display = "none";
+                }
+                return;
+            }
+            
+            // Tính tổng số giây còn lại
+            var totalSeconds = Math.floor(remaining / 1000);
+            
+            // Tính số ngày, giờ, phút, giây
+            var days = Math.floor(totalSeconds / (24 * 3600));
+            var hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+            var minutes = Math.floor((totalSeconds % 3600) / 60);
+            var seconds = totalSeconds % 60;
+            
+            console.log("Total seconds:", totalSeconds);
+            console.log("Days:", days, "Hours:", hours, "Minutes:", minutes, "Seconds:", seconds);
+            
+            // Format với 2 chữ số
+            var h = String(hours).padStart(2, '0');
+            var m = String(minutes).padStart(2, '0');
+            var s = String(seconds).padStart(2, '0');
+            
+            var displayText = '';
+
+            // Nếu có ngày
+            if (days > 0) {
+                displayText += '<span class="time-box">' + days + '</span> ngày ';
+            }
+
+            // Thêm giờ, phút, giây với class time-box
+            displayText +=
+                '<span class="time-box">' + h + '</span>' +
+                '<span class="colon">:</span>' +
+                '<span class="time-box">' + m + '</span>' +
+                '<span class="colon">:</span>' +
+                '<span class="time-box">' + s + '</span>';
+
+            // Gán vào innerHTML thay vì textContent để HTML được render
+            
+            timer.innerHTML = displayText;
+            console.log("Display:", displayText);
+        }
+        
+        // Chạy ngay
+        updateCountdown();
+        
+        // Lặp mỗi giây
+        setInterval(updateCountdown, 1000);
     });
 });
 </script>

@@ -2,6 +2,8 @@ package com.example.demo.controller;
 
 import com.example.demo.Entity.Product;
 import com.example.demo.Entity.ProductDetail;
+import com.example.demo.Entity.ProductDiscount;
+import com.example.demo.dto.BestSellerDto;
 import com.example.demo.service.ProductDetailService;
 import com.example.demo.service.ProductService;
 import org.springframework.stereotype.Controller;
@@ -10,7 +12,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.Date;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class HomePageController {   
@@ -20,12 +29,71 @@ public class HomePageController {
         this.productDetailService = productDetailService;
         this.productService = productService;
     }
-    @GetMapping("")
-    public String getHomePage(Model model){
-        List<Product> products = productService.getAll();
-        model.addAttribute("products", products);
-        return "user/client/home";
+@GetMapping("")
+public String getHomePage(Model model,
+    @RequestParam(value = "percent", required = false) Double percent
+    ) {
+    List<Product> products = productService.getAll();
+    LocalDateTime now = LocalDateTime.now();
+
+    // Lọc sản phẩm có ít nhất 1 giảm giá còn hiệu lực
+    List<Product> discountProducts = products.stream()
+            .filter(p -> p.getProductDetailList().stream()
+                    .anyMatch(pd -> pd.getProductDiscount().stream()
+                            .anyMatch(d -> d.getEndDate().isAfter(now))))
+            .collect(Collectors.toList());
+    
+    if(percent != null){
+        discountProducts = discountProducts.stream()
+        .filter(p -> p.getProductDetailList().stream().anyMatch(pd -> pd.getProductDiscount().stream().anyMatch(d -> d.getDiscountedAmount() >= percent)))
+        .collect(Collectors.toList());
+        model.addAttribute("selectPercent", percent.intValue());
     }
+    // Chuyển LocalDateTime sang java.util.Date cho JSP
+    products.forEach(product -> product.getProductDetailList().forEach(pd -> {
+        pd.getProductDiscount().forEach(d -> {
+            d.setStartDateAsDate(Date.from(d.getStartDate()
+                    .atZone(ZoneId.systemDefault()).toInstant()));
+            d.setEndDateAsDate(Date.from(d.getEndDate()
+                    .atZone(ZoneId.systemDefault()).toInstant()));
+        });
+    }));
+
+    List<BestSellerDto> bestSeller = productService.getBestSellerByProduct();
+    model.addAttribute("bestSellers", bestSeller);
+    model.addAttribute("products", products);
+    model.addAttribute("discountProducts", discountProducts);
+    return "user/client/home";
+}
+    @GetMapping("/product/filter")
+        public String filterProductByDiscount(@RequestParam("percent") int percent, Model model){
+            List<Product> products = productService.getAll();
+            LocalDateTime now = LocalDateTime.now();
+            List<Product> filtered = products.stream()
+            .filter( p -> {
+                if(p.getProductDetailList().isEmpty()) return false;
+                ProductDetail pd = p.getProductDetailList().get(0);
+                if(pd.getDiscountedPrice() == 0 || pd.getPrice() == null) return false;
+                double discount = (pd.getPrice() - pd.getDiscountedPrice() )* 100/ pd.getPrice();
+                return discount >= percent;
+            })
+            .collect(Collectors.toList());
+            List<Product> discountProducts = products.stream()
+                .filter(p -> p.getProductDetailList().stream()
+                    .anyMatch(pd -> pd.getProductDiscount().stream()
+                        .anyMatch(d -> d.getEndDate().isAfter(now))))
+                .collect(Collectors.toList());
+                List<BestSellerDto> bestSeller = productService.getBestSellerByProduct();
+    model.addAttribute("bestSellers", bestSeller);
+            model.addAttribute("discountProducts", discountProducts);
+            model.addAttribute("products", filtered); // ⚠️ phải là 'products'
+            model.addAttribute("selectedPercent", percent);
+            return "user/client/home";
+        }
+    
+
+
+
 
     @GetMapping("product/{id}")
     public String getProductDetail(@PathVariable("id") Long id, Model model){
@@ -41,7 +109,24 @@ public class HomePageController {
                              ", Size: " + (detail.getSize() != null ? detail.getSize().getName() : "null") +
                              ", Price: " + detail.getPrice() +
                              ", Quantity: " + detail.getQuantity());
+            if(detail.getProductDiscount() != null){
+                for(ProductDiscount discount : detail.getProductDiscount()){
+                    discount.setStartDateAsDate(Date.from(discount.getStartDate()
+                        .atZone(ZoneId.systemDefault()).toInstant()));
+                    discount.setEndDateAsDate(Date.from(discount.getEndDate()
+                        .atZone(ZoneId.systemDefault()).toInstant()));
+                }
         }
+        List<BestSellerDto> bestSeller = productService.getBestSellerByProduct();
+        model.addAttribute("bestSellers", bestSeller);
+        int totalSold = 0;
+        for(BestSellerDto seller : bestSeller){
+            if(seller.getProductId().equals(id)){
+                totalSold = seller.getTotalSoldQuantity();
+                break;
+            }
+        }
+        model.addAttribute("totalSold", totalSold);
         List<Product> relatedProducts = productService.getRelatedProducts(id);
         model.addAttribute("product", product);
         model.addAttribute("relatedProducts", relatedProducts);
@@ -51,7 +136,7 @@ public class HomePageController {
         if(productDetails.isEmpty()){
             return "user/client/detail-empty";
         }
-
+    }
         return "user/client/detail";
     }
 

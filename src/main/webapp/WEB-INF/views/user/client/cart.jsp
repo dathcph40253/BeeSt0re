@@ -66,40 +66,57 @@
                                         <small class="text-muted">Còn ${item.productDetail.quantity} sản phẩm</small>
                                     </div>
                                     <div class="col-md-2 text-end">
-    <%-- 1. Xác định giá đơn vị cuối cùng (giá đã giảm nếu có) --%>
-    <c:set var="finalUnitPrice" 
-           value="${item.productDetail.discountedPrice lt item.productDetail.price ? item.productDetail.discountedPrice : item.productDetail.price}"/>
-           
-    <c:set var="itemSubtotal" value="${finalUnitPrice * item.quantity}"/>
+                                        <%-- 1. Xác định giá đơn vị cuối cùng (giá đã giảm nếu có) --%>
+                                        <c:set var="finalUnitPrice" 
+                                            value="${item.productDetail.discountedPrice lt item.productDetail.price ? item.productDetail.discountedPrice : item.productDetail.price}"/>
+                                            
+                                        <c:set var="itemSubtotal" value="${finalUnitPrice * item.quantity}"/>
 
-    <c:choose>
-        <c:when test="${item.productDetail.discountedPrice lt item.productDetail.price}">
-            <p class="infProducts_home text-danger fw-bold mb-0">
-                <fmt:formatNumber value="${itemSubtotal}" type="number" pattern="#,##0" />₫
-            </p>
-            
-            <c:set var="originalSubtotal" value="${item.productDetail.price * item.quantity}"/>
-            <p class="infProducts_home text-muted text-decoration-line-through small">
-                <fmt:formatNumber value="${originalSubtotal}" type="number" pattern="#,##0" />₫
-            </p>
-            
-            <p class="small text-muted mb-0">
-                (<fmt:formatNumber value="${item.productDetail.price}" type="number" pattern="#,##0" />₫/sp)
-            </p>
-        </c:when>
-        <c:otherwise>
-            <p class="infProducts_home fw-bold">
-                <fmt:formatNumber value="${itemSubtotal}" type="number" pattern="#,##0" />₫
-            </p>
-        </c:otherwise>
-    </c:choose>
-</div>
+                                        <c:choose>
+                                            <c:when test="${item.productDetail.discountedPrice lt item.productDetail.price}">
+                                                <p class="infProducts_home text-danger fw-bold mb-0">
+                                                    <fmt:formatNumber value="${itemSubtotal}" type="number" pattern="#,##0" />₫
+                                                </p>
+                                                
+                                                <c:set var="originalSubtotal" value="${item.productDetail.price * item.quantity}"/>
+                                                <p class="infProducts_home text-muted text-decoration-line-through small">
+                                                    <fmt:formatNumber value="${originalSubtotal}" type="number" pattern="#,##0" />₫
+                                                </p>
+                                                
+                                                <p class="small text-muted mb-0">
+                                                    (<fmt:formatNumber value="${item.productDetail.price}" type="number" pattern="#,##0" />₫/sp)
+                                                </p>
+                                            
+                                            </c:when>
+                                            <c:otherwise>
+                                                <p class="infProducts_home fw-bold">
+                                                    <fmt:formatNumber value="${itemSubtotal}" type="number" pattern="#,##0" />₫
+                                                </p>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
                                     <div class="col-md-1">
                                         <button class="btn btn-outline-danger btn-sm"
                                                 onclick="removeFromCart(${item.id})">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
+                                    <c:if test="${not empty item.productDetail.productDiscount}">
+                                        <div class="deal-banner">
+                                            <div class="deal-left">
+                                                <i class="fa-solid fa-fire-flame-curved"></i>
+                                                <span class="deal-label">Giảm giá:</span>
+                                            </div>
+                                            <div class="deal-right">
+                                                <span class="deal-end-text">KẾT THÚC TRONG</span>
+                                                <div class="deal-timer" 
+                                                    id="timer-${item.productDetail.id}" 
+                                                    data-end="${item.productDetail.productDiscount[0].endDateAsDate.time}">
+                                                    Loading...
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:if>
                                 </div>
                             </c:forEach>
                         </div>
@@ -280,6 +297,75 @@ function checkQuantity(items){
             }, 400); // chờ hiệu ứng fade-out
         }, 3000);
     }
+document.addEventListener("DOMContentLoaded", function() {
+    // Tìm tất cả các timer
+    var timers = document.querySelectorAll("[data-end]");
+    
+    console.log("Found timers:", timers.length);
+    
+    timers.forEach(function(timer) {
+        var endTime = parseInt(timer.getAttribute("data-end"));
+        var dealBanner = timer.closest(".deal-banner");
+        console.log("Timer element:", timer);
+        console.log("End timestamp:", endTime);
+        console.log("End date:", new Date(endTime).toLocaleString());
+        
+        function updateCountdown() {
+            var now = Date.now();
+            var remaining = endTime - now;
+            
+            if (remaining <= 0) {
+                if(dealBanner) {
+                    dealBanner.style.display = "none";
+                }
+                return;
+            }
+            
+            // Tính tổng số giây còn lại
+            var totalSeconds = Math.floor(remaining / 1000);
+            
+            // Tính số ngày, giờ, phút, giây
+            var days = Math.floor(totalSeconds / (24 * 3600));
+            var hours = Math.floor((totalSeconds % (24 * 3600)) / 3600);
+            var minutes = Math.floor((totalSeconds % 3600) / 60);
+            var seconds = totalSeconds % 60;
+            
+            console.log("Total seconds:", totalSeconds);
+            console.log("Days:", days, "Hours:", hours, "Minutes:", minutes, "Seconds:", seconds);
+            
+            // Format với 2 chữ số
+            var h = String(hours).padStart(2, '0');
+            var m = String(minutes).padStart(2, '0');
+            var s = String(seconds).padStart(2, '0');
+            
+            var displayText = '';
+
+            // Nếu có ngày
+            if (days > 0) {
+                displayText += '<span class="time-box">' + days + '</span> ngày ';
+            }
+
+            // Thêm giờ, phút, giây với class time-box
+            displayText +=
+                '<span class="time-box">' + h + '</span>' +
+                '<span class="colon">:</span>' +
+                '<span class="time-box">' + m + '</span>' +
+                '<span class="colon">:</span>' +
+                '<span class="time-box">' + s + '</span>';
+
+            // Gán vào innerHTML thay vì textContent để HTML được render
+            
+            timer.innerHTML = displayText;
+            console.log("Display:", displayText);
+        }
+        
+        // Chạy ngay
+        updateCountdown();
+        
+        // Lặp mỗi giây
+        setInterval(updateCountdown, 1000);
+    });
+});
 
 </script>
 </body>

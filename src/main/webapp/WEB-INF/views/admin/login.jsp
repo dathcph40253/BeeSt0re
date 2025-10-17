@@ -21,7 +21,6 @@
             display: flex;
             justify-content: center;
             align-items: center; /* căn giữa login-box */
-            padding-top: 15px;
         }
 
         .login-box {
@@ -35,7 +34,7 @@
 
         .message-top-right {
             position: fixed;
-            top: 100px;
+            top: 24px;
             right: 32px;
             background: #ffe0e0;
             color: #d8000c;
@@ -68,15 +67,11 @@
         ${message}
     </div>
 </c:if>
-
-<!-- HEADER -->
-<jsp:include page="user/layout/header.jsp"/>
-
 <!-- MAIN -->
 <main>
     <div class="login-box">
         <h2 class="mb-4">Đăng nhập</h2>
-        <form action="/Login" method="post">
+        <form action="/admin/login" method="post">
             <div class="mb-3 text-start">
                 <label class="form-label">Tên tài khoản:</label>
                 <input type="text" name="name" class="form-control" required/>
@@ -89,14 +84,11 @@
             <div class="mt-3 text-start">
                 <a href="/forgot-password">Quên mật khẩu?</a><br/>
                 Nếu bạn chưa có tài khoản,
-                <a href="/DangKy">đăng ký tại đây</a>
+                <a href="/admin/register">đăng ký tại đây</a>
             </div>
         </form>
     </div>
 </main>
-
-<!-- FOOTER -->
-<jsp:include page="user/layout/footer.jsp"/>
 
 </body>
 </html>

@@ -17,4 +17,21 @@ public interface ProductRepo extends JpaRepository<Product, Long> {
 
     List<Product> findTop5ByCategoryAndIdNot(Category category, Long id);
 
+    
+    @Query("""
+        SELECT p.id AS productId,
+               p.name AS productName,
+               SUM(bd.quantity - COALESCE(bd.returnQuantity, 0)) AS totalSoldQuantity,
+               MIN(i.link) AS imageLink,
+                pd.quantity
+        FROM Product p
+        JOIN p.productDetailList pd
+        JOIN pd.billDetailList bd
+        JOIN bd.bill b
+        LEFT JOIN pd.imageList i
+        WHERE b.status = 'success'
+        GROUP BY p.id, p.name ,pd.quantity
+        ORDER BY totalSoldQuantity DESC
+    """)
+    List<Object[]> findBestSellingProductsWithImage();
 }
