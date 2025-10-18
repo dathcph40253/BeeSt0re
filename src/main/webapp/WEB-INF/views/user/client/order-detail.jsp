@@ -360,7 +360,7 @@ function showNotification(message, type) {
     }, 3000);
 }
 function cancelOrder(orderId) {
-    if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+    if (showConfirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
         fetch('/orders/' + orderId + '/cancel', {
             method: 'POST',
             headers: {
@@ -378,6 +378,46 @@ function cancelOrder(orderId) {
             showNotification('Đã xảy ra lỗi!', 'error');
         });
     }
+}
+function showConfirm(message, {okText = 'Đồng ý', cancelText = 'Hủy'} = {}) {
+    return new Promise((resolve) => {
+        // Tạo modal nếu chưa có
+        let overlay = document.getElementById('customConfirm');
+        if (!overlay) {
+            document.body.insertAdjacentHTML('beforeend', `
+                <div id="customConfirm" class="cc-overlay">
+                  <div class="cc-modal">
+                    <div class="cc-body">
+                      <p id="cc-message"></p>
+                    </div>
+                    <div class="cc-actions">
+                      <button id="cc-cancel" class="cc-btn">Hủy</button>
+                      <button id="cc-ok" class="cc-btn primary">Đồng ý</button>
+                    </div>
+                  </div>
+                </div>
+            `);
+        }
+
+        overlay = document.getElementById('customConfirm');
+        const msgEl = document.getElementById('cc-message');
+        const okBtn = document.getElementById('cc-ok');
+        const cancelBtn = document.getElementById('cc-cancel');
+
+        msgEl.textContent = message;
+        okBtn.textContent = okText;
+        cancelBtn.textContent = cancelText;
+
+        overlay.classList.add('show');
+
+        const cleanup = () => {
+            overlay.classList.remove('show');
+            okBtn.onclick = cancelBtn.onclick = null;
+        };
+
+        okBtn.onclick = () => { cleanup(); resolve(true); };
+        cancelBtn.onclick = () => { cleanup(); resolve(false); };
+    });
 }
 </script>
 </body>

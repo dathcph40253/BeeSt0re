@@ -184,9 +184,12 @@ function changeQuantity(cartId, delta, maxQuantity) {
 
     // Nếu người dùng giảm về 0 -> xác nhận xóa
     if (newQuantity < 1) {
-        if (confirm('Bạn có chắc muốn xóa sản phẩm này khỏi giỏ hàng không?')) {
-            removeFromCart(cartId);
-        }
+        showConfirm('Bạn có muốn xóa sản phẩm này ra khỏi giỏ hàng ko?')
+        .then(ok => {
+            if(ok){
+                removeFromCart(cartId);
+            }
+        });
         return;
     }
 
@@ -246,7 +249,7 @@ function checkOut(event) {
 }
 
 function removeFromCart(cartId) {
-    if (confirm('Bạn có chắc muốn xóa sản phẩm này?')) {
+    if (showConfirm('Bạn có muốn xóa sản phẩm này ko?')) {
         fetch('/cart/remove', {
             method: 'POST',
             headers: {
@@ -280,6 +283,50 @@ function checkQuantity(items){
     return true;
 
 }
+function showConfirm(message, {okText = 'Đồng ý', cancelText = 'Hủy'} = {}) {
+    return new Promise((resolve) => {
+        // Tạo modal nếu chưa có
+        let overlay = document.getElementById('customConfirm');
+        if (!overlay) {
+            document.body.insertAdjacentHTML('beforeend', `
+                <div id="customConfirm" class="cc-overlay">
+                  <div class="cc-modal">
+                    <div class="cc-body">
+                      <p id="cc-message"></p>
+                    </div>
+                    <div class="cc-actions">
+                      <button id="cc-cancel" class="cc-btn">Hủy</button>
+                      <button id="cc-ok" class="cc-btn primary">Đồng ý</button>
+                    </div>
+                  </div>
+                </div>
+            `);
+        }
+
+        overlay = document.getElementById('customConfirm');
+        const msgEl = document.getElementById('cc-message');
+        const okBtn = document.getElementById('cc-ok');
+        const cancelBtn = document.getElementById('cc-cancel');
+
+        msgEl.textContent = message;
+        okBtn.textContent = okText;
+        cancelBtn.textContent = cancelText;
+
+        overlay.classList.add('show');
+
+        const cleanup = () => {
+            overlay.classList.remove('show');
+            okBtn.onclick = cancelBtn.onclick = null;
+        };
+
+        okBtn.onclick = () => { cleanup(); resolve(true); };
+        cancelBtn.onclick = () => { cleanup(); resolve(false); };
+    });
+}
+
+
+
+
     function showNotification(message, type = 'info') {
         const notification = document.getElementById('nofication-cart');
         notification.textContent = message;
