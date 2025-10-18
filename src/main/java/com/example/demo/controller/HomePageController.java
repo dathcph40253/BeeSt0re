@@ -78,13 +78,33 @@ public String getHomePage(Model model,
                 return discount >= percent;
             })
             .collect(Collectors.toList());
+                        filtered.forEach(
+                product -> product.getProductDetailList().forEach( 
+                    db -> {
+                        db.getProductDiscount().forEach(
+                            d -> { d.setStartDateAsDate(Date.from(d.getStartDate().atZone(ZoneId.systemDefault()).toInstant()));
+                            d.setEndDateAsDate(Date.from(d.getEndDate().atZone(ZoneId.systemDefault()).toInstant()));
+                        });
+                    }
+                )
+            );
             List<Product> discountProducts = products.stream()
                 .filter(p -> p.getProductDetailList().stream()
                     .anyMatch(pd -> pd.getProductDiscount().stream()
                         .anyMatch(d -> d.getEndDate().isAfter(now))))
                 .collect(Collectors.toList());
-                List<BestSellerDto> bestSeller = productService.getBestSellerByProduct();
-    model.addAttribute("bestSellers", bestSeller);
+                discountProducts.forEach(
+                    product -> product.getProductDetailList().forEach( 
+                    db -> {
+                        db.getProductDiscount().forEach(
+                            d -> { d.setStartDateAsDate(Date.from(d.getStartDate().atZone(ZoneId.systemDefault()).toInstant()));
+                            d.setEndDateAsDate(Date.from(d.getEndDate().atZone(ZoneId.systemDefault()).toInstant()));
+                        });
+                    }
+                )
+                );
+            List<BestSellerDto> bestSeller = productService.getBestSellerByProduct();
+            model.addAttribute("bestSellers", bestSeller);
             model.addAttribute("discountProducts", discountProducts);
             model.addAttribute("products", filtered); // ⚠️ phải là 'products'
             model.addAttribute("selectedPercent", percent);
