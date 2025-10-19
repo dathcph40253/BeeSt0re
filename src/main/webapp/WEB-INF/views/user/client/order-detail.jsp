@@ -209,7 +209,7 @@
             <!-- Hành động -->
             <div class="card">
                 <div class="card-body">
-                    <c:if test="${bill.status != 'CANCELLED'}">
+                    <c:if test="${ bill.status != 'CANCELLED' && bill.status != 'DELIVERED' && bill.status != 'SHIPPING'}">
                         <button class="btn btn-danger w-100 mb-2" onclick="cancelOrder(${bill.id})">
                             <i class="fas fa-times me-2"></i>Hủy đơn hàng
                         </button>

@@ -8,6 +8,7 @@ import com.example.demo.repository.UserRepone;
 import com.example.demo.service.CustomerService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -106,13 +108,21 @@ public String getLogin(
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         // Xóa thông tin người dùng khỏi session
         session.removeAttribute("user");
+        User user = (User) session.getAttribute("user");
         // Clear Spring Security context
         SecurityContextHolder.clearContext();
+         
         // Hủy toàn bộ session
         session.invalidate();
         // Thêm thông báo đăng xuất thành công
         redirectAttributes.addFlashAttribute("message", "Đăng xuất thành công");
         // Chuyển hướng về trang home thay vì trang đăng nhập
+        if(user != null && user.getRole() != null){
+            String roleName = user.getRole().getName();
+            if("ROLE_ADMIN".equals(roleName) || "ROLE_EMPLOYEE".equals(roleName)){
+                return "redirect:/admin/login";
+            }
+        }
         return "redirect:/";
     }
     @GetMapping("/search")

@@ -138,10 +138,10 @@
 
                                         <div class="mt-3">
                                             <a href="/orders/${bill.id}" class="btn btn-outline-primary btn-sm">
-                                                <i class="fas fa-eye me-1"></i>Xem chi tiết
+                                                <i class="fas fa-eye me-1"></i>Xem chi tiết 
                                             </a>
                                             
-                                            <c:if test="${bill.status == 'PENDING' || bill.status == 'CONFIRMED'}">
+                                            <c:if test="${bill.status != 'CANCELLED' && bill.status != 'DELIVERED' && bill.status != 'SHIPPING'}">
                                                 <button class="btn btn-outline-danger btn-sm ms-2" 
                                                         onclick="cancelOrder(${bill.id})">
                                                     <i class="fas fa-times me-1"></i>Hủy đơn hàng

@@ -94,8 +94,8 @@ public class OrderController {
                 return "redirect:/orders";
             }
 
-            // Chỉ cho phép hủy đơn hàng ở trạng thái PENDING hoặc CONFIRMED
-            if (!"PENDING".equals(bill.getStatus()) && !"CONFIRMED".equals(bill.getStatus())) {
+            // Cho tất cả được hủy trừ trạng thái cancelled and delivered and shipping
+            if ( "CANCELLED".equals(bill.getStatus()) && "DELIVERED".equals(bill.getStatus()) && "SHIPPING".equals(bill.getStatus())) {
                 redirectAttributes.addFlashAttribute("error", "Không thể hủy đơn hàng ở trạng thái hiện tại");
                 return "redirect:/orders/" + id;
             }

@@ -84,7 +84,7 @@
             <div class="mt-3 text-start">
                 <a href="/forgot-password">Quên mật khẩu?</a><br/>
                 Nếu bạn chưa có tài khoản,
-                <a href="/admin/register">đăng ký tại đây</a>
+                <a href="/admin/register-admin">đăng ký tại đây</a>
             </div>
         </form>
     </div>
