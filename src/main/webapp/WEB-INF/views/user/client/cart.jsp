@@ -248,24 +248,29 @@ function checkOut(event) {
     }, 1500);
 }
 
-function removeFromCart(cartId) {
-    if (showConfirm('Bạn có muốn xóa sản phẩm này ko?')) {
-        fetch('/cart/remove', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'cartId=' + cartId
-        })
-        .then(response => response.text())
-        .then(data => {
-            if (data.startsWith('success:')) {
-                location.reload();
-            } else {
-                showNotification(data.replace('error:', ''), 'error');
-            }
-        });
-    }
+async function removeFromCart(cartId) {
+    const ok = await showConfirm('Bạn có muốn xóa sản phẩm này không?');
+    if (!ok) return; // người dùng bấm "Hủy"
+
+    fetch('/cart/remove', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'cartId=' + cartId
+    })
+    .then(response => response.text())
+    .then(data => {
+        if (data.startsWith('success:')) {
+            location.reload();
+        } else {
+            showNotification(data.replace('error:', ''), 'error');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        showNotification('Đã xảy ra lỗi khi xóa sản phẩm', 'error');
+    });
 }
 function checkQuantity(items){
     for ( let item of items){

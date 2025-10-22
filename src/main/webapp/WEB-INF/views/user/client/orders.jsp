@@ -167,8 +167,9 @@
     <jsp:include page="../layout/footer.jsp"/>
 
     <script>
-    function cancelOrder(orderId) {
-        if (showConfirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+    async function cancelOrder(orderId) {
+        const ok = await showConfirm('Bạn có chắc chắn muốn hủy đơn hàng này?');
+        if(!ok) return;
             fetch('/orders/' + orderId + '/cancel', {
                 method: 'POST',
                 headers: {
@@ -186,7 +187,6 @@
                 alert('Có lỗi xảy ra: ' + error.message);
             });
         }
-    }
     function showConfirm(message, {okText = 'Đồng ý', cancelText = 'Hủy'} = {}) {
     return new Promise((resolve) => {
         // Tạo modal nếu chưa có

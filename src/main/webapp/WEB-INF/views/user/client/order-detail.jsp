@@ -359,8 +359,9 @@ function showNotification(message, type) {
         }, 400); // Thời gian khớp với CSS transition
     }, 3000);
 }
-function cancelOrder(orderId) {
-    if (showConfirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+async function cancelOrder(orderId) {
+    const ok = await showConfirm('Bạn có chắc chắn muốn hủy đơn hàng này?')
+    if(!ok) return;
         fetch('/orders/' + orderId + '/cancel', {
             method: 'POST',
             headers: {
@@ -378,7 +379,7 @@ function cancelOrder(orderId) {
             showNotification('Đã xảy ra lỗi!', 'error');
         });
     }
-}
+
 function showConfirm(message, {okText = 'Đồng ý', cancelText = 'Hủy'} = {}) {
     return new Promise((resolve) => {
         // Tạo modal nếu chưa có
