@@ -32,7 +32,7 @@ public class BillService {
 
     // ============aas===== Tạo hóa đơn từ giỏ hàng trong DB =================
     public Bill createBillFromCart(User user, String billingAddress, String invoiceType,
-                                   PaymentMethod paymentMethod, Discount discount) {
+            PaymentMethod paymentMethod, Discount discount) {
         List<Cart> cartItems = cartRepository.findByAccountOrderByCreateDateDesc(user);
 
         if (cartItems.isEmpty()) {
@@ -85,10 +85,11 @@ public class BillService {
         return bill;
     }
 
-    // ================= Tạo hóa đơn từ giỏ hàng tạm (multi-cart POS) =================
+    // ================= Tạo hóa đơn từ giỏ hàng tạm (multi-cart POS)
+    // =================
     public Bill createBillFromTempCart(User user, String billingAddress, String invoiceType,
-                                       PaymentMethod paymentMethod, Discount discount,
-                                       List<Cart> cartItems) {
+            PaymentMethod paymentMethod, Discount discount,
+            List<Cart> cartItems) {
         if (cartItems == null || cartItems.isEmpty()) {
             throw new RuntimeException("Giỏ hàng trống");
         }
@@ -117,8 +118,6 @@ public class BillService {
         bill.setAmount(totalAmount);
         bill.setSalesChannel("offline");
         bill.setPromotionPrice(discountAmount);
-
-
 
         bill = billRepository.save(bill);
 
@@ -163,7 +162,7 @@ public class BillService {
     }
 
     private double calculateDiscountAmount(double totalAmount, Discount discount) {
-        if( discount.getMinimumAmountInCart() != null && totalAmount < discount.getMinimumAmountInCart()){
+        if (discount.getMinimumAmountInCart() != null && totalAmount < discount.getMinimumAmountInCart()) {
             return 0;
         }
 
@@ -180,14 +179,14 @@ public class BillService {
                 return discountAmount;
             } else if (discount.getType() == 2 && discount.getAmount() != null && discount.getAmount() > 0) {
                 return discount.getAmount();
-            }else  if (discount.getType() == 3 && discount.getPercentage() != null && discount.getPercentage() > 0) {
+            } else if (discount.getType() == 3 && discount.getPercentage() != null && discount.getPercentage() > 0) {
                 double discountAmount = totalAmount * discount.getPercentage() / 100;
                 if (discount.getMaximumAmount() != null) {
                     return Math.min(discountAmount, discount.getMaximumAmount());
                 }
                 return discountAmount;
+            }
         }
-    }   
         return 0;
     }
 
@@ -215,7 +214,7 @@ public class BillService {
     }
 
     public List<Bill> getAllBills() {
-        return billRepository.findAll();
+        return billRepository.findAllByOrderByCreateDateDesc();
     }
 
     public List<Bill> getBillsByStatus(String status) {
@@ -293,7 +292,7 @@ public class BillService {
                 discount.setMaximumUsage(discount.getMaximumUsage() - 1);
                 discountRepo.save(discount);
                 System.out.println("✅ Đã trừ 1 lượt sử dụng mã giảm giá: " + discount.getCode() +
-                                 " (còn lại: " + discount.getMaximumUsage() + ")");
+                        " (còn lại: " + discount.getMaximumUsage() + ")");
             }
         }
     }
@@ -305,7 +304,7 @@ public class BillService {
                 discount.setMaximumUsage(discount.getMaximumUsage() + 1);
                 discountRepo.save(discount);
                 System.out.println("✅ Đã hoàn trả 1 lượt sử dụng mã giảm giá: " + discount.getCode() +
-                                 " (hiện có: " + discount.getMaximumUsage() + ")");
+                        " (hiện có: " + discount.getMaximumUsage() + ")");
             }
         }
     }
@@ -317,10 +316,12 @@ public class BillService {
             try {
                 calculateDiscountAmount(cartTotal, d);
                 valid.add(d);
-            } catch (Exception ignored) {}
+            } catch (Exception ignored) {
+            }
         }
         return valid;
     }
+
     public List<Bill> searchBills(String query) {
         return billRepository.searchBills(query);
     }

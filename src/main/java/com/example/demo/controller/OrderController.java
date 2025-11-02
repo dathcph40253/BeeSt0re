@@ -35,9 +35,9 @@ public class OrderController {
         }
 
         // Kiểm tra quyền xem đơn hàng (chỉ chủ đơn hàng hoặc admin)
-        if (!bill.getCustomer().getId().equals(user.getCustomer().getId()) && 
-            !"ROLE_ADMIN".equals(user.getRole().getName()) && 
-            !"ROLE_EMPLOYEE".equals(user.getRole().getName())) {
+        if (!bill.getCustomer().getId().equals(user.getCustomer().getId()) &&
+                !"ROLE_ADMIN".equals(user.getRole().getName()) &&
+                !"ROLE_EMPLOYEE".equals(user.getRole().getName())) {
             return "redirect:/orders";
         }
 
@@ -52,8 +52,8 @@ public class OrderController {
     // Danh sách đơn hàng của user
     @GetMapping("/orders")
     public String viewOrders(
-        @RequestParam(value = "status", required = false) String status,
-        HttpSession session, Model model) {
+            @RequestParam(value = "status", required = false) String status,
+            HttpSession session, Model model) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/Login";
@@ -73,9 +73,9 @@ public class OrderController {
 
     // Hủy đơn hàng
     @PostMapping("/orders/{id}/cancel")
-    public String cancelOrder(@PathVariable Long id, 
-                             HttpSession session, 
-                             RedirectAttributes redirectAttributes) {
+    public String cancelOrder(@PathVariable Long id,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/Login";
@@ -95,7 +95,8 @@ public class OrderController {
             }
 
             // Cho tất cả được hủy trừ trạng thái cancelled and delivered and shipping
-            if ( "CANCELLED".equals(bill.getStatus()) && "DELIVERED".equals(bill.getStatus()) && "SHIPPING".equals(bill.getStatus())) {
+            if ("CANCELLED".equals(bill.getStatus()) && "DELIVERED".equals(bill.getStatus())
+                    && "SHIPPING".equals(bill.getStatus())) {
                 redirectAttributes.addFlashAttribute("error", "Không thể hủy đơn hàng ở trạng thái hiện tại");
                 return "redirect:/orders/" + id;
             }
@@ -125,34 +126,32 @@ public class OrderController {
         return "admin/orders/list";
     }
 
-@GetMapping("/admin/orders/{id}")
-public String adminViewOrderDetail(@PathVariable Long id, HttpSession session, Model model) {
-    User user = (User) session.getAttribute("user");
-    if (user == null || 
-        (!"ROLE_ADMIN".equals(user.getRole().getName()) && !"ROLE_EMPLOYEE".equals(user.getRole().getName()))) {
-        return "redirect:/Login";
+    @GetMapping("/admin/orders/{id}")
+    public String adminViewOrderDetail(@PathVariable Long id, HttpSession session, Model model) {
+        User user = (User) session.getAttribute("user");
+        if (user == null ||
+                (!"ROLE_ADMIN".equals(user.getRole().getName()) && !"ROLE_EMPLOYEE".equals(user.getRole().getName()))) {
+            return "redirect:/Login";
+        }
+
+        Bill bill = billService.getBillById(id);
+        if (bill == null) {
+            return "redirect:/admin/orders";
+        }
+
+        List<BillDetail> billDetails = billDetailRepository.findByBill(bill);
+        model.addAttribute("bill", bill);
+        model.addAttribute("billDetails", billDetails);
+
+        return "admin/orders/detail";
     }
-
-    Bill bill = billService.getBillById(id);
-    if (bill == null) {
-        return "redirect:/admin/orders";
-    }
-
-    List<BillDetail> billDetails = billDetailRepository.findByBill(bill);
-    model.addAttribute("bill", bill);
-    model.addAttribute("billDetails", billDetails);
-
-    return "admin/orders/detail";
-}
-
-
 
     // Admin - Cập nhật trạng thái đơn hàng
     @PostMapping("/admin/orders/{id}/update-status")
     public String adminUpdateOrderStatus(@PathVariable Long id,
-                                       @RequestParam String status,
-                                       HttpSession session,
-                                       RedirectAttributes redirectAttributes) {
+            @RequestParam String status,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
             return "redirect:/Login";
@@ -161,13 +160,16 @@ public String adminViewOrderDetail(@PathVariable Long id, HttpSession session, M
         try {
             billService.updateBillStatus(id, status, user.getEmail());
             redirectAttributes.addFlashAttribute("success", "Cập nhật trạng thái thành công cho đơn hàng #" + id);
+            redirectAttributes.addAttribute("updatedId", id);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Cập nhật thất bại: " + e.getMessage());
+            redirectAttributes.addAttribute("updatedId", id);
         }
 
         return "redirect:/admin/orders";
     }
-        @GetMapping("/admin/search-orders")
+
+    @GetMapping("/admin/search-orders")
     public String searchOrders(@RequestParam("query") String query, Model model) {
         List<Bill> bills = billService.searchBills(query);
         model.addAttribute("bills", bills);

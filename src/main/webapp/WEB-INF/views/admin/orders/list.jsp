@@ -209,7 +209,7 @@
                         </c:when>
                         <c:otherwise>
                             <c:forEach var="bill" items="${bills}">
-                                <tr>
+                                <tr id="bill-${bill.id}">
                                     <td>
                                         <span class="order-code">
                                             <i class="fa-solid fa-receipt me-2 text-primary"></i>${bill.code}
@@ -374,6 +374,21 @@
             if (message) {
                 alert(decodeURIComponent(message));
             }
+        });
+        document.addEventListener('DOMContentLoaded', function() {
+        const params = new URLSearchParams(window.location.search);
+        const updatedId = params.get('updatedId');
+        if (updatedId) {
+            const target = document.getElementById('bill-' + updatedId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                target.style.backgroundColor = '#fff3cd';
+                setTimeout(() => {
+                    target.style.transition ='background-color 1s';
+                    target.style.backgroundColor = 'red'
+                }, 20000);
+            }
+        }
         });
     </script>
 </body>

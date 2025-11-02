@@ -24,7 +24,7 @@
         <div class="col-md-6 col-12 mx-auto">
             <h3>UPDATE PRODUCT ${product.id}</h3>
             <hr/>
-            <form:form action="/product/update" method="post" modelAttribute="product">
+            <form:form action="/admin/product/update" method="post" modelAttribute="product">
                 <div class="mb-3">
                     <label class="form-label">ID</label>
                     <form:input path="id" class="form-control" readonly="true"/>

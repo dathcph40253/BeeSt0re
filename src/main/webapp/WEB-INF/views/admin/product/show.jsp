@@ -132,7 +132,7 @@
                 <jsp:param name="title" value="Quản Lý Sản Phẩm"/>
                 <jsp:param name="icon" value="fa-solid fa-box"/>
             </jsp:include>
-            <a class="btn-add" href="/product/create">
+            <a class="btn-add" href="/admin/product/create">
                 <i class="fas fa-plus"></i>
                 Thêm sản phẩm
             </a>
@@ -208,8 +208,8 @@
                         <td>${product.getTotalQuantity()}</td>
                         <td>${product.status == 1 ? "Hoạt động" : "Ngừng hoạt động"}</td>
                         <td class="product-actions">
-                            <a class="btn-edit" href="/product/update/${product.id}"><i class="fas fa-edit"></i></a>
-                            <a class="btn-delete" href="/product/delete/${product.id}"><i class="fas fa-trash"></i></a>
+                            <a class="btn-edit" href="/admin/product/update/${product.id}"><i class="fas fa-edit"></i></a>
+                            <a class="btn-delete" href="/admin/product/delete/${product.id}"><i class="fas fa-trash"></i></a>
                             <a href="/product-detail/${product.id}" class="btn-detail"><i class="fa-solid fa-info"></i></a>
                         </td>
                     </tr>

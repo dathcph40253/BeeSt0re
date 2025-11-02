@@ -214,7 +214,7 @@
                                class="btn-add" style="padding: 12px 30px; font-size: 1.1rem;">
                                 <i class="fas fa-plus"></i> Thêm chi tiết sản phẩm
                             </a>
-                            <a href="/product" class="btn btn-info" style="padding: 12px 30px;">
+                            <a href="/admin/products" class="btn btn-info" style="padding: 12px 30px;">
                                 <i class="fas fa-arrow-left"></i> Quay lại danh sách
                             </a>
                         </div>
@@ -280,7 +280,7 @@
                         </tbody>
                     </table>
                     <div>
-                        <a href="/product" class="btn btn-info" style="margin-top:48px">Quay lại</a>
+                        <a href="/admin/products" class="btn btn-info" style="margin-top:48px">Quay lại</a>
                     </div>
                 </c:otherwise>
             </c:choose>
