@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-
 import com.example.demo.Entity.Customer;
 import com.example.demo.Entity.User;
 import com.example.demo.dto.LoginDto;
@@ -34,97 +33,97 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    
+
     @Autowired
     private CustomerService customerService;
-    
 
     @GetMapping("/Login")
     public String DangNhap() {
         return "user";
     }
+
     @GetMapping("/admin/login")
     public String adminLogin() {
         return "admin/login";
     }
 
-  @PostMapping({"/Login", "/admin/login"})
-public String getLogin(
-        LoginDto loginDto,
-        RedirectAttributes re,
-        HttpSession session,
-        HttpServletRequest request,
-        Model model
-) {
-    String requestURI = request.getRequestURI(); // Lấy đường dẫn thực tế người dùng gửi form
-    boolean isAdminLogin = requestURI.contains("/admin");
+    @PostMapping({ "/Login", "/admin/login" })
+    public String getLogin(
+            LoginDto loginDto,
+            RedirectAttributes re,
+            HttpSession session,
+            HttpServletRequest request,
+            Model model) {
+        String requestURI = request.getRequestURI(); // Lấy đường dẫn thực tế người dùng gửi form
+        boolean isAdminLogin = requestURI.contains("/admin");
 
-    Optional<User> userOpt = userReponse.findByEmail(loginDto.getName());
-    if (userOpt.isPresent()) {
-        User user = userOpt.get();
-        if (passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
-            if (user.getIsNonLocked()) {
-                session.setAttribute("user", user);
+        Optional<User> userOpt = userReponse.findByEmail(loginDto.getName());
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
+                if (user.getIsNonLocked()) {
+                    session.setAttribute("user", user);
 
-                Customer customer = user.getCustomer();
-                if (customer != null) {
-                    session.setAttribute("customer", customer);
-                }
+                    Customer customer = user.getCustomer();
+                    if (customer != null) {
+                        session.setAttribute("customer", customer);
+                    }
 
-                String roleName = user.getRole().getName();
-                List<GrantedAuthority> authorities =
-                        List.of(new SimpleGrantedAuthority(roleName));
+                    String roleName = user.getRole().getName();
+                    List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(roleName));
 
-                Authentication authToken =
-                        new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
+                    Authentication authToken = new UsernamePasswordAuthenticationToken(user.getEmail(), null,
+                            authorities);
 
-                SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-                securityContext.setAuthentication(authToken);
-                SecurityContextHolder.setContext(securityContext);
-                session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
+                    SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+                    securityContext.setAuthentication(authToken);
+                    SecurityContextHolder.setContext(securityContext);
+                    session.setAttribute("SPRING_SECURITY_CONTEXT", securityContext);
 
-                re.addFlashAttribute("message", "Đăng nhập thành công " + user.getEmail());
+                    re.addFlashAttribute("message", "Đăng nhập thành công " + user.getEmail());
 
-                // Điều hướng theo role
-                if ("ROLE_ADMIN".equals(roleName) || "ROLE_EMPLOYEE".equals(roleName)) {
-                    return "redirect:/admin/Home";
+                    // Điều hướng theo role
+                    if ("ROLE_ADMIN".equals(roleName) || "ROLE_EMPLOYEE".equals(roleName)) {
+                        return "redirect:/admin/Home";
+                    } else {
+                        return "redirect:/";
+                    }
                 } else {
-                    return "redirect:/";
+                    re.addFlashAttribute("message", "Tài khoản đã bị khóa");
+                    return isAdminLogin ? "redirect:/admin/login" : "redirect:/Login";
                 }
-            } else {
-                re.addFlashAttribute("message", "Tài khoản đã bị khóa");
-                return isAdminLogin ? "redirect:/admin/login" : "redirect:/Login";
             }
         }
+
+        // Sai email hoặc mật khẩu
+        re.addFlashAttribute("message", "Email hoặc mật khẩu không đúng");
+        return isAdminLogin ? "redirect:/admin/login" : "redirect:/Login";
     }
 
-    // Sai email hoặc mật khẩu
-    re.addFlashAttribute("message", "Email hoặc mật khẩu không đúng");
-    return isAdminLogin ? "redirect:/admin/login" : "redirect:/Login";
-}
-
-    
     @GetMapping("/Logout")
     public String logout(HttpSession session, RedirectAttributes redirectAttributes) {
         // Xóa thông tin người dùng khỏi session
-        session.removeAttribute("user");
         User user = (User) session.getAttribute("user");
+        session.removeAttribute("user");
         // Clear Spring Security context
         SecurityContextHolder.clearContext();
-         
+
         // Hủy toàn bộ session
         session.invalidate();
         // Thêm thông báo đăng xuất thành công
         redirectAttributes.addFlashAttribute("message", "Đăng xuất thành công");
         // Chuyển hướng về trang home thay vì trang đăng nhập
-        if(user != null && user.getRole() != null){
+        if (user != null && user.getRole() != null) {
             String roleName = user.getRole().getName();
-            if("ROLE_ADMIN".equals(roleName) || "ROLE_EMPLOYEE".equals(roleName)){
-                return "redirect:/admin/login";
+            if ("ROLE_ADMIN".equals(roleName)) {
+                return "redirect:/Home";
+            } else {
+                return "redirect:/";
             }
         }
         return "redirect:/";
     }
+
     @GetMapping("/search")
     public String searchName(@RequestParam("keyword") String keyword) {
         String newKeyword = keyword.toLowerCase();
@@ -160,5 +159,3 @@ public String getLogin(
         }
     }
 }
-
-

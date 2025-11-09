@@ -50,19 +50,19 @@
 }
 
 /* Search Box */
-.search-box {
+.search-box-user {
     width: 100%;
     max-width: 500px;
     margin: 0 auto;
     position: relative;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     border: 2px solid #5cb85c;
     border-radius: 25px;
     overflow: hidden;
 }
 
-.search-box input {
+.search-box-user input {
     flex: 1;
     border: none;
     outline: none;
@@ -70,16 +70,16 @@
     font-size: 14px;
 }
 
-.search-box button {
+.search-box-user button {
     background: #5cb85c;
     border: none;
-    padding: 10px 20px;
+    padding: 0 15px;
     color: white;
-    cursor: pointer;
+    cursor:  pointer;
     transition: background 0.3s;
 }
 
-.search-box button:hover {
+.search-box-user button:hover {
     background: #4cae4c;
 }
 
@@ -223,7 +223,7 @@
         font-size: 1.5rem;
     }
     
-    .search-box {
+    .search-box-user {
         max-width: 100%;
     }
     
@@ -279,7 +279,7 @@
 
             <!-- Search Box -->
             <div class="col-lg-6 col-md-5 col-12 order-lg-2 order-md-2 order-3">
-                <form action="/product" method="get" class="search-box">
+                <form action="/product" method="get" class="search-box-user">
                     <input type="text" name="keyword" placeholder="Bạn muốn tìm sản phẩm gì hôm nay?"
                         value="${keyword != null ? keyword : ''}">
                     <button type="submit">

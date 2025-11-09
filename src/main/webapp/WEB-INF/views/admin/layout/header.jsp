@@ -49,7 +49,7 @@
                 <!-- MENU NGƯỜI DÙNG -->
                 <div id="menu" class="menu hidden">
                     <ul>
-                        <li><a href="${pageContext.request.contextPath}/profile">Thông tin người dùng</a></li>
+                        <li><a href="${pageContext.request.contextPath}/admin/customer/${customer.id}">Thông tin người dùng</a></li>
                         <li><a href="#">Thông báo</a></li>
                         <li><a href="${pageContext.request.contextPath}/Logout">Đăng xuất</a></li>
                     </ul>

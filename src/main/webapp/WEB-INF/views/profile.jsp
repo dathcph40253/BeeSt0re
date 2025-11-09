@@ -56,7 +56,7 @@
             font-weight: 600;
             color: #333;
         }
-
+/* 
         input[type="text"] {
             width: 100%;
             padding: 10px 12px;
@@ -64,9 +64,9 @@
             border: 1px solid #ccc;
             border-radius: 6px;
             font-size: 14px;
-        }
+        } */
 
-        button {
+        .submit-profile {
             width: 100%;
             padding: 12px;
             background-color: #1abc9c;
@@ -78,7 +78,7 @@
             transition: 0.3s;
         }
 
-        button:hover {
+        .submit-profile:hover {
             background-color: #16a085;
         }
 
@@ -130,7 +130,7 @@
                 </div>
 
                 <!-- Nút xác nhận -->
-                <button type="submit">Xác nhận</button>
+                <button type="submit" class="submit-profile">Xác nhận</button>
             </form:form>
         </div>
     </div>

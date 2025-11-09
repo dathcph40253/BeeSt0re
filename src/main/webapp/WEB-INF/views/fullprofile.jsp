@@ -16,6 +16,8 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #f5f5f5;
+            display: flex;
+            flex-direction: column;
         }
 
         /* Layout */
@@ -238,6 +240,7 @@
                 justify-content: center;
             }
         }
+        
     </style>
 </head>
 
@@ -369,7 +372,6 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 <jsp:include page="user/layout/footer.jsp"/>

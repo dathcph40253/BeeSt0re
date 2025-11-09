@@ -52,7 +52,7 @@
     </style>
 </head>
 <body>
-<div class="container">
+<div class="containerr">
     <jsp:include page="layout/sidebar.jsp"/>
     <div class="main-content">
         <jsp:include page="layout/header.jsp"/>

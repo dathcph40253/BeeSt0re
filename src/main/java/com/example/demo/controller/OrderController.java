@@ -154,7 +154,7 @@ public class OrderController {
             RedirectAttributes redirectAttributes) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
-            return "redirect:/Login";
+            return "redirect:/admin/login";
         }
 
         try {
