@@ -87,27 +87,13 @@ public class BrandController {
         return "redirect:/Brand";
     }
     @GetMapping("/Brand/search")
-    public String searchBrand(@RequestParam(name = "id") String id, Model model) {
-        List<Brand>  brands;
-        if(id !=null &&  !id.isBlank()) {
-            try{
-                Long ids = Long.parseLong(id);
-                Brand brand = repo.findById(ids).orElse(null);
-                if (brand != null) {
-                    brands = List.of(brand);
-                } else {
-                    brands = new ArrayList<>();
-                }
-            }catch (NumberFormatException e){
-                brands = new ArrayList<>();
-            }
-            }
-            else{
-                brands = repo.findByDeleteFalse();
-            }
-            model.addAttribute("brands", brands);
-            return "brands";
-        }
+    public String searchBrands(@RequestParam(required = false) String query, Model model) {
+        List<Brand> brands = brandService.searchBrands(query);
+        model.addAttribute("brands", brands);
+        model.addAttribute("query", query);
+        return "brands"; // thay bằng tên file HTML thực tế của bạn
     }
+
+}
 
 

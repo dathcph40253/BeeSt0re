@@ -33,4 +33,8 @@ public class SizeService {
             sizeRepo.save(size);
         }
     }
+    public List<Size> searchSizes(String query) {
+        return sizeRepo.searchSizes(query);
+    }
+
 }

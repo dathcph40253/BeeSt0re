@@ -30,16 +30,30 @@
     </c:if>
 
     <form class="row g-3 mb-4" method="get" action="/Brand/search">
+        <!-- Ô nhập tìm kiếm -->
         <div class="col-auto">
-            <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
+            <input type="text"
+                   class="form-control"
+                   name="query"
+                   placeholder="Tìm theo mã hoặc tên thương hiệu..."
+                   value="${param.query}">
         </div>
+
+        <!-- Nút tìm kiếm -->
         <div class="col-auto">
-            <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
+            <button type="submit" class="btn btn-primary">
+                🔍 Tìm kiếm
+            </button>
         </div>
+
+        <!-- Nút tải lại -->
         <div class="col-auto">
-            <a href="/Brand" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+            <a href="/Brand" class="btn btn-outline-secondary">
+                🔄 Tải lại bảng
+            </a>
         </div>
     </form>
+
     <c:if test="${not empty success}">
         <div class="alert alert-success">${success}</div>
     </c:if>

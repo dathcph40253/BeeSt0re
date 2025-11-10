@@ -5,11 +5,13 @@ import com.example.demo.repository.BillDetailRepository;
 import com.example.demo.service.*;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -170,10 +172,22 @@ public class OrderController {
     }
 
     @GetMapping("/admin/search-orders")
-    public String searchOrders(@RequestParam("query") String query, Model model) {
-        List<Bill> bills = billService.searchBills(query);
+    public String searchOrders(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Model model) {
+
+        // Gọi service xử lý tìm kiếm theo từ khóa + khoảng ngày
+        List<Bill> bills = billService.searchBills(query, startDate, endDate);
+
+        // Gửi dữ liệu sang view
         model.addAttribute("bills", bills);
         model.addAttribute("searchQuery", query);
-        return "admin/orders/list";
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+
+        return "admin/orders/list"; // Trang hiển thị danh sách đơn hàng
     }
+
 }

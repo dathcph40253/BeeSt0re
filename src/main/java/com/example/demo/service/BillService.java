@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -191,19 +193,12 @@ public class BillService {
     }
 
     private String generateBillCode() {
-        List<String> latestCodes = billRepository.findLatestBillCode();
-        int nextNumber = 1;
-        if (!latestCodes.isEmpty()) {
-            String lastCode = latestCodes.get(0);
-            String numberPart = lastCode.substring(2);
-            try {
-                nextNumber = Integer.parseInt(numberPart) + 1;
-            } catch (NumberFormatException e) {
-                nextNumber = 1;
-            }
-        }
-        return String.format("HD%06d", nextNumber);
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        String dateTimePart = now.format(formatter);
+        return "HD" + dateTimePart;
     }
+
 
     public Bill getBillById(Long id) {
         return billRepository.findById(id).orElse(null);
@@ -322,9 +317,12 @@ public class BillService {
         return valid;
     }
 
-    public List<Bill> searchBills(String query) {
-        return billRepository.searchBills(query);
+    public List<Bill> searchBills(String query, LocalDate startDate, LocalDate endDate) {
+        LocalDateTime start = (startDate != null) ? startDate.atStartOfDay() : null;
+        LocalDateTime end = (endDate != null) ? endDate.plusDays(1).atStartOfDay() : null;
+        return billRepository.searchBills(query, start, end);
     }
+
 
     public List<Bill> getBillsByCustomerAndStatus(Customer customer, String status) {
         return billRepository.findByCustomerAndStatusOrderByCreateDateDesc(customer, status);

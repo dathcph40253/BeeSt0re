@@ -12,6 +12,7 @@ import java.util.List;
 public interface DiscountRepo extends JpaRepository<Discount, Long> {
     // Lấy tất cả bản ghi có delete_flag = 0
     List<Discount> findByDeleteFalse();
-
-    
+    List<Discount> findByCodeContainingIgnoreCaseOrDetailContainingIgnoreCase(String code, String detail);
 }
+    
+

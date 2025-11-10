@@ -20,6 +20,10 @@ public class CategoryService {
         return categoryRepo.findAll();
     }
 
+    public List<Category> searchCategories(String query) {
+        return categoryRepo.searchCategories(query);
+    }
+
     public void deleteCategory(Long categoryId){
         boolean existsCategory = productDetailRepo.existsByProductCategoryIdAndQuantityGreaterThan(categoryId, 0);
         if(existsCategory){

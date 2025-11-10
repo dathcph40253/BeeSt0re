@@ -43,8 +43,6 @@ public class Product {
     private boolean delete_flag;
     @Column
     private int gender;
-    @Column(name = "sales_channel")
-    private String salesChannel;
     @ManyToOne
     @JoinColumn(name = "brand_id")
     private Brand brand;

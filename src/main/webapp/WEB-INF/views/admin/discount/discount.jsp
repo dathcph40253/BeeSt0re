@@ -28,20 +28,20 @@
 
                 <!-- Form tìm kiếm -->
                 <form class="row g-3 mb-4" method="get" action="/admin/Discount/search">
-                    <div class="col-auto">
-                        <input type="text" class="form-control" name="id" placeholder="Tìm theo ID">
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
-                    </div>
-                    <div class="col-auto">
-                        <a href="/admin/Discount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
-                    </div>
-                    <div class="col-auto">
-                        <a href="/admin/Discount/create" class="btn btn-success">
-                            <i class="fas fa-plus me-2"></i>Thêm mã giảm giá
-                        </a>
-                    </div>
+                        <div class="col-auto">
+                                <input type="text" class="form-control" name="keyword" placeholder="Tìm theo mã hoặc mô tả...">
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
+                            </div>
+                            <div class="col-auto">
+                                <a href="/admin/Discount" class="btn btn-outline-secondary">🔄 Tải lại bảng</a>
+                            </div>
+                        <div class="col-auto">
+                            <a href="/admin/Discount/create" class="btn btn-success">
+                                ➕ Thêm mã giảm giá
+                            </a>
+                        </div>
                 </form>
 
                 <!-- Bảng dữ liệu -->

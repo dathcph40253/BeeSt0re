@@ -204,9 +204,33 @@
             </h3>
         </div>
         <form class="d-flex mb-4" method="get" action="/admin/bills/search">
-            <input class="form-control me-2" type="search" name="query" placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, địa chỉ..." aria-label="Search" value="${param.query}">
-            <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+            <!-- Ô tìm kiếm theo mã, tên KH, địa chỉ -->
+            <input class="form-control me-2"
+                   type="search"
+                   name="query"
+                   placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, địa chỉ..."
+                   aria-label="Search"
+                   value="${param.query}">
+
+            <!-- Tìm kiếm theo ngày bắt đầu -->
+            <input class="form-control me-2"
+                       type="date"
+                       name="startDate"
+                       value="${param.startDate}"
+                       style="width: 200px;">
+
+            <!-- Tìm kiếm theo ngày kết thúc -->
+            <input class="form-control me-2"
+                       type="date"
+                       name="endDate"
+                       value="${param.endDate}"
+                       style="width: 200px;">
+
+            <button class="btn btn-outline-success" type="submit">
+                <i class="fas fa-search"></i> Tìm kiếm
+            </button>
         </form>
+
         <!-- Status Filter -->
         <div class="status-filter">
             <h6 class="mb-3"><i class="fas fa-filter me-2"></i>Lọc theo trạng thái:</h6>

@@ -82,22 +82,11 @@ public class SizeController {
         return "redirect:/Size";
     }
     @GetMapping("/Size/search")
-    public String searchSize(@RequestParam(name = "id") String id, Model model) {
-        List<Size> sizes;
-        if( id!= null && !id.isBlank()){
-            try{
-                Long ids = Long.parseLong(id);
-                Size size = sizeRepo.findById(ids).orElse(null);
-                if(size != null) {
-                    sizes = List.of(size);
-                }else {
-                    sizes = new ArrayList<>();
-                }
-            }catch (NumberFormatException e){
-                sizes = new ArrayList<>();
-            }
-            model.addAttribute("sizes", sizes);
-        }
-        return "size";
+    public String searchSize(@RequestParam("query") String query, Model model) {
+        List<Size> sizes = sizeService.searchSizes(query);
+        model.addAttribute("sizes", sizes);
+        model.addAttribute("searchQuery", query);
+        return "size"; // hoặc đường dẫn view của bạn
     }
+
 }

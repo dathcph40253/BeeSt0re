@@ -82,22 +82,11 @@ public class MaterialController {
         return "redirect:/Material";
     }
     @GetMapping("/Material/search")
-    public String searchMaterial(@RequestParam(name = "id") String id, Model model){
-        List<Material> materials;
-        if(id!=null && !id.isBlank()) {
-            try{
-                Long ids = Long.parseLong(id);
-                Material material = materialRepo.findById(ids).orElse(null);
-                if(material!=null){
-                    materials = List.of(material);
-                }else{
-                    materials = new ArrayList<>();
-                }
-            }catch (NumberFormatException e){
-                materials = new ArrayList<>();
-            }
-            model.addAttribute("materials", materials);
-        }
-        return "material";
+    public String searchMaterial(@RequestParam("query") String query, Model model) {
+        List<Material> materials = materialService.searchMaterials(query);
+        model.addAttribute("materials", materials);
+        model.addAttribute("searchQuery", query);
+        return "material"; // hoặc đường dẫn view hiện tại của bạn
     }
+
 }

@@ -32,5 +32,9 @@ public class ColorService {
                 colorRepo.save(color);
             }
         }
+    public List<Color> searchColors(String query) {
+        return colorRepo.searchColors(query);
+    }
+
 }
 

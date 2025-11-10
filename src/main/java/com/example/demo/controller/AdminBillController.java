@@ -1,8 +1,10 @@
 package com.example.demo.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,14 +39,23 @@ public class AdminBillController {
         model.addAttribute("selectedStatus", status);
         return "admin/bills";
     }
-    
+
     @GetMapping("/search")
-    public String searchBills(@RequestParam("query") String query, Model model) {
-        List<Bill> bills = billService.searchBills(query);
+    public String searchBills(
+            @RequestParam(required = false) String query,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+            Model model) {
+
+        List<Bill> bills = billService.searchBills(query, startDate, endDate);
         model.addAttribute("recentBills", bills);
         model.addAttribute("query", query);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
+
         return "admin/bills";
     }
+
 }
     
 

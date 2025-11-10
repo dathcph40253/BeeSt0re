@@ -134,9 +134,29 @@
             </h3>
         </div>
         <form class="d-flex mb-4" method="get" action="/admin/search-orders">
-            <input class="form-control me-2" type="search" name="query" placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, địa chỉ..." aria-label="Search" value="${param.query}">
-            <button class="btn btn-outline-success" type="submit"><i class="fas fa-search"></i> Tìm kiếm</button>
+            <input class="form-control me-2"
+                   type="search"
+                   name="query"
+                   placeholder="Tìm kiếm theo mã đơn hàng, tên khách hàng, địa chỉ..."
+                   aria-label="Search"
+                   value="${param.query}">
+
+            <input class="form-control me-2"
+                       type="date"
+                       name="startDate"
+                       value="${param.startDate}"
+                       style="width: 200px;">
+
+                <input class="form-control me-2"
+                       type="date"
+                       name="endDate"
+                       value="${param.endDate}"
+                       style="width: 200px;">
+            <button class="btn btn-outline-success" type="submit">
+                <i class="fas fa-search"></i> Tìm kiếm
+            </button>
         </form>
+
         <!-- Success/Error Messages -->
         <c:if test="${not empty success}">
             <div class="alert alert-success alert-dismissible fade show" role="alert">

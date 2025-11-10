@@ -23,20 +23,13 @@ import java.util.*;
 @RequestMapping("/admin/sales")
 public class AdminSalesController {
 
-    @Autowired
-    private ProductDetailService productDetailService;
-    @Autowired
-    private BillService billService;
-    @Autowired
-    private PaymentMethodRepository paymentMethodRepository;
-    @Autowired
-    private DiscountRepo discountRepo;
-    @Autowired
-    private BillRepository billRepository;
-    @Autowired
-    private UserRepone userrepo;
-    @Autowired
-    private InvoicePdfService invoicePdfService;
+    @Autowired private ProductDetailService productDetailService;
+    @Autowired private BillService billService;
+    @Autowired private PaymentMethodRepository paymentMethodRepository;
+    @Autowired private DiscountRepo discountRepo;
+    @Autowired private BillRepository billRepository;
+    @Autowired private UserRepone userrepo;
+    @Autowired private InvoicePdfService invoicePdfService;
 
     // ================== Helper ==================
     @SuppressWarnings("unchecked")
@@ -52,17 +45,15 @@ public class AdminSalesController {
     // ================== Trang bán hàng ==================
     @GetMapping
     public String salesPage(HttpSession session, Model model,
-            @RequestParam(value = "keyword", required = false) String keyword,
-            @RequestParam(value = "tab", required = false) Integer tabId,
-            @RequestParam(value = "newTab", required = false) Boolean newTab,
-            @RequestParam(value = "removeTab", required = false) Integer removeTab) {
+                            @RequestParam(value = "keyword", required = false) String keyword,
+                            @RequestParam(value = "tab", required = false) Integer tabId,
+                            @RequestParam(value = "newTab", required = false) Boolean newTab,
+                            @RequestParam(value = "removeTab", required = false) Integer removeTab) {
 
         User sessionUser = (User) session.getAttribute("user");
-        if (sessionUser == null)
-            return "redirect:/Login";
+        if (sessionUser == null) return "redirect:/Login";
         User user = userrepo.findById(sessionUser.getId()).orElse(null);
-        if (user == null)
-            return "redirect:/Login";
+        if (user == null) return "redirect:/Login";
 
         Customer customer = user.getCustomer();
         Map<Integer, List<Cart>> carts = getAllCarts(session);
@@ -137,10 +128,10 @@ public class AdminSalesController {
     // ================== Quản lý giỏ ==================
     @PostMapping("/cart/add")
     public String addToCart(@RequestParam("productDetailId") Long productDetailId,
-            @RequestParam(value = "quantity", defaultValue = "1") Integer quantity,
-            @RequestParam("tabId") Integer tabId,
-            HttpSession session,
-            RedirectAttributes redirectAttributes) {
+                            @RequestParam(value = "quantity", defaultValue = "1") Integer quantity,
+                            @RequestParam("tabId") Integer tabId,
+                            HttpSession session,
+                            RedirectAttributes redirectAttributes) {
         Map<Integer, List<Cart>> carts = getAllCarts(session);
         List<Cart> cartItems = carts.getOrDefault(tabId, new ArrayList<>());
 
@@ -175,9 +166,9 @@ public class AdminSalesController {
 
     @PostMapping("/cart/remove")
     public String removeCartItem(@RequestParam("cartIndex") Integer cartIndex,
-            @RequestParam("tabId") Integer tabId,
-            HttpSession session,
-            RedirectAttributes redirectAttributes) {
+                                 @RequestParam("tabId") Integer tabId,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
         Map<Integer, List<Cart>> carts = getAllCarts(session);
         List<Cart> cartItems = carts.getOrDefault(tabId, new ArrayList<>());
 
@@ -198,10 +189,10 @@ public class AdminSalesController {
 
     @PostMapping("/cart/update")
     public String updateCartItem(@RequestParam("tabId") Integer tabId,
-            @RequestParam("cartIndex") Integer cartIndex,
-            @RequestParam("quantity") Integer newQuantity,
-            HttpSession session,
-            RedirectAttributes redirectAttributes) {
+                                 @RequestParam("cartIndex") Integer cartIndex,
+                                 @RequestParam("quantity") Integer newQuantity,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
         Map<Integer, List<Cart>> carts = getAllCarts(session);
         List<Cart> cartItems = carts.getOrDefault(tabId, new ArrayList<>());
 
@@ -240,10 +231,10 @@ public class AdminSalesController {
     // ================== Thanh toán ==================
     @PostMapping("/place-order")
     public String placeOrder(@RequestParam("paymentMethodId") Long paymentMethodId,
-            @RequestParam(value = "discountId", required = false) Long discountId,
-            @RequestParam("tabId") Integer tabId,
-            HttpSession session,
-            RedirectAttributes redirectAttributes) {
+                             @RequestParam(value = "discountId", required = false) Long discountId,
+                             @RequestParam("tabId") Integer tabId,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
         Map<Integer, List<Cart>> carts = getAllCarts(session);
         List<Cart> cartItems = carts.getOrDefault(tabId, new ArrayList<>());
 
@@ -257,12 +248,14 @@ public class AdminSalesController {
             Discount discount = (discountId != null) ? discountRepo.findById(discountId).orElse(null) : null;
             Long userId = ((User) session.getAttribute("user")).getId();
             User sessionUser = userrepo.findById(userId).orElse(null);
+
+
             Bill bill = billService.createBillFromTempCart(
                     sessionUser, "Tại quầy", "RETAIL", paymentMethod, discount, cartItems);
             carts.remove(tabId);
+            session.setAttribute("carts", carts);
             redirectAttributes.addFlashAttribute("lastBillId", bill.getId());
             redirectAttributes.addFlashAttribute("success", "Đã tạo hóa đơn thành công: " + bill.getCode());
-            session.setAttribute("carts", carts);
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Thanh toán thất bại: " + e.getMessage());
         }
@@ -283,8 +276,7 @@ public class AdminSalesController {
         } catch (Exception e) {
             try {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Lỗi khi in hóa đơn");
-            } catch (IOException ignored) {
-            }
+            } catch (IOException ignored) {}
         }
     }
 }

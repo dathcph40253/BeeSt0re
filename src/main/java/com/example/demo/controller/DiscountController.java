@@ -53,24 +53,17 @@ public class DiscountController {
     }
 
     @GetMapping("/Discount/search")
-    public String search(@RequestParam(name = "id") String id, Model model) {
+    public String searchDiscounts(@RequestParam(name = "keyword", required = false) String keyword, Model model) {
         List<Discount> discounts;
-        if (id != null && !id.isBlank()) {
-            try {
-                Long ids = Long.parseLong(id);
-                Discount discount = discountRepo.findById(ids).orElse(null);
-                if (discount != null && !discount.isDelete()) {
-                    discounts = List.of(discount);
-                } else {
-                    discounts = new ArrayList<>();
-                }
-            } catch (NumberFormatException e) {
-                discounts = new ArrayList<>();
-            }
+
+        if (keyword != null && !keyword.isEmpty()) {
+            discounts = discountRepo.findByCodeContainingIgnoreCaseOrDetailContainingIgnoreCase(keyword, keyword);
         } else {
-            discounts = discountRepo.findByDeleteFalse();
+            discounts = discountRepo.findAll();
         }
+
         model.addAttribute("discounts", discounts);
+        model.addAttribute("keyword", keyword);
         return "admin/discount/discount";
     }
 

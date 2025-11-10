@@ -21,6 +21,10 @@ public class MaterialService {
         return materialRepo.findAll();
     }
 
+    public List<Material> searchMaterials(String query) {
+        return materialRepo.searchMaterials(query);
+    }
+
     public void deleteMaterial(Long materialId){
         boolean existsMaterial = productDetailRepo.existsByProductMaterialIdAndQuantityGreaterThan(materialId, 0);
         if(existsMaterial){

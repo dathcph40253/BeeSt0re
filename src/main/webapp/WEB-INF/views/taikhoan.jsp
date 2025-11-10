@@ -28,8 +28,13 @@
 
             <div class="d-flex justify-content-between mb-3">
                 <form class="d-flex" method="get" action="/admin/account">
-                    <input type="text" class="form-control me-2" name="id" placeholder="Tìm theo ID" style="width: 200px;">
-                    <button type="submit" class="btn btn-primary">🔍 Tìm kiếm</button>
+                   <input type="text"
+                              class="form-control me-2"
+                              name="query"
+                              placeholder="🔍 Tìm theo mã tài khoản, email hoặc tên người dùng"
+                              style="width: 280px;"
+                              value="${param.query}">
+                       <button type="submit" class="btn btn-primary">Tìm kiếm</button>
                 </form>
             </div>
 

@@ -31,4 +31,10 @@ public class BrandService {
             brandRepo.save(brand);
         }
     }
+    public List<Brand> searchBrands(String query) {
+        if (query == null || query.trim().isEmpty()) {
+            return brandRepo.findAll();
+        }
+        return brandRepo.searchBrands(query);
+    }
 }

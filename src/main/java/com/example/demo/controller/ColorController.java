@@ -77,24 +77,11 @@ public class ColorController {
         return "redirect:/Color";
     }
     @GetMapping("/Color/search")
-    public String searchColor(@RequestParam(name = "id") String id, Model model) {
-        List<Color>  color;
-        if(id !=null &&  !id.isBlank()) {
-            try{
-                Long ids = Long.parseLong(id);
-                Color  color1 = colorRepo.findById(ids).orElse(null);
-                if (color1 != null) {
-                    color = List.of(color1);
-                } else {
-                    color = new ArrayList<>();
-                }
-            }catch (NumberFormatException e){
-                color = new ArrayList<>();
-            }
-        }else{
-            color = colorRepo.findByDeleteFalse();
-        }
-        model.addAttribute("colors", color);
-        return "brands";
+    public String searchColor(@RequestParam("query") String query, Model model) {
+        List<Color> colors = colorService.searchColors(query);
+        model.addAttribute("colors", colors);
+        model.addAttribute("searchQuery", query);
+        return "color"; // hoặc đổi nếu view của bạn khác
     }
+
 }

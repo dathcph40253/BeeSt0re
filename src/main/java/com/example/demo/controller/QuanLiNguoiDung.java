@@ -19,17 +19,23 @@ public class QuanLiNguoiDung {
     private UserRepone xyz;
 
     @GetMapping("/account")
-    public String QuanLiNguoiDung(@RequestParam(name = "id", required = false) List<Long> keyword, Model model) {
+    public String QuanLiNguoiDung(
+            @RequestParam(name = "query", required = false) String query,
+            Model model) {
+
         List<User> users;
-        if(keyword != null && !keyword.isEmpty()) {
-            users = xyz.findByIdIn(keyword);
-        }else {
+
+        if (query != null && !query.trim().isEmpty()) {
+            users = xyz.searchUsers(query);
+        } else {
             users = xyz.findAll();
         }
+
         model.addAttribute("users", users);
-        model.addAttribute("keyword", keyword);
+        model.addAttribute("query", query);
         return "taikhoan";
     }
+
 
 
 }

@@ -82,25 +82,12 @@ public class CategoryController {
         return "redirect:/Category";
     }
     @GetMapping("/Category/search")
-    public String searchCategory(@RequestParam(name = "id") String id, Model model) {
-        List<Category> categories;
-        if(id !=null &&  !id.isBlank()) {
-            try {
-                Long ids = Long.parseLong(id);
-                Category category = categoryRepo.findById(ids).orElse(null);
-                if (category != null) {
-                    categories = List.of(category);
-                } else {
-                    categories = new ArrayList<>();
-                }
-            } catch (NumberFormatException e) {
-                categories = new ArrayList<>();
-            }
-        }else{
-                categories = categoryRepo.findByDeleteFalse();
-            }
-            model.addAttribute("categories", categories);
-            return "category";
-        }
+    public String searchCategory(@RequestParam("query") String query, Model model) {
+        List<Category> categories = categoryService.searchCategories(query);
+        model.addAttribute("categories", categories);
+        model.addAttribute("searchQuery", query);
+        return "category"; // hoặc đường dẫn view của bạn
     }
+
+}
 

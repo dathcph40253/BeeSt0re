@@ -63,8 +63,16 @@ public interface BillRepository extends JpaRepository<Bill, Long> {
     List<Bill> findByStatusAndCreateDateBefore(String status, LocalDateTime createDate);
 
     @Query("SELECT b FROM Bill b WHERE " +
+            "(:query IS NULL OR :query = '' OR " +
             "LOWER(b.code) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(b.customer.name) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-            "LOWER(b.billingAddress) LIKE LOWER(CONCAT('%', :query, '%'))")
-    List<Bill> searchBills(@Param("query") String query);
+            "LOWER(b.billingAddress) LIKE LOWER(CONCAT('%', :query, '%'))) " +
+            "AND (:startDate IS NULL OR b.createDate >= :startDate) " +
+            "AND (:endDate IS NULL OR b.createDate <= :endDate)")
+    List<Bill> searchBills(
+            @Param("query") String query,
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
+
 }
